@@ -1,0 +1,107 @@
+﻿@model IEnumerable<CompraVentaCore.Models.Vendedor>
+
+@{
+    ViewBag.Title = "Trabajadores";
+}
+
+@if (TempData["exito"] != null)
+{
+    <div class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Éxito!</strong> @TempData["exito"]
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>ERROR!</strong> @TempData["error"]
+    </div>
+}
+
+<table class="table dynamic">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreCompleto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Usuario.UserName)
+                </td>
+                <td>
+                    @if (item.Usuario != null)
+                    {
+                        @String.Join(",", item.Usuario.Roles.Select(r => r.Role.Name))
+                    }
+                </td>
+                <td class="col-md-2 text-right">
+                    <a class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="@Url.Action("Editar", new {Id = item.Id})"><i class="glyphicon glyphicon-edit"></i></a>
+                    <a data-id="@item.Id" class="btn btn-danger btn-sm eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar" href="javascript:;"><i class="glyphicon glyphicon-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha">&nbsp;@ViewBag.Title</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <a href="@Url.Action("Agregar")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Nuevo Trabajador</a>
+        </div>
+    </div>
+    <br/>
+
+}
+
+<!-- MODAL ELIMINAR TRABAJADOR -->
+<div id="modal-inactivar" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Eliminar trabajador</h4>
+            </div>
+            <div id="inactivarUser_form">
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- TERMINA MODAL ELIMINAR TRABAJADOR -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script src="~/Scripts/com.bar.menu.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+            $('.eliminar').click(function () {
+                var idTrabajador = $(this).attr("data-id");
+                var url = '@Url.Action("Eliminar","Trabajadores")' + "/" + idTrabajador;
+                $('#inactivarUser_form').load(url, function() {
+                    $('#modal-inactivar').modal('show');
+                });
+                
+            });
+        });
+    </script>
+}

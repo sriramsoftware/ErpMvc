@@ -1,0 +1,110 @@
+﻿@model CompraVentaCore.Models.Elaboracion
+
+<table class="mytable table table-bordered" style="width: 100%">
+    <tr>
+        <td colspan="6">
+            Montin Cubano
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            Ficha de Costo
+        </td>
+    </tr>
+    <tr>
+        <td>FECHA DE APROBACIÓN</td>
+        <td colspan="2"></td>
+        <td colspan="2">NOMBRE DE LA OFERTA</td>
+        <td colspan="1" class="data">@Model.Nombre</td>
+    </tr>
+    <tr>
+        <td colspan="2">INGREDIENTES</td>
+        <td colspan="1">CANTIDAD</td>
+        <td colspan="1">UM</td>
+        <td colspan="1">PRECIO DE COSTO(UM)</td>
+        <td colspan="1">IMPORTE</td>
+    </tr>
+    @{
+        decimal costoTotal = 0;
+    }
+    @foreach (var producto in Model.Productos)
+    {
+        <tr class="data">
+            <td colspan="2">@producto.Producto.Nombre</td>
+            <td>
+                @producto.Cantidad
+            </td>
+            <td>@producto.UnidadDeMedida.Siglas</td>
+            <td class="text-right">
+                @{
+                    var precio = ViewBag.Costos[producto.ProductoId];
+                    decimal costo = precio * producto.Cantidad;
+                    costoTotal += costo;
+                }
+                $ @precio
+            </td>
+            <td class="text-right">
+                $ @costo
+            </td>
+        </tr>
+                    }
+    <tr>
+        <td colspan="5" class="text-right">
+            Costo Total de Materia Prima
+        </td>
+        <td class="data text-right">
+            @String.Format("{0:C}", costoTotal)
+        </td>
+    </tr>
+    <tr><td colspan="6">OTROS INDICADORES</td></tr>
+    <tr>
+        <td colspan="2">Precio con Índice</td>
+        <td class="data">
+            @String.Format("{0:C}", Model.Costo * Model.IndiceEsperado)
+        </td>
+        <td colspan="2">Precio de Venta</td>
+        <td class="data">$ @Model.PrecioDeVenta</td>
+    </tr>
+    <tr>
+        <td colspan="2">Costo por peso de ingreso planificado</td>
+        <td class="data">
+            $ @Model.CostoPlanificado
+        </td>
+        <td colspan="2">Costo por peso de ingreso real</td>
+        @if (Model.CostoPlanificado < (Model.PrecioDeVenta != 0 ? costoTotal / Model.PrecioDeVenta : 0))
+        {
+            <td class="data error-table">
+                @String.Format("{0:C}", Model.PrecioDeVenta != 0 ? costoTotal / Model.PrecioDeVenta : 0)
+            </td>
+        }
+        else
+        {
+            <td class="data">
+                @String.Format("{0:C}", Model.PrecioDeVenta != 0 ? costoTotal / Model.PrecioDeVenta : 0)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Margen de contribución</td>
+        <td class="data">
+            @String.Format("{0:C}", Model.PrecioDeVenta - costoTotal)
+        </td>
+        <td>Índice Esperado</td>
+        <td class="data">
+            @String.Format("{0:##.###}", Model.IndiceEsperado)
+        </td>
+        <td>Índice Aplicado</td>
+        <td class="data">
+            @String.Format("{0:##.###}", costoTotal != 0 ? Model.PrecioDeVenta / costoTotal : 0 )
+        </td>
+    </tr>
+    <tr><td colspan="6">CARTA TÉCNICA</td></tr>
+    <tr>
+        <td>Preparación</td>
+        <td colspan="5" class="data text-justify">@Model.Preparacion</td>
+    </tr>
+    <tr>
+        <td>Presentación</td>
+        <td colspan="5" class="data text-justify">@Model.Presentacion</td>
+    </tr>
+</table>

@@ -1,0 +1,167 @@
+﻿@using CompraVentaCore.Models
+@model IEnumerable<CompraVentaCore.Models.Venta>
+
+@{
+    ViewBag.Title = "Ventas";
+}
+<div class="row">
+
+    @if (TempData["exito"] != null)
+    {
+        <div class="alert alert-dismissable alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Éxito!</strong> @TempData["exito"]
+        </div>
+    }
+    @if (TempData["error"] != null)
+    {
+        <div class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>ERROR!</strong> @TempData["error"]
+        </div>
+    }
+
+</div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <form class="form-horizontal" role="form" accept-charset="utf-8">
+            <div class="form-group">
+                <label class="col-md-6 col-sm-6  col-xs-12 control-label">Buscar Ventas del Día</label>
+                <div class="col-md-6 col-sm-6 col-xs-12 " style="padding: 0px;">
+                    <div class="input-group input-append date col-md-6 col-sm-6" data-date="" data-date-format="dd-mm-yyyy" id="datepicker" data-date="">
+                        <input class="input-small form-control  datepicker" type="text" id="date" name="date" value='@ViewBag.DiaContable.Fecha.ToShortDateString()'>
+                        <span class="input-group-addon add-on">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div id="ventas-div">
+    <h1 class="message-body ">Subtotal de Ventas del Día: @String.Format("{0:C}", Model.Sum(v => v.Importe))</h1>
+    @if (Model.Any())
+    {
+        <div class="row text-center">
+            @{
+                var puntosDeVenta = Model.GroupBy(v => v.PuntoDeVenta).Select(v => new { PuntoDeVenta = v.Key.Nombre, Importe = v.Sum(ve => ve.Importe) });
+            }
+            @foreach (var pto in puntosDeVenta)
+            {
+                <div class="col-md-3 col-sm-3 col-xs-12">
+                    <h4 class="title_insight ">@pto.PuntoDeVenta:<br /> @String.Format("{0:C}", pto.Importe)</h4>
+                </div>
+            }
+            <div class="col-md-3 col-sm-3 col-xs-12">
+                <h4 class="title_insight ">Total:<br /> @String.Format("{0:C}", Model.Sum(v => v.Importe))</h4>
+            </div>
+        </div>
+                }
+    <hr />
+    @if (ViewBag.TotalDeVentasEnEspera > 0)
+    {
+        <div class="alert alert-warning text-center">
+            Por favor, recuerde que tiene @ViewBag.TotalDeVentasEnEspera comandas
+            en espera de pago del cliente.
+        </div>
+    }
+
+    @foreach (var venta in Model)
+    {
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                <label class="badge badge-title">
+                    @String.Format("{0:C}", venta.Importe)
+                </label>
+            </div>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                <h4 class="title_insight">@venta.DiaContable.Fecha</h4>
+
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Ajax.ActionLink("Ver Menus Consumidos", "MenusEnVentaPartial", "Ventas", new { Id = venta.Id }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, HttpMethod = "Get", UpdateTargetId = "modal-detalle", OnComplete = "mostrarModal" }, new { @class = "btn btn-primary btn-sm col-md-12" })
+
+            </div>
+        </div>
+        <hr />
+    }
+</div>
+
+
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha"><i class="glyphicon glyphicon-usd icono_derecha"></i>&nbsp;Ventas</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
+            <p>Observe las ventas registradas en la fecha contable actual y sus menús asociados</p>
+            <p>Hoy se han registrado un total de @Model.Count() ventas.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <a href="@Url.Action("NuevaVenta")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Registrar Nueva Venta</a>
+        </div>
+    </div>
+    <br />
+}
+
+<!-- MODAL AGREGAR MENU -->
+<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 id="modal-title" class="modal-title">Menús en venta</h4>
+            </div>
+            <div id="modal-detalle" class="modal-body">
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- TERMINA MODAL AGREGAR MENU -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script src="~/Scripts/com.bar.menu.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+            $('#date').change(function () {
+                console.log("cambio de fecha");
+                var fecha = $("#date").val();
+                $.ajax({
+                    url: "@Url.Action("BuscarVentas","Ventas")",
+                    type: "POST",
+                    data: { fecha: fecha },
+                    dataType: "html",
+                    success: function (data) {
+                        $("#ventas-div").html(data);
+                        funcionesMenu();
+                    },
+                    error: function (data) { }
+                });
+            });
+            
+        });
+
+        function mostrarModal() {
+            $("#modal").modal('show');
+        }
+    </script>
+}

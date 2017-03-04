@@ -1,0 +1,38 @@
+﻿@model ComercialCore.Models.Producto
+
+@{
+    ViewBag.Title = "Eliminar producto";
+}
+
+<h2>@ViewBag.Title.</h2>
+<h3>Esta seguro que desea Eliminar este registro?</h3>
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+            {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Borrar" class="btn btn-danger" /> |
+            @Html.ActionLink("Atras", "Listado", null, new { @class = "btn btn-default" })
+        </div>
+    }
+</div>

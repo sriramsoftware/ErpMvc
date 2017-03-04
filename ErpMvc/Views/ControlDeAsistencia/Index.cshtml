@@ -1,0 +1,87 @@
+﻿@model IEnumerable<CompraVentaCore.Models.Vendedor>
+
+@{
+    ViewBag.Title = "Control de asistencia";
+}
+
+
+
+<div id="tabla-asistencia">
+    @{
+        Html.RenderAction("ListadoAsistencia","ControlDeAsistencia");
+    }
+</div>
+
+@if (TempData["exito"] != null)
+{
+    <div class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Éxito!</strong> @TempData["exito"]
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>ERROR!</strong> @TempData["error"]
+    </div>
+}
+
+@using (Html.BeginForm("Firmar","ControlDeAsistencia"))
+{
+  @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    <div class="col-md-8 col-md-offset-2">
+        <div class="form-group">
+            <label class = "col-md-4 control-label">Usuario</label>
+            <div class="col-md-8">
+                <input type="text" id="nombreUsuario" name="nombreUsuario" class="form-control" required="required"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label">Contraseña</label>
+            <div class="col-md-8">
+                <input type="password" id="contraseña" name="contraseña" class="form-control" required="required" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                <input type="submit" class="btn btn-success" value="Firmar" />
+            </div>
+        </div>
+    </div>
+}
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha">&nbsp;@ViewBag.Title</p>
+        </div>
+    </div>
+    
+
+}
+
+<!-- MODAL AGREGAR MENU -->
+<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+<!-- TERMINA MODAL AGREGAR MENU -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script src="~/Scripts/com.bar.menu.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+        });
+    </script>
+}

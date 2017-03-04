@@ -1,0 +1,141 @@
+﻿@using ErpMvc.Models
+@using ErpMvc.ViewModels
+@model IEnumerable<ProductoConcretoViewModel>
+
+@{
+    ViewBag.Title = "productos";
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+@if (TempData["exito"] != null)
+{
+    <div class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Éxito!</strong> @TempData["exito"]
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>ERROR!</strong> @TempData["error"]
+    </div>
+}
+
+<table class="table dynamic">
+    <thead>
+        <tr>
+        
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                        <label class="badge badge-title">
+                            @if (item.Producto.Cantidad <= 1)
+                            {
+                                @String.Format("{0} {1}",item.Existencia.Cantidad, item.Producto.UnidadDeMedida.Nombre)
+                            }
+                            else
+                            {
+                                @String.Format("{0} {1}, en {2} envaces", item.Existencia.Cantidad,item.Producto.UnidadDeMedida.Nombre, item.Existencia.Cantidad/item.Producto.Cantidad)
+                            }
+                        </label>
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <h4 class="title_insight">@String.Format("{0} ({1} {2})", item.Producto.Producto.Nombre, item.Producto.Cantidad, item.Producto.UnidadDeMedida.Siglas)</h4>
+                        <br />
+                        Grupo: @item.Producto.Producto.Grupo.Descripcion
+                        <br />
+                        Precio de Compra Promedio por Unidad: @Html.DisplayFor(modelItem => item.Producto.PrecioUnitario)
+                        <br />
+                        @if (item.Producto.Producto.EsInventariable)
+                {
+                            @:Este producto es inventariable
+                }
+                else
+                {
+                            @:Este producto no es inventariable
+                }
+                    </div>
+
+                    <div class="col-md-4 col-sm-4 col-xs-12">
+                        @if (User.IsInRole(RolesMontin.UsuarioAvanzado) || User.IsInRole(RolesMontin.Administrador))
+                        {
+                            <a  href="@Url.Action("Editar", new {Id = item.Producto.Id})" class="edit_grupo btn btn-primary btn-sm col-md-12 productoupd" data-toggle="tooltip" data-placement="top" title="Editar">
+                                <i class="glyphicon glyphicon-edit"></i>&nbsp;Editar este Producto
+                            </a>
+                        }
+
+                        <a href="@Url.Action("Historial",new {Id = item.Producto.Id})" class="btn btn-primary btn-sm col-md-12 productoentrar" value="${row.id }">
+                            <i class="glyphicon glyphicon-bookmark"></i>&nbsp;Movimientos / Historial
+                        </a>
+                        @if (User.IsInRole(RolesMontin.Administrador))
+                        {
+                            <a class="btn btn-danger btn-sm col-md-12 " data-toggle="tooltip" data-placement="top" title="Eliminar" href="@Url.Action("Eliminar", new {Id = item.Producto.ProductoId})"><i class="glyphicon glyphicon-trash"></i> Eliminar este producto</a>
+                        }
+                        
+                    </div>
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- MODAL -->
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @{
+                Html.RenderAction("AgregarProductoPartial");
+            }
+        </div>
+    </div>
+</div>
+<!-- AQUI TERMINA MODAL -->
+
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha"><i class="glyphicon glyphicon-glass icono_derecha"></i>&nbsp;Productos</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
+            <p>Gestione toda la información relativa a los productos, sus datos y existencia real.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" data-toggle="modal" data-target="#myModal">Agregar Nuevo Producto</a>
+            <br />
+            <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" href="@Url.Action("Inventario","Reportes")">Inventarios de Productos</a>
+            <br />
+            @*<a class="btn btn-default col-md-12 col-sm-12 col-xs-12" href="@Url.Action("TramitarSalida","Productos")">Dar salida a productos</a>
+            <br />*@
+            
+            <img class="imagen_derecho img-thumbnail" src="@Url.Content("~/Content/images/productos.jpg")" />
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+        });
+    </script>
+}

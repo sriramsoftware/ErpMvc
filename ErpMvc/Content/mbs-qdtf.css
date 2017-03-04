@@ -1,0 +1,68 @@
+/*!
+ * Quick DataTables Formatting v1.0 ()
+ * Copyright (c) 2015 Matanzas Bay Software
+ * Licensed under MIT (http://opensource.org/licenses/MIT)
+ */
+
+/*! mbs-qdtf.css v1.0 | MIT License | */
+
+.dataTables_wrapper table {
+    float: left;
+}
+
+.dataTables_wrapper table th.sorting {
+    background: url("images/sort_both.png") no-repeat scroll right center;
+}
+
+.dataTables_wrapper table th.sorting_asc {
+    background: url("images/sort_asc.png") no-repeat scroll right center;
+}
+
+.dataTables_wrapper table th.sorting_desc {
+    background: url("images/sort_desc.png") no-repeat scroll right center;
+}
+
+.dataTables_wrapper input,
+.dataTables_wrapper select {
+    border-width: 1px;
+    border-style: solid;
+}
+
+.dataTables_length, .dataTables_filter {
+    position: relative;
+    padding: 5px;
+}
+
+.dataTables_length, .dataTables_info {
+    float: left;
+}
+
+.dataTables_info {
+    font-size: 11px;
+    line-height: 26px;
+    padding: 5px;
+}
+
+.dataTables_filter, .dataTables_paginate {
+    float: right;
+}
+
+.paginate_button {
+    float: left;
+    line-height: 14px;
+    font-size: 11px;
+    display: block;
+    padding: 4px 5px;
+    margin: 5px 5px 5px 0;
+}
+
+.paginate_button, .paginate_button:hover {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.dataTables_paginate .disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.65;
+}

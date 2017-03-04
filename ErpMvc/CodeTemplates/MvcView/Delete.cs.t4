@@ -1,0 +1,101 @@
+﻿<#@ template language="C#" HostSpecific="True" #>
+<#@ output extension=".cshtml" #>
+<#@ include file="Imports.include.t4" #>
+@model <#= ViewDataTypeName #>
+<#
+// The following chained if-statement outputs the file header code and markup for a partial view, a view using a layout page, or a regular view.
+if(IsPartialView) {
+#>
+
+<#
+} else if(IsLayoutPageSelected) {
+#>
+
+@{
+    ViewBag.Title = "Borrar";
+<#
+if (!String.IsNullOrEmpty(LayoutPageFile)) {
+#>
+    Layout = "<#= LayoutPageFile#>";
+<#
+}
+#>
+}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h2 class="text-center"><#= ViewDataTypeShortName#></h2>
+
+    </div>
+
+<#
+} else {
+#>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Borrar <#= ViewDataTypeShortName#></title>
+</head>
+<body>
+<#
+    PushIndent("    ");
+}
+#>
+<div class="panel-body">
+<h3>Esta seguro que desea borrar este registro?</h3>
+<div>    
+    <dl class="dl-horizontal">
+<#
+foreach (PropertyMetadata property in ModelMetadata.Properties) {
+    if (property.Scaffold && !property.IsPrimaryKey && !property.IsForeignKey) {
+#>
+<#
+        // This is a temporary work around until core scaffolding provides support for independent associations.
+        if (property.IsAssociation && GetRelatedModelMetadata(property) == null) {
+            continue;
+        }
+#>
+        <dt>
+            @Html.DisplayNameFor(model => model.<#= GetValueExpression(property) #>)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.<#= GetValueExpression(property) #>)
+        </dd>
+
+<#
+    }
+}
+#>
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Borrar" class="btn btn-danger" /> |
+            @Html.ActionLink("Cancelar", "Index", null , new{ @class = "btn btn-default"})
+        </div>
+    }
+</div>
+</div>
+</div>
+<#
+// The following code closes the tag used in the case of a view using a layout page and the body and html tags in the case of a regular view page
+#>
+<#
+if(!IsPartialView && !IsLayoutPageSelected) {
+    ClearIndent();
+#>
+</body>
+</html>
+<#
+}
+#>
+<#@ include file="ModelMetadataFunctions.cs.include.t4" #>

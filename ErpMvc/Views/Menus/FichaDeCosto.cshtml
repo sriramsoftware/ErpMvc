@@ -1,0 +1,246 @@
+﻿@using CompraVentaCore.Models
+@model CompraVentaCore.Models.Elaboracion
+
+@{
+    ViewBag.Title = "Menus";
+}
+
+@if (TempData["exito"] != null)
+{
+    <div class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Éxito!</strong> @TempData["exito"]
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>ERROR!</strong> @TempData["error"]
+    </div>
+}
+
+<div id="menuController" class="form-group" data-ng-controller="menuController">
+    @{
+        Html.RenderPartial("_ProductoPorMenuPartial", new ProductosPorElaboracion());
+    }
+</div>
+
+
+<div id="tabla-ficha-de-costo">
+    
+</div>
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha_historial">Ficha de Costo del Menú @Model.Nombre</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="contenido_derecho_descripcion">
+            <p>
+                Escriba los productos que desee agregar a la ficha de costo escogiendo la opción deseada
+                del autocompletador. Una vez que tenga los productos definidos debe editar la cantidad y la
+                unidad de medida.
+            </p>
+            @*<p>
+                Cada vez que edite uno de estos datos; la información
+                se guardará automáticamente devolviendo el estado de la operación. Los posibles estados
+                son:
+            </p>
+            <ul style="list-style-type: none;">
+                <li style="margin: 5px;">
+                    <i class="icon-ok "></i>&nbsp;Producto asociado exitosamente con la ficha de costo
+                </li>
+                <li style="margin: 5px;">
+                    <i class="icon-save "></i>&nbsp;Necesita guardar cambios
+                </li>
+                <li style="margin: 5px;">
+                    <i class="icon-warning-sign "></i>&nbsp;
+                    Error en la cantidad especificada, solo se aceptan números mayores que cero
+                </li>
+            </ul>*@
+            <p>En caso de haberse equivocado entrando un producto siempre tiene la opción de eliminarlo.</p>
+            <a href="@Url.Action("Listado")" class="btn btn-default col-md-12"><i class="icon-book"></i>&nbsp;Volver al Menú</a>
+            <br />
+            @*<a class="btn edit-menu btn-default col-md-12" style="margin-top: 10px;" value="${menu.id}">
+                <i class="icon-edit"></i>&nbsp;Editar Datos del Menú
+            </a>
+            <br />
+            <a class="btn  btn-default col-md-12" style="margin-top: 10px;"
+               href="fichadecosto?id=${menu.id}" target="blank">
+                <i class="icon-file-pdf icomoon"></i>&nbsp;Reporte de Ficha de Costo
+            </a>*@
+            <img src="${imageFolder}${menu.id}_small.jpg?time=${menu.fechaModificacionImagen}" onerror="this.remove();" class="img-thumbnail"
+                 style="margin-top: 10px;" />
+        </div>
+    </div>
+
+}
+
+<!-- MODAL AGREGAR MENU -->
+<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @{
+                Html.RenderAction("AgregarMenuPartial");
+            }
+        </div>
+    </div>
+</div>
+<!-- TERMINA MODAL AGREGAR MENU -->
+
+@section Scripts {
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".select").chosen();
+
+            $('.nuevo').tooltip();
+
+            $("#save-carga-btn").click(function () {
+                $("#form-carga").remove();
+            });
+
+            $("#ProductoId").change(function() {
+                var msg = $("#ProductoId option:selected").val();
+                angular.element('#menuController').scope().fetchUnidades(msg);
+                angular.element('#menuController').scope().$apply();
+            });
+        });
+        
+        function cargaAgregada() {
+            $("#carga-modal").modal('hide');
+            angular.element('#menuController').scope().fetchProductos();
+            angular.element('#menuController').scope().$apply();
+        };
+
+
+
+        erp.controller('menuController', [
+            '$scope', '$http', function ($scope, $http) {
+                $scope.loading = true;
+                $scope.addMode = false;
+                $scope.tieneError = false;
+                $scope.error = "";
+                $scope.select_changed = 0;
+
+                $scope.productos = [];
+                $scope.urlProductos = '@Url.Action("ListaProductos","Productos")';
+
+                $scope.fetchProductos = function () {
+                    $http.get($scope.urlProductos).then(function (result) {
+                        $scope.productos = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+
+                $scope.fetchProductos();
+
+                $scope.unidades = [];
+                $scope.urlUnidades = '@Url.Action("ListaUnidadesDeMedida", "Productos")';
+                $scope.urlProductosEnMenu = '@Url.Action("ProductosEnMenu", "Menus",new {menuId = Model.Id})';
+
+                $scope.fetchUnidades = function (id) {
+                    $http.get($scope.urlUnidades + "/" + id).then(function (result) {
+                        $scope.unidades = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+
+                $scope.fetchProductosEnMenu = function () {
+                    $http.get($scope.urlProductosEnMenu).then(function (result) {
+                        $scope.productosEnMenu = result.data;
+                        var urlTablaFichaDeCosto = '@Url.Action("FichaDeCostoResumen", new { id = Model.Id })';
+                                $("#tabla-ficha-de-costo").load(urlTablaFichaDeCosto);
+                    });
+                }
+
+                //$scope.fetchUnidades();
+
+                $scope.productosEnMenu = [];
+                $scope.fetchProductosEnMenu();
+
+                $scope.newDetalle = {};
+                
+                $scope.toggleEdit = function () {
+                    this.detalle.editMode = !this.detalle.editMode;
+                };
+                $scope.agregarDetalle = function () {
+                    $scope.show = false;
+                    var detalleNuevo = {};
+                    var valido = true;
+                    if ($scope.newDetalle.Cantidad == null || $scope.newDetalle.ProductoId === "") {
+                        $scope.error = "Debe insertar los datos del producto.";
+                        $scope.tieneError = true;
+                        valido = false;
+                    }
+                    //var form = $("#form-detalle-compra");
+                    //if (valido && !form.valid()) {
+                    //    $scope.error = "Datos incorrectos en el producto.";
+                    //    $scope.tieneError = true;
+                    //    valido = false;
+                    //}
+                    if (valido && $scope.productosEnMenu.find(function (a) { if ($scope.newDetalle.ProductoId.Id === a.ProductoId) { return true; } return false; })) {
+                        $scope.error = "Ya tiene este producto agregado.";
+                        $scope.tieneError = true;
+                        valido = false;
+                    }
+                    if (valido) {
+                        detalleNuevo.ProductoId = $scope.newDetalle.ProductoId.Id;
+                        detalleNuevo.UnidadId = $scope.newDetalle.UnidadId.Id;
+                        detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
+                        detalleNuevo.MenuId = @Model.Id;
+                        $http.post(
+                            '@Url.Action("AgregarProductoAMenu","Menus")',
+                            detalleNuevo).then(function(result) {
+                            $scope.fetchProductosEnMenu();
+                        });
+                    }
+                };
+
+
+
+                $scope.closeAlert = function () {
+                    $scope.tieneError = false;
+                };
+
+                //Used to save a record after edit
+                $scope.save = function (data) {
+                    $scope.loading = true;
+                    var carga = this.carga;
+                    carga.CargaId = data.CargaId;
+                    carga.Cantidad = data.Cantidad;
+                    var cargaNombre = $("#carga_" + carga.Id + " option:selected").html();
+                    carga.CargaNombre = cargaNombre;
+                    carga.editMode = false;
+                    $scope.loading = false;
+                };
+
+                $scope.cancelar = function () {
+                    $scope.detallesCompra = [];
+                    $("#save-carga-btn").addClass('disabled');
+                    $scope.newDetalle = {};
+                };
+
+                //Used to edit a record
+                $scope.borrarProducto = function (index) {
+                    $scope.loading = true;
+                    var detalle = {};
+                    detalle.productoId = this.detalle.ProductoId;
+                    detalle.menuId = '@Model.Id';
+                    $http.post(
+                            '@Url.Action("QuitarProductoDeMenu","Menus")',
+                            detalle).then(function(result) {
+                                $scope.fetchProductosEnMenu();
+                            });
+                    $scope.loading = false;
+                };
+            }
+        ]);
+
+    </script>
+}

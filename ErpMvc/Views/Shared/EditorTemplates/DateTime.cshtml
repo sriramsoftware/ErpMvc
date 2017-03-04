@@ -1,0 +1,9 @@
+﻿@inherits System.Web.Mvc.WebViewPage<DateTime?>
+@if (Model.HasValue)
+{
+    @Html.TextBox("", String.Format("{0:dd/MM/yyyy}", Model.Value), new { @class = "form-control datepicker", @type = "datetime " })
+}
+else
+{
+    @Html.TextBox("", String.Format("{0:dd/MM/yyyy}", DateTime.Now), new { @class = "form-control datepicker", @type = "datetime" })
+}

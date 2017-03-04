@@ -1,0 +1,4 @@
+﻿@model ContabilidadCore.Models.DiaContable
+
+<p class="control-label"><strong>Fecha Contable :</strong> @Model.Fecha.ToShortDateString()</p>
+<input type="hidden" id="DiaContableId" name="DiaContableId" value="@Model.Id"/>

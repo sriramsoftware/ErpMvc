@@ -1,0 +1,101 @@
+﻿@model SeguridadCore.ViewModels.UsuarioViewModel
+@{
+    ViewBag.Title = "Editar usuario";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("EditarUsuario", "Usuario", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="col-md-12">
+        <div class="form-group">
+            @Html.LabelFor(m => m.NombreUsuario, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.NombreUsuario, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.NombreUsuario)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Nombre, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Nombre)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Apellidos, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Apellidos, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Apellidos)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.CorreoElectronico, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.CorreoElectronico, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.CorreoElectronico)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.AreaId, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownList("AreaId", null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.AreaId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.EspecialidadId, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownList("EspecialidadId", null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.EspecialidadId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Rol, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownList("Rol", null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Rol)
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(m => m.NombreUsuario, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.NombreUsuario, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Nombre, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Apellidos, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Apellidos, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Rol, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.DropDownList("Rol", null,new { @class = "form-control" })
+                </div>
+            </div>*@
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Atrás", "ListaUsuario", "Usuario", new { @class = "btn btn-default" })
+                <input type="submit" class="btn btn-success" value="Guardar" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

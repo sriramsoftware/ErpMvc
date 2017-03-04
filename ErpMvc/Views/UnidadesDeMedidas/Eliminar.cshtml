@@ -1,0 +1,61 @@
+﻿@model ComercialCore.Models.UnidadDeMedida
+
+@{
+    ViewBag.Title = "Eliminar";
+}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h2 class="text-center">@ViewBag.Title</h2>
+
+    </div>
+
+    <div class="panel-body ">
+        <h3 class="text-center">Esta seguro que desea borrar este registro?</h3>
+        <div class="">
+            <dl class="dl-horizontal col-md-offset-5">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Nombre)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Siglas)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Siglas)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.TipoDeUnidadDeMedida)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.TipoDeUnidadDeMedida.Name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.FactorDeConversion)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.FactorDeConversion)
+                </dd>
+
+            </dl>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color col-md-offset-8 col-md-4">
+                    <input type="submit" value="Borrar" class="btn btn-danger" /> |
+                    @Html.ActionLink("Cancelar", "Listado", null, new { @class = "btn btn-default" })
+                </div>
+            }
+        </div>
+    </div>
+</div>

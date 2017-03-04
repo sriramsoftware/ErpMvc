@@ -1,0 +1,22 @@
+﻿@model IEnumerable<ErpMvc.Models.Asistencia>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Trabajador</th>
+        <th>Entrada</th>
+        <th>Salida</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var asist in Model)
+    {
+        <tr>
+            <td>@asist.Vendedor.NombreCompleto</td>
+            <td>@asist.Entrada</td>
+            <td>@asist.Salida</td>
+        </tr>
+    }
+    </tbody>
+</table>
+

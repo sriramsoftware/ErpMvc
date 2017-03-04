@@ -1,0 +1,78 @@
+﻿@model ErpMvc.ViewModels.ProductoViewModel
+
+@using (Html.BeginForm("AgregarProductoPartial", "Productos", FormMethod.Post, new { @accept_charset = "utf-8", @id = "addproducto" }))
+{
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 id="modal-title" class="modal-title">Agregar Nuevo Producto</h4>
+    </div>
+    <div class="modal-body">
+        <div id="alert-danger" class="alert alert-warning hidden"></div>
+        <input type="hidden" id="id" name="id" value="0" />
+        <div class="row">
+            <div class="col-md-4 col-sm-4 text-right">
+                Nombre del producto
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.TextBoxFor(model => model.Nombre,new {@class="form-control"})
+                @Html.ValidationMessageFor(model => model.Nombre)
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 col-sm-4 text-right">
+                Grupo
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.DropDownList("GrupoId", null, new {@class="form-control"})
+                @Html.ValidationMessageFor(model => model.GrupoId)
+            </div>
+        </div>
+
+        <div id="row-unidad" class="row">
+            <div class="col-md-4 col-sm-4 text-right">
+                Unidad de Medida
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.DropDownList("UnidadDeMedidaId",null, new {@class= "form-control"})
+                @Html.ValidationMessageFor(model => model.UnidadDeMedidaId)
+            </div>
+        </div>
+
+        <div id="row-cantidad" class="row">
+            <div class="col-md-4 col-sm-4 text-right">
+                Presentación en Envase
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.TextBoxFor(model => model.Cantidad, new {@class="form-control"})
+                @Html.ValidationMessageFor(model => model.Cantidad)
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 col-sm-4 text-right">
+                Precio de Compra
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.TextBoxFor(model => model.PrecioUnitario, new {@class="form-control"})
+                @Html.ValidationMessageFor(model => model.PrecioUnitario)
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-4 col-sm-4 text-right"></div>
+            <div class="col-md-8 col-sm-8">
+                <label>
+                    @Html.CheckBoxFor(model => model.EsInventariable,new { @style = "margin-top: -3px;" })
+                    Este producto es inventariable
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button id="btn-primary" type="submit" class="btn btn-primary">Agregar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+    </div>
+}

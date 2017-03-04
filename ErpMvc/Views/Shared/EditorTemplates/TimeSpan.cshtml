@@ -1,0 +1,8 @@
+﻿@inherits WebViewPage<TimeSpan?>
+@if (Model.HasValue)
+{
+    @Html.TextBox("", Model.Value, new { @class = "form-control hora", @required = "required"})
+}
+else{
+    @Html.TextBox("", String.Format("{0:HH:mm}", DateTime.Now), new { @class = "form-control hora", @required = "required"})
+}

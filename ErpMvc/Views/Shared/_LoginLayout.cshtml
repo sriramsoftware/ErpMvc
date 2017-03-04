@@ -1,0 +1,22 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SiscaCore</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/jquery-ui.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css")
+    @RenderSection("styles", false)
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body class="img-responsive" style="background: url( /Content/images/fondo.jpg); background-color: #cccccc; background-size: cover; background-position: center; background-attachment: fixed; background-repeat: no-repeat; ">
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

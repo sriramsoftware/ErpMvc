@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>SeguridadCore</id>
+    <version>1.2.0.2</version>
+    <title>SeguridadCore</title>
+    <authors>Elvis Jr Crego</authors>
+    <owners>Elvis Jr Crego</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Clases basicas de seguridad</description>
+    <copyright>Copyright 2017</copyright>
+    <dependencies>
+      <dependency id="Microsoft.AspNet.Identity.EntityFramework" version="1.0.0" />
+    </dependencies>
+  </metadata>
+</package>

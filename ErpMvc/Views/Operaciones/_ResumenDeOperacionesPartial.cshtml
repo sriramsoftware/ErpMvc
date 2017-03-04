@@ -1,0 +1,24 @@
+﻿@model IEnumerable<ErpMvc.ViewModels.ResumenDeOperaciones>
+
+<h1>Resumen de operaciones</h1>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>Detalle</th>
+        <th>Importe</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var op in Model)
+    {
+        <tr>
+            <td>@op.Detalle</td>
+            <td>@op.Importe</td>
+        </tr>
+    }
+        <tr>
+            <td><strong>Total</strong></td>
+            <td><strong> @Model.Sum(m => m.Importe) </strong></td>
+        </tr>
+    </tbody>
+</table>

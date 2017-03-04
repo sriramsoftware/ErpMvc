@@ -1,0 +1,83 @@
+﻿@model ErpMvc.ViewModels.VendedorViewModel
+
+@{
+    ViewBag.Title = "Nuevo vendedor";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("Agregar", "Trabajadores", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    <div class="col-md-8 col-md-offset-2">
+        <div class="form-group">
+            @Html.LabelFor(m => m.Vendedor.Ci, "Cedula", new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Vendedor.Ci, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Vendedor.Ci)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Vendedor.Nombres, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Vendedor.Nombres, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Vendedor.Nombres)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Vendedor.PrimerApellido, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Vendedor.PrimerApellido, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Vendedor.PrimerApellido)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Vendedor.SegundoApellido, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Vendedor.SegundoApellido, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Vendedor.SegundoApellido)
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(m => m.UsuarioViewModel.NombreUsuario, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.UsuarioViewModel.NombreUsuario, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.UsuarioViewModel.NombreUsuario)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.UsuarioViewModel.Contraseña, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.PasswordFor(m => m.UsuarioViewModel.Contraseña, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.UsuarioViewModel.Contraseña)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.UsuarioViewModel.ConfirmarContraseña, new {@class = "col-md-4 control-label"})
+            <div class="col-md-8">
+                @Html.PasswordFor(m => m.UsuarioViewModel.ConfirmarContraseña, new {@class = "form-control"})
+                @Html.ValidationMessageFor(m => m.UsuarioViewModel.ConfirmarContraseña)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Roles, "Roles", new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.ListBox("Roles", null, new { @class = "form-control select" })
+                @Html.ValidationMessageFor(m => m.Roles)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                @Html.ActionLink("Atrás", "Index", null, new { @class = "btn btn-default" })
+                <input type="submit" class="btn btn-success" value="Crear" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

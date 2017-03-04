@@ -1,0 +1,63 @@
+﻿@model CompraVentaCore.Models.ProductosPorElaboracion
+
+<div class="col-md-12">
+    <div class="alert alert-danger" data-ng-show="tieneError">
+        <button type="button" class="close" aria-hidden="true" data-ng-click="closeAlert()">&times;</button>
+        <p>{{ error }}</p>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Unidad</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr id="form-detalle-compra">
+            <td>
+                <select id="ProductoId" name="ProductoId" class="form-control" chosen data-ng-model="newDetalle.ProductoId" data-ng-options="producto.Nombre for producto in productos track by producto.Id"></select>
+                @Html.ValidationMessageFor(model => model.ProductoId)
+
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.Cantidad, new {@class = "form-control", @style = "max-width: 100px !important", @data_ng_model = "newDetalle.Cantidad"})
+                @Html.ValidationMessageFor(model => model.Cantidad)
+            </td>
+            <td>
+                <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" chosen data-ng-model="newDetalle.UnidadId" data-ng-options="unidad.Nombre for unidad in unidades track by unidad.Id"></select>
+                @Html.ValidationMessageFor(model => model.UnidadDeMedidaId)
+            </td>
+            <td>
+                <a id="add_aprob" data-ng-click="agregarDetalle()" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
+            </td>
+        </tr>
+        <tr data-ng-repeat="detalle in productosEnMenu">
+            <td>
+                <strong data-ng-hide="detalle.editMode">{{ detalle.Producto }}</strong>
+                <input name="Productos[{{ $index }}].ProductoId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ProductoId" class="form-control"/>
+            </td>
+            <td>
+                <p data-ng-hide="carga.editMode">{{ detalle.Cantidad }}</p>
+                <input name="Productos[{{ $index }}].Cantidad" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.Cantidad" class="form-control"/>
+            </td>
+            <td>
+                <p data-ng-hide="carga.editMode">{{ detalle.Unidad }}</p>
+                <input name="Productos[{{ $index }}].UnidadDeMedidaId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.UnidadId" class="form-control"/>
+            </td>
+            <td>
+                <p data-ng-hide="carga.editMode">
+                    @*<a class="btn btn-info" data-ng-click="toggleEdit(aprobacion)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-edit" aria-hidden="true"></span></a> |*@
+                    <a class="btn btn-danger" data-ng-click="borrarProducto(detalle)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                </p>
+                <p data-ng-show="carga.editMode">
+                    <a class="btn btn-success" data-ng-click="save(carga)" href="javascript:;">Guardar</a> |
+                    <a class="btn btn-danger" data-ng-click="toggleEdit(carga)" href="javascript:;">Cancelar</a>
+                </p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

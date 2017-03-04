@@ -1,0 +1,210 @@
+﻿@using ErpMvc.Models
+@model CompraVentaCore.Models.Venta
+
+@{
+    ViewBag.Title = "Ventas";
+}
+
+@using (Html.BeginForm("NuevaVenta", "Ventas"))
+{
+    <div class="row padding0px">
+        @if (User.IsInRole(RolesMontin.Administrador))
+        {
+            <div class="col-md-6 col-sm-6 col-xs-12 padding0px">
+                <div class="row padding0px">
+                    <div class="col-md-6 col-sm-6 col-xs-6 text-right">
+                        Dependiente
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6 padding0px">
+                        @Html.DropDownList("VendedorId", null, new { @class = "form-control select" })
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="col-md-6 col-sm-6 col-xs-12 padding0px">
+            <div class="row padding0px">
+                <div class="col-md-6 col-sm-6 col-xs-6 text-right">
+                    Punto de venta
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    @Html.DropDownList("PuntoDeVentaId", null, new {@class = "form-control select"})
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="tabla-detalle-de-venta"  data-ng-controller="ventasController">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                @{
+                    Html.RenderAction("DetalleDeVentaPartial");
+                }
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="col-md-6 col-sm-6 col-xs-6 text-right">
+                    total
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    @Html.TextBoxFor(m => m.Importe,new {@class="form-control", @data_ng_model="importeTotal"})
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <button id="submit-btn" type="submit" class="btn btn-primary">Registrar Venta</button>
+        </div>
+    </div>
+                    }
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="contenido_derecho_titulo">
+            <p class="parrafo_derecha">Nueva Venta</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="contenido_derecho_descripcion">
+            <p>
+                Para registrar una venta debe especificar el tipo de moneda con que le pagan, el dependiente
+                que atendió al cliente, el número de comanda en caso de existir y los elementos del menú
+                consumidos por el cliente.
+            </p>
+        </div>
+    </div>
+
+
+}
+
+<!-- MODAL AGREGAR MENU -->
+<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+<!-- TERMINA MODAL AGREGAR MENU -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script src="~/Scripts/com.bar.menu.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+
+            $('#submit-btn').click(function() {
+                $('#form-detalle-compra').remove();
+            });
+
+
+            $(document).on('click', "#ElaboracionId option", function () {
+                console.log('testing change');
+            });
+        });
+
+
+
+        erp.controller('ventasController', [
+            '$scope', '$http', function ($scope, $http) {
+                $scope.loading = true;
+                $scope.addMode = false;
+                $scope.tieneError = false;
+                $scope.error = "";
+                $scope.select_changed = 0;
+                $scope.precioDeVentaDeMenu = 0;
+                $scope.importeTotal = 0;
+
+                $scope.menus = [];
+                $scope.urlMenus = '@Url.Action("Menus","Menus")';
+
+                $scope.fetchMenus = function () {
+                    $http.get($scope.urlMenus).then(function (result) {
+                        $scope.menus = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+
+                $scope.fetchMenus();
+
+                $scope.detallesVenta = [];
+                $scope.newDetalle = {};
+
+                $scope.toggleEdit = function () {
+                    this.detalle.editMode = !this.detalle.editMode;
+                };
+                $scope.agregarDetalle = function () {
+                    $scope.show = false;
+                    var detalleNuevo = {};
+                    var valido = true;
+                    if ($scope.newDetalle.Cantidad == null || $scope.newDetalle.ElaboracionId === "") {
+                        $scope.error = "Debe insertar los datos del menu.";
+                        $scope.tieneError = true;
+                        valido = false;
+                    }
+                    //var form = $("#form-detalle-compra");
+                    //if (valido && !form.valid()) {
+                    //    $scope.error = "Datos incorrectos en el producto.";
+                    //    $scope.tieneError = true;
+                    //    valido = false;
+                    //}
+                    if (valido && $scope.detallesVenta.find(function (a) { if ($scope.newDetalle.ElaboracionId === a.ElaboracionId) { return true; } return false; })) {
+                        $scope.error = "Ya tiene agregado este menu.";
+                        $scope.tieneError = true;
+                        valido = false;
+                    }
+                    if (valido) {
+                        detalleNuevo.ElaboracionId = $scope.newDetalle.ElaboracionId.Id;
+                        detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
+                        $scope.importeTotal += ($scope.newDetalle.ElaboracionId.Precio * $scope.newDetalle.Cantidad);
+                        detalleNuevo.ImporteTotal = ($scope.newDetalle.ElaboracionId.Precio * $scope.newDetalle.Cantidad);
+                        var menuNombre = $("#ElaboracionId option:selected").html();
+                        detalleNuevo.NombreMenu = menuNombre;
+                        $scope.detallesVenta.push(detalleNuevo);
+                        $("#save-aprob-btn").removeClass('disabled');
+                        $scope.newDetalle = {};
+                        $("#Aprobacion_Fecha").val("");
+                    }
+
+                };
+
+                $scope.closeAlert = function () {
+                    $scope.tieneError = false;
+                };
+
+                //Used to save a record after edit
+                $scope.save = function (data) {
+                    $scope.loading = true;
+                    var carga = this.carga;
+                    carga.CargaId = data.CargaId;
+                    carga.Cantidad = data.Cantidad;
+                    var cargaNombre = $("#carga_" + carga.Id + " option:selected").html();
+                    carga.CargaNombre = cargaNombre;
+                    carga.editMode = false;
+                    $scope.loading = false;
+                };
+
+                $scope.cancelar = function () {
+                    $scope.detallesCompra = [];
+                    $("#save-carga-btn").addClass('disabled');
+                    $scope.newDetalle = {};
+                };
+
+                //Used to edit a record
+                $scope.borrarDetalle = function (index) {
+                    $scope.loading = true;
+                    var detalle = this.detalle;
+                    $scope.importeTotal -= (detalle.ImporteTotal);
+                    $scope.detallesVenta.splice(index, 1);
+                    detalle.editMode = false;
+                    $scope.loading = false;
+                };
+            }
+        ]);
+
+    </script>
+}

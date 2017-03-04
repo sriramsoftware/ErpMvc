@@ -1,0 +1,59 @@
+﻿@model ErpMvc.ViewModels.VendedorViewModel
+
+@{
+    ViewBag.Title = "Modificar trabajador";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("Editar", "Trabajadores", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    <div class="col-md-8 col-md-offset-2">
+        @Html.HiddenFor(m => m.Vendedor.Id)
+        @Html.HiddenFor(m => m.Vendedor.DireccionId)
+        @Html.HiddenFor(m => m.Vendedor.NoExpedienteLaboral)
+        @Html.HiddenFor(m => m.Vendedor.PuntoDeVentaId)
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Vendedor.Ci, "Cedula", new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Vendedor.Ci, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Vendedor.Ci)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Vendedor.Nombres, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Vendedor.Nombres, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Vendedor.Nombres)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Vendedor.PrimerApellido, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Vendedor.PrimerApellido, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Vendedor.PrimerApellido)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Vendedor.SegundoApellido, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Vendedor.SegundoApellido, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Vendedor.SegundoApellido)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                @Html.ActionLink("Atrás", "Index", null, new {@class = "btn btn-default"})
+                <input type="submit" class="btn btn-success" value="Crear"/>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

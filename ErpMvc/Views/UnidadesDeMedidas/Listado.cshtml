@@ -1,0 +1,72 @@
+﻿@model IEnumerable<ComercialCore.Models.UnidadDeMedida>
+
+@{
+    ViewBag.Title = "Unidades de medidas";
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+@if (TempData["exito"] != null)
+{
+    <div class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Éxito!</strong> @TempData["exito"]
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>ERROR!</strong> @TempData["error"]
+    </div>
+}
+<p>
+    <a class="btn btn-success" href="@Url.Action("Agregar","UnidadesDeMedidas")"> <i class="glyphicon glyphicon-plus"></i> Nueva</a>
+</p>
+
+<table class="table dynamic">
+    <thead>
+        <tr>
+            <th>
+                Nombre
+            </th>
+            <th>Siglas</th>
+            <th>Tipo de unidad</th>
+            <th>Factor de conversion</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Siglas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoDeUnidadDeMedida.Name)
+                </td>
+                <td>
+                    @item.FactorDeConversion
+                </td>
+                <td class="col-md-2 text-right">
+                    <a class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="@Url.Action("Editar", new {Id = item.Id})"><i class="glyphicon glyphicon-edit"></i></a>
+                    @*<a class="btn btn-danger btn-sm eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar" href="@Url.Action("Eliminar", new {Id = item.Id})"><i class="glyphicon glyphicon-trash"></i></a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+        });
+    </script>
+}
