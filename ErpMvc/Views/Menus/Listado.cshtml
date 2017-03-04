@@ -48,10 +48,9 @@
                         @item.Nombre
                     </h4><br />
                     <p>
-                        Precio de Venta: @item.PrecioDeVenta<br />
-                        Precio Total de Materias Primas: @item.Costo<br/>
-                        @{var precioConIndice = item.Costo * item.IndiceEsperado;}
-                        Precio con Índice: @precioConIndice
+                        Precio de Venta: @String.Format("{0:C}", item.PrecioDeVenta)<br />
+                        Precio Total de Materias Primas: @String.Format("{0:C}", item.Costo)<br/>
+                        Precio con Índice: @String.Format("{0:C}", item.Costo * item.IndiceEsperado)
                     </p>
                 </td>
                 <td class="col-md-4">

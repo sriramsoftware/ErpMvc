@@ -65,12 +65,11 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> Administración<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="@Url.Action("Listado", "ClasificacionesDeProductos")">Clasificacion de productos</a></li>
-                                <li><a href="@Url.Action("Listado", "UnidadesDeMedidas")">Unidades de medidas</a></li>
+                                @*<li><a href="@Url.Action("Listado", "UnidadesDeMedidas")">Unidades de medidas</a></li>*@
                                 <li class="divider"></li>
                                 <li><a href="@Url.Action("Index", "CentrosDeCostos")">Centros de costo</a></li>
                                 <li><a href="@Url.Action("Index", "PuntoDeVenta")">Puntos de Ventas</a></li>
-                                <li class="divider"></li>
-                                <li>@Html.ActionLink("Usuarios", "ListaUsuario", "Seguridad", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                                
                             </ul>
                         </li>
                     }
@@ -175,7 +174,7 @@
             });
 
             $.get("@Url.Action("DiaContableData","PeriodoContable")", function(data) {
-                    $("#dia-contable").html(Date(data.Model.Fecha));
+                    $("#dia-contable").html(data);
                 }
                 );
         });

@@ -9,6 +9,7 @@ using CompraVentaCore.Models;
 using ErpMvc.Models;
 using ErpMvc.ViewModels;
 using HumanResourcesCore.Models;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using SeguridadCore.Models;
@@ -96,14 +97,7 @@ namespace ErpMvc.Controllers
               new { Nombre = RolesMontin.UsuarioAvanzado},
               new { Nombre = RolesMontin.Vendedor}
             };
-            if (vendedor.Usuario != null)
-            {
-                ViewBag.Roles = new SelectList(roles, "Nombre", "Nombre", vendedor.Usuario.Roles.Select(r => r.Role.Name));
-            }
-            else
-            {
-                ViewBag.Roles = new SelectList(roles, "Nombre", "Nombre");
-            }
+            ViewBag.Roles = vendedor.Usuario != null ? new SelectList(roles, "Nombre", "Nombre", vendedor.Usuario.Roles.Select(r => r.Role.Name)) : new SelectList(roles, "Nombre", "Nombre");
             return View(viewModel);
         }
 
@@ -111,26 +105,32 @@ namespace ErpMvc.Controllers
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Editar(VendedorViewModel vendedorViewModel)
         {
-            //vendedorViewModel.Vendedor.PuntoDeVentaId = vendedorViewModel.PuntoDeVentaId;
+            if (vendedorViewModel.Vendedor.UsuarioId.IsNullOrWhiteSpace())
+            {
+                var user = new Usuario
+                {
+                    UserName = vendedorViewModel.UsuarioViewModel.NombreUsuario,
+                    Activo = true,
+                    Correo = vendedorViewModel.UsuarioViewModel.NombreUsuario + "@montin.com",
+                };
+                var result = UserManager.Create(user, "admin123*");
+                foreach (var rol in vendedorViewModel.Roles)
+                {
+                    UserManager.AddToRole(user.Id, rol);
+                }
+                vendedorViewModel.Vendedor.UsuarioId = user.Id;
+            }
+            else
+            {
+                UserManager.RemoveFromRole(vendedorViewModel.Vendedor.UsuarioId, RolesMontin.UsuarioAvanzado);
+                UserManager.RemoveFromRole(vendedorViewModel.Vendedor.UsuarioId, RolesMontin.Vendedor);
+                foreach (var rol in vendedorViewModel.Roles)
+                {
+                    UserManager.AddToRole(vendedorViewModel.Vendedor.UsuarioId, rol);
+                }
+            }
             if (_vendedorService.ModificarVendedor(vendedorViewModel.Vendedor))
             {
-                //var tarjeta = _db.Set<TarjetaDeAsistencia>().Find(vendedorViewModel.Vendedor.Id);
-                //if (_db.Set<TarjetaDeAsistencia>().Any(t => t.Usuario == vendedorViewModel.UsuarioViewModel.NombreUsuario && t.VendedorId != vendedorViewModel.Vendedor.Id))
-                //{
-                //    TempData["error"] = "El usuario ya existe";
-                //    return RedirectToAction("Index");
-                //}
-                //if (tarjeta == null)
-                //{
-                //    tarjeta = new TarjetaDeAsistencia() {VendedorId = vendedorViewModel.Vendedor.Id, Usuario = vendedorViewModel.Usuario, Contraseña = vendedorViewModel.Contraseña};
-                //    _db.Set<TarjetaDeAsistencia>().Add(tarjeta);
-                //}
-                //else
-                //{
-                //    tarjeta.Usuario = vendedorViewModel.Usuario;
-                //    tarjeta.Contraseña = vendedorViewModel.Contraseña;
-                //}
-                //_db.SaveChanges();
                 TempData["exito"] = "Trabajador modificado correctamente";
                 return RedirectToAction("Index");
             }
@@ -153,7 +153,7 @@ namespace ErpMvc.Controllers
 
         [Authorize(Roles = RolesMontin.Administrador)]
         [HttpPost]
-        [ActionName("Elilminar")]
+        [ActionName("Eliminar")]
         public ActionResult EliminarConfirmado(int id)
         {
             var trabajador = _vendedorService.Vendedores().Find(id);

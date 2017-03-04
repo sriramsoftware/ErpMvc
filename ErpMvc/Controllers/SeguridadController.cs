@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ErpMvc.Models;
+using ErpMvc.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
@@ -121,6 +122,39 @@ namespace ErpMvc.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [Authorize(Roles = RolesMontin.Administrador)]
+        public ActionResult ResetearContraseña(string usuarioId)
+        {
+            var data = new ResetearContraseñaViewModel() {Usuarioid = usuarioId};
+            return View(data);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = RolesMontin.Administrador)]
+        public async Task<ActionResult> ResetearContraseña(ResetearContraseñaViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = _db.Set<Usuario>().Find(model.Usuarioid);
+                user.PasswordHash = "AGo6bjEybjpmoFh0EwbHXayf+5ZdYtt4a5LYYa8tTkd412v9yCkZ0VhgbQcgrCVdEg==";
+                _db.Entry(user).State = EntityState.Modified;
+                _db.SaveChanges();
+                IdentityResult result = await UserManager.ChangePasswordAsync(user.Id, "123456", model.ContraseñaNueva);
+                if (result.Succeeded)
+                {
+                    TempData["exito"] = "Contraseña reseteada correctamente";
+                    return RedirectToAction("Index","Trabajadores");
+                }
+                else
+                {
+                    AddErrors(result);
+                }
+            }
             return View(model);
         }
 

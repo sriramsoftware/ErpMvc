@@ -41,10 +41,10 @@
                     decimal costo = precio * producto.Cantidad;
                     costoTotal += costo;
                 }
-                $ @precio
+                @String.Format("{0:C}", precio) 
             </td>
             <td class="text-right">
-                $ @costo
+                @String.Format("{0:C}", costo)
             </td>
         </tr>
                     }
@@ -95,7 +95,7 @@
         </td>
         <td>Índice Aplicado</td>
         <td class="data">
-            @String.Format("{0:##.###}", costoTotal != 0 ? Model.PrecioDeVenta / costoTotal : 0 )
+            @String.Format("{0:##.##}", costoTotal != 0 ? Model.PrecioDeVenta / costoTotal : 0 )
         </td>
     </tr>
     <tr><td colspan="6">CARTA TÉCNICA</td></tr>

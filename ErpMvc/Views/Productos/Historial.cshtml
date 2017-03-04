@@ -41,7 +41,7 @@
             <tr>
                 <td>@item.Tipo.Descripcion</td>
                 <td>@item.DiaContable.Fecha.ToShortDateString()</td>
-                <td>@String.Format("{0} {1}",item.Cantidad, item.Producto.UnidadDeMedida.Siglas)</td>
+                <td>@String.Format("{0} {1}",Math.Round(item.Cantidad,2), item.Producto.UnidadDeMedida.Siglas)</td>
                 <td>@item.Usuario.UserName</td>
                 
             </tr>

@@ -29,7 +29,23 @@ namespace ErpMvc.Controllers
 
         public ActionResult Listado()
         {
-            var productos = _db.Set<ProductoConcreto>().Where(p => p.Producto.Activo).Join(_db.Set<ExistenciaCentroDeCosto>(),e => e.Id, p => p.ProductoId,(p,e) => new ProductoConcretoViewModel {Producto = p, Existencia = e}).ToList();
+            var productos = new List<ProductoConcretoViewModel>();
+            foreach (var prod in _db.Set<ProductoConcreto>().Where(p => p.Producto.Activo).ToList())
+            {
+                if (_db.Set<ExistenciaCentroDeCosto>().Any(e => e.ProductoId == prod.Id))
+                {
+                    productos.Add(new ProductoConcretoViewModel() {Producto = prod, Existencia = _db.Set<ExistenciaCentroDeCosto>().SingleOrDefault(e => e.ProductoId == prod.Id) });
+                }
+                else
+                {
+                    productos.Add(new ProductoConcretoViewModel()
+                    {
+                        Producto = prod,
+                        Existencia = new ExistenciaCentroDeCosto() { Cantidad = 0, Producto = prod, ProductoId = prod.Id}
+                    });
+                }
+            }
+            //productos.AddRange(_db.Set<ProductoConcreto>().Where(p=> p.));
             return View(productos);
         }
 
@@ -38,6 +54,10 @@ namespace ErpMvc.Controllers
             var producto = _db.Set<ProductoConcreto>().Find(id);
             var movimientos = _db.Set<MovimientoDeProducto>().Include(m => m.Tipo).Include(m => m.Usuario).Include(m => m.Producto).Where(m => m.ProductoId == id).ToList();
             var existencia = _db.Set<ExistenciaCentroDeCosto>().SingleOrDefault(e => e.ProductoId == id);
+            if (existencia == null)
+            {
+                existencia = new ExistenciaCentroDeCosto() {Cantidad = 0};
+            }
             var viewModel = new ProductoConcretoViewModel()
             {
                 Producto = producto,
@@ -159,6 +179,15 @@ namespace ErpMvc.Controllers
             if (producto == null)
             {
                 return HttpNotFound();
+            }
+            if (_db.Set<ExistenciaCentroDeCosto>().Any(e => e.Producto.ProductoId == producto.Id))
+            {
+                var existencia = _db.Set<ExistenciaCentroDeCosto>().SingleOrDefault(e => e.Producto.ProductoId == producto.Id);
+                if (existencia.Cantidad > 0)
+                {
+                    TempData["error"] = "No se puede eliminar un producto con existencia";
+                    return RedirectToAction("Listado");
+                }
             }
             return View(producto);
         }

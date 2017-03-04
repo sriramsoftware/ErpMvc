@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Abrir dia contable";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("AbrirDia", "PeriodoContable", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    <div class="col-md-8 col-md-offset-2">
+        <div class="form-group">
+            <label class="col-md-4 control-label">Fecha</label>
+            <div class="col-md-8">
+               <input id="fecha" name="fecha" type="date" class="datepicker form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                <input type="submit" class="btn btn-success" value="Crear" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

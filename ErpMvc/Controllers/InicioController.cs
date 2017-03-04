@@ -17,6 +17,10 @@ namespace ErpMvc.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
+                if (_periodoContableService.NoHayDiaAbierto())
+                {
+                    return RedirectToAction("AbrirDia", "PeriodoContable");
+                }
                 ViewBag.DiaContable = _periodoContableService.GetDiaContableActual();
                 return View();
             }

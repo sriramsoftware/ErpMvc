@@ -1,4 +1,5 @@
-﻿@model IEnumerable<CompraVentaCore.Models.Vendedor>
+﻿@using ErpMvc.Models
+@model IEnumerable<CompraVentaCore.Models.Vendedor>
 
 @{
     ViewBag.Title = "Trabajadores";
@@ -45,8 +46,12 @@
                     }
                 </td>
                 <td class="col-md-2 text-right">
-                    <a class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="@Url.Action("Editar", new {Id = item.Id})"><i class="glyphicon glyphicon-edit"></i></a>
-                    <a data-id="@item.Id" class="btn btn-danger btn-sm eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar" href="javascript:;"><i class="glyphicon glyphicon-trash"></i></a>
+                    @if (User.IsInRole(RolesMontin.Administrador))
+                    {
+                        <a class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Restablecer contraseña" href="@Url.Action("ResetearContraseña","Seguridad", new {UsuarioId = item.UsuarioId})"><i class="glyphicon glyphicon-user"></i></a>
+                        <a class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="@Url.Action("Editar", new {Id = item.Id})"><i class="glyphicon glyphicon-edit"></i></a>
+                        <a data-id="@item.Id" class="btn btn-danger btn-sm eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar" href="javascript:;"><i class="glyphicon glyphicon-trash"></i></a>
+                    }
                 </td>
             </tr>
         }

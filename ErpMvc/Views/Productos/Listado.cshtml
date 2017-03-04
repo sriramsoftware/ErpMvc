@@ -39,11 +39,11 @@
                         <label class="badge badge-title">
                             @if (item.Producto.Cantidad <= 1)
                             {
-                                @String.Format("{0} {1}",item.Existencia.Cantidad, item.Producto.UnidadDeMedida.Nombre)
+                                @String.Format("{0} {1}", item.Existencia.Cantidad, item.Producto.UnidadDeMedida.Nombre)
                             }
                             else
                             {
-                                @String.Format("{0} {1}, en {2} envaces", item.Existencia.Cantidad,item.Producto.UnidadDeMedida.Nombre, item.Existencia.Cantidad/item.Producto.Cantidad)
+                                @String.Format("{0} {1}, en {2} envaces", item.Existencia.Cantidad,item.Producto.UnidadDeMedida.Nombre,Math.Round(item.Existencia.Cantidad/item.Producto.Cantidad,2))
                             }
                         </label>
                     </div>

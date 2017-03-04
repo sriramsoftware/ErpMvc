@@ -20,12 +20,12 @@ namespace ErpMvc.Reportes
 
             fecha_reporte.Text = "Fecha: " + DateTime.Now.ToShortDateString();
 
-            DataSource = db.ExistenciasEnCentroDeCostos.GroupBy(e => e.Producto).Select(e => new
+            DataSource = db.ExistenciasEnCentroDeCostos.Where(e => e.Producto.Producto.Activo).GroupBy(e => e.Producto).Select(e => new
             {
                 Producto = e.Key.Producto.Nombre,
                 Um = e.Key.UnidadDeMedida.Siglas,
                 Cantidad = e.Sum(c => c.Cantidad),
-                Valor = e.Sum(v => v.Producto.PrecioUnitario * v.Cantidad)
+                Valor = Math.Round(e.Sum(v => v.Producto.PrecioUnitario * v.Cantidad),2)
             }).ToList();
 
             this.productoCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
@@ -38,7 +38,7 @@ namespace ErpMvc.Reportes
             new DevExpress.XtraReports.UI.XRBinding("Text", null, "Cantidad")});
 
             this.valorCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Valor")});
+            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Valor","{0:C}")});
         }
 
     }

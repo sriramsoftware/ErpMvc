@@ -57,6 +57,7 @@ namespace ErpMvc.Controllers
             ModelState.Remove("Id");
             ModelState.Remove("PrecioDeVenta");
             ModelState.Remove("Costo");
+            elaboracion.Activo = true;
             if (ModelState.IsValid)
             {
                 _elaboracionService.AgregarElaboracion(elaboracion);
@@ -94,6 +95,7 @@ namespace ErpMvc.Controllers
         {
             if (ModelState.IsValid)
             {
+                elaboracion.Activo = true;
                 _elaboracionService.ModificarElaboracion(elaboracion);
             }
             return RedirectToAction("Listado");

@@ -27,7 +27,7 @@ namespace ErpMvc.Controllers
         public ActionResult ExportReportViewer(string reporteId)
         {
             var reporte = reports[reporteId];
-            //reports.Remove(reporteId);
+            reports.Remove(reporteId);
             return DevExpress.Web.Mvc.ReportViewerExtension.ExportTo(reporte);
         }
 
