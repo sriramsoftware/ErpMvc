@@ -48,17 +48,17 @@
       <HintPath>..\packages\ComercialCore.1.4.0\lib\net45\ComercialCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaBL, Version=1.17.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaBL.1.17.15\lib\net45\CompraVentaBL.dll</HintPath>
+    <Reference Include="CompraVentaBL, Version=1.17.23.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaBL.1.17.23\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CompraVentaCore, Version=1.7.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CompraVentaCore.1.7.1\lib\net45\CompraVentaCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ContabilidadBL, Version=1.3.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ContabilidadBL.1.3.5\lib\net45\ContabilidadBL.dll</HintPath>
+    <Reference Include="ContabilidadBL, Version=1.3.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ContabilidadBL.1.3.6\lib\net45\ContabilidadBL.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ContabilidadCore, Version=1.3.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ContabilidadCore.1.3.0.1\lib\net45\ContabilidadCore.dll</HintPath>
@@ -206,9 +206,9 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SeguridadCore, Version=1.2.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SeguridadCore.1.2.0.2\lib\net45\SeguridadCore.dll</HintPath>
+    <Reference Include="SeguridadCore, Version=1.2.0.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SeguridadCore.1.2.0.3\lib\net45\SeguridadCore.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

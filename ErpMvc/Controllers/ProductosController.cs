@@ -9,6 +9,7 @@ using System.Data.Entity;
 using System.Net;
 using AlmacenCore.Models;
 using CompraVentaCore.Models;
+using ContabilidadCore.Models;
 using ErpMvc.Models;
 using ErpMvc.ViewModels;
 using Microsoft.AspNet.Identity;
@@ -19,11 +20,13 @@ namespace ErpMvc.Controllers
     public class ProductosController : Controller
     {
         private ProductoService _service;
+        private CentroDeCostoService _centroCostoService;
         private DbContext _db;
 
         public ProductosController(DbContext context)
         {
             _service = new ProductoService(context);
+            _centroCostoService = new CentroDeCostoService(context);
             _db = context;
         }
 
@@ -188,6 +191,16 @@ namespace ErpMvc.Controllers
                     TempData["error"] = "No se puede eliminar un producto con existencia";
                     return RedirectToAction("Listado");
                 }
+                if (_db.Set<Elaboracion>().Any(e => e.Activo && (e.Productos.Any(p => p.ProductoId == id) || e.Agregados.Any(p => p.ProductoId == id))))
+                {
+                    TempData["error"] = "No se puede eliminar este producto porque es usado en un menu";
+                    return RedirectToAction("Listado");
+                }
+            }
+            if (_db.Set<Elaboracion>().Any(e => e.Activo && (e.Productos.Any(p => p.ProductoId == id) || e.Agregados.Any(p => p.ProductoId == id))))
+            {
+                TempData["error"] = "No se puede eliminar este producto porque es usado en un menu";
+                return RedirectToAction("Listado");
             }
             return View(producto);
         }
@@ -219,14 +232,34 @@ namespace ErpMvc.Controllers
             compra.UsuarioId = usuario;
             if (ModelState.IsValid)
             {
-                //if (_comprasService.ComprarYPasarACentroDeCosto(compra, usuario))
-                //{
+                if (!compra.Productos.Any())
+                {
+                    TempData["error"] = "No se puede efectuar una merma vacia";
+                    return View();
+                }
+                var centrocostoId = _db.Set<CentroDeCosto>().FirstOrDefault().Id;
+                foreach (var prod in compra.Productos)
+                {
+                    _centroCostoService.DarSalidaPorMerma(prod.ProductoId, centrocostoId,prod.Cantidad,prod.UnidadDeMedidaId,User.Identity.GetUserId() );
+                }
 
-                    return RedirectToAction("Index", "Inicio");
-                //}
+                if (_centroCostoService.GuardarCambios())
+                {
+                    TempData["exito"] = "Salida registrada correctamente";
+                    return RedirectToAction("Listado", "Productos");
+                }
+                TempData["error"] = "No se pudo registrar la salida correctamente";
+                return RedirectToAction("Listado", "Productos");
             }
             return View(compra);
         }
 
+        public JsonResult SePuedeDarSalida(int productoId, decimal cantidad, int unidadId)
+        {
+            var centroCostoId = _centroCostoService.CentrosDeCosto().FirstOrDefault().Id;
+            var productoConcretoId = _db.Set<ProductoConcreto>().SingleOrDefault(p => p.ProductoId == productoId).Id;
+            var result = _centroCostoService.PuedeDarSalida(productoConcretoId,centroCostoId, cantidad,unidadId);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }

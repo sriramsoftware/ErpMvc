@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Web.Mvc;
 using ContabilidadBL;
 
@@ -19,7 +20,7 @@ namespace ErpMvc.Controllers
             {
                 if (_periodoContableService.NoHayDiaAbierto())
                 {
-                    return RedirectToAction("AbrirDia", "PeriodoContable");
+                    _periodoContableService.EmpezarDiaContable(DateTime.Now);
                 }
                 ViewBag.DiaContable = _periodoContableService.GetDiaContableActual();
                 return View();

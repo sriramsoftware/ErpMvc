@@ -36,7 +36,6 @@ namespace ErpMvc.Controllers
             return Json(diaContable.Fecha.ToShortDateString(),JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult CerrarDia()
         {
             var diaContable = _service.GetDiaContableActual();

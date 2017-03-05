@@ -11,14 +11,13 @@
                 <th>Producto</th>
                 <th>Cantidad</th>
                 <th>Unidad</th>
-                <th>Importe Total</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             <tr id="form-detalle-compra">
                 <td>
-                    <select id="ProductoId" name="ProductoId" class="form-control" data-ng-model="newDetalle.ProductoId" data-ng-options="producto.Nombre for producto in productos track by producto.Id"></select>
+                    <select id="ProductoId" name="ProductoId" class="form-control" chosen data-ng-model="newDetalle.ProductoId" data-ng-options="producto.Nombre for producto in productos track by producto.Id"></select>
                     @Html.ValidationMessageFor(model => model.ProductoId)
 
                 </td>
@@ -27,12 +26,8 @@
                     @Html.ValidationMessageFor(model => model.Cantidad)
                 </td>
                 <td>
-                    <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" data-ng-model="newDetalle.UnidadId" data-ng-options="unidad.Nombre for unidad in unidades track by unidad.Id"></select>
+                    <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" chosen data-ng-model="newDetalle.UnidadId" data-ng-options="unidad.Nombre for unidad in unidades track by unidad.Id"></select>
                     @Html.ValidationMessageFor(model => model.UnidadDeMedidaId)
-                </td>
-                <td>
-                    @Html.TextBoxFor(model => model.ImporteTotal, new { @class = "form-control", @style = "max-width: 100px !important", @data_ng_model = "newDetalle.ImporteTotal" })
-                    @Html.ValidationMessageFor(model => model.ImporteTotal)
                 </td>
                 <td>
                     <a id="add_aprob" data-ng-click="agregarDetalle()" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
@@ -50,11 +45,6 @@
                 <td>
                     <p data-ng-hide="carga.editMode">{{ detalle.NombreUnidad }}</p>
                     <input name="Productos[{{ $index }}].UnidadDeMedidaId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.UnidadId" class="form-control" />
-                </td>
-                <td>
-                    <p data-ng-hide="carga.editMode">{{ detalle.ImporteTotal }}</p>
-                    <input name="Productos[{{ $index }}].ImporteTotal" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ImporteTotal" class="form-control" />
-                    <input name="Productos[{{ $index }}].MonedaId" type="hidden" value="1"/>
                 </td>
                 <td>
                     <p data-ng-hide="carga.editMode">

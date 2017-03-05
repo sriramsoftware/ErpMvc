@@ -2,9 +2,25 @@
 @model CompraVentaCore.Models.Venta
 
 @{
-    ViewBag.Title = "Ventas";
+    ViewBag.Title = "Nueva venta";
 }
 
+<h1 class="message-body">@ViewBag.Title.</h1>
+
+@if (TempData["exito"] != null)
+{
+    <div class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Éxito!</strong> @TempData["exito"]
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>ERROR!</strong> @TempData["error"]
+    </div>
+}
 @using (Html.BeginForm("NuevaVenta", "Ventas"))
 {
     <div class="row padding0px">
@@ -101,10 +117,6 @@
                 $('#form-detalle-compra').remove();
             });
 
-
-            $(document).on('click', "#ElaboracionId option", function () {
-                console.log('testing change');
-            });
         });
 
 
@@ -157,19 +169,27 @@
                         $scope.tieneError = true;
                         valido = false;
                     }
-                    if (valido) {
-                        detalleNuevo.ElaboracionId = $scope.newDetalle.ElaboracionId.Id;
-                        detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
-                        $scope.importeTotal += ($scope.newDetalle.ElaboracionId.Precio * $scope.newDetalle.Cantidad);
-                        detalleNuevo.ImporteTotal = ($scope.newDetalle.ElaboracionId.Precio * $scope.newDetalle.Cantidad);
-                        var menuNombre = $("#ElaboracionId option:selected").html();
-                        detalleNuevo.NombreMenu = menuNombre;
-                        $scope.detallesVenta.push(detalleNuevo);
-                        $("#save-aprob-btn").removeClass('disabled');
-                        $scope.newDetalle = {};
-                        $("#Aprobacion_Fecha").val("");
-                    }
+                    var url = "@Url.Action("SePuedeVender","Ventas")" + "?menuId=" + $scope.newDetalle.ElaboracionId.Id + "&cantidad=" + $scope.newDetalle.Cantidad;
+                    $http.get(url).then(function (result) {
+                        valido = result.data;
+                        if (valido) {
+                            detalleNuevo.ElaboracionId = $scope.newDetalle.ElaboracionId.Id;
+                            detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
+                            $scope.importeTotal += ($scope.newDetalle.ElaboracionId.Precio * $scope.newDetalle.Cantidad);
+                            detalleNuevo.ImporteTotal = ($scope.newDetalle.ElaboracionId.Precio * $scope.newDetalle.Cantidad);
+                            var menuNombre = $("#ElaboracionId option:selected").html();
+                            detalleNuevo.NombreMenu = menuNombre;
+                            $scope.detallesVenta.push(detalleNuevo);
+                            $("#save-aprob-btn").removeClass('disabled');
+                            $scope.newDetalle = {};
+                            $("#Aprobacion_Fecha").val("");
+                            $scope.fetchMenus();
+                        } else {
+                            $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";
+                            $scope.tieneError = true;
+                        }
 
+                    });
                 };
 
                 $scope.closeAlert = function () {

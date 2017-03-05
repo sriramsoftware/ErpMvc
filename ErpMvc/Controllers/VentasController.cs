@@ -10,6 +10,7 @@ using ContabilidadBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
 using HumanResourcesCore.Models;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 
 namespace ErpMvc.Controllers
@@ -79,6 +80,13 @@ namespace ErpMvc.Controllers
                 }
                 venta.VendedorId = vendedor.Id;
             }
+            if (!venta.Elaboraciones.Any())
+            {
+                TempData["error"] = "No se puede efectuar una venta vacia";
+                ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre");
+                ViewBag.VendedorId = new SelectList(_ventasService.Vendedores(), "Id", "NombreCompleto");
+                return View();
+            }
             if (_ventasService.Vender(venta, User.Identity.GetUserId()))
             {
                 TempData["exito"] = "Venta agregada correctamente";
@@ -146,6 +154,11 @@ namespace ErpMvc.Controllers
             return RedirectToAction("Index");
         }
 
+        public JsonResult SePuedeVender(int menuId, int cantidad)
+        {
+            var result = _ventasService.SePuedeVender(menuId, cantidad);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

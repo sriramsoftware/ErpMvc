@@ -191,14 +191,19 @@
                     }
                     if (valido) {
                         detalleNuevo.ProductoId = $scope.newDetalle.ProductoId.Id;
+                        $scope.fetchProductos();
                         detalleNuevo.UnidadId = $scope.newDetalle.UnidadId.Id;
                         detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
                         detalleNuevo.MenuId = @Model.Id;
+                        $scope.newDetalle.Cantidad = 0;
+                        
                         $http.post(
                             '@Url.Action("AgregarProductoAMenu","Menus")',
                             detalleNuevo).then(function(result) {
-                            $scope.fetchProductosEnMenu();
-                        });
+                                $scope.fetchProductosEnMenu();
+                            
+                            });
+                        
                     }
                 };
 

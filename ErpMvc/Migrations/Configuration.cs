@@ -1,6 +1,7 @@
 using System.Data.Entity.Migrations;
 using AlmacenCore.Models;
 using ComercialCore.Models;
+using CompraVentaCore.Models;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -37,6 +38,7 @@ namespace ErpMvc.Migrations
             context.TiposDeUnidadesDeMedidas.AddOrUpdate(t => t.Id,
                 new TipoDeUnidadDeMedida() {Id = 1,Name = "Peso"},
                 new TipoDeUnidadDeMedida() {Id = 2,Name = "Capacidad"},
+                new TipoDeUnidadDeMedida() {Id = 4,Name = "Cantidad"},
                 new TipoDeUnidadDeMedida() {Id = 3,Name = "Distancia"});
 
             context.UnidadesDeMedidas.AddOrUpdate(u => u.Id,
@@ -44,7 +46,8 @@ namespace ErpMvc.Migrations
                 new UnidadDeMedida() { Id = 2, Nombre = "Litros", Siglas = "lt", TipoDeUnidadDeMedidaId = 2, FactorDeConversion = 0.001m},
                 new UnidadDeMedida() { Id = 3, Nombre = "gramos", Siglas = "g", TipoDeUnidadDeMedidaId = 1, FactorDeConversion = 1m},
                 new UnidadDeMedida() { Id = 4, Nombre = "Kilogramos", Siglas = "Kg", TipoDeUnidadDeMedidaId = 1, FactorDeConversion = 0.001m},
-                new UnidadDeMedida() { Id = 4, Nombre = "Onza", Siglas = "oz", TipoDeUnidadDeMedidaId = 1, FactorDeConversion = 0.0353m},
+                new UnidadDeMedida() { Id = 6, Nombre = "Onza", Siglas = "oz", TipoDeUnidadDeMedidaId = 1, FactorDeConversion = 0.0353m},
+                new UnidadDeMedida() { Id = 6, Nombre = "Unidad", Siglas = "u", TipoDeUnidadDeMedidaId = 4 , FactorDeConversion = 1m },
                 new UnidadDeMedida() { Id = 5, Nombre = "Libras", Siglas = "lb", TipoDeUnidadDeMedidaId = 1, FactorDeConversion = 0.0022m}
                 );
 
@@ -65,6 +68,10 @@ namespace ErpMvc.Migrations
                 );
             context.CentrosDeCostos.AddOrUpdate(c => c.Id,
                 new CentroDeCosto() {Id = 1,Codigo = "01", Nombre = "Montin Cubano"}
+                );
+
+            context.PuntosDeVentas.AddOrUpdate(c => c.Id,
+                new PuntoDeVenta() { Id = 1, Nombre = "Montin Cubano", CentroDeCostoId = 1}
                 );
         }
     }

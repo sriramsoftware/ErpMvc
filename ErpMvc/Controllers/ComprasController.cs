@@ -38,6 +38,11 @@ namespace ErpMvc.Controllers
             compra.UsuarioId = usuario;
             if (ModelState.IsValid)
             {
+                if (!compra.Productos.Any())
+                {
+                    TempData["error"] = "No se puede efectuar una compra vacia";
+                    return View();
+                }
                 if (_comprasService.ComprarYPasarACentroDeCosto(compra,usuario))
                 {
 

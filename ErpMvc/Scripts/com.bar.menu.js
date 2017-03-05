@@ -125,8 +125,8 @@ $(document).ready(function(){
 	});
 	
 	function editMenu(){
-		$(".edit-menu").unbind();
-		$(".edit-menu").click(function(){
+	    $(".edit-menu").unbind();
+	    $(document).on("click", ".edit-menu", function () {
 			var id = $(this).attr("value");
 			$.ajax({
 				url: "/Menus/Menu/"+id, 
