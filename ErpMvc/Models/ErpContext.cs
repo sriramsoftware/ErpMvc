@@ -1,5 +1,7 @@
 ﻿using System.Data.Entity;
 using AlmacenCore.Models;
+using CajaCore.DbConfigurations;
+using CajaCore.Models;
 using ComercialCore.Models;
 using CompraVentaCore.Models;
 using ContabilidadCore.DbConfigurations;
@@ -19,12 +21,7 @@ namespace ErpMvc.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new AsientoConfig());
-            modelBuilder.Configurations.Add(new CuentaConfig());
-            modelBuilder.Configurations.Add(new DisponibilidadConfig());
-            modelBuilder.Configurations.Add(new MovimientoConfig());
-            modelBuilder.Configurations.Add(new NivelConfig());
-            modelBuilder.Configurations.Add(new ConfiguracionCuentaModuloConfig());
+            //modelBuilder.Configurations.Add(new DenominacionDeMonedasConfig());
             modelBuilder.Entity<UnidadDeMedida>().Property(u => u.FactorDeConversion).HasPrecision(15, 5);
             modelBuilder.Entity<MovimientoDeProducto>().Property(u => u.Cantidad).HasPrecision(15, 5);
             modelBuilder.Entity<ValeSalidaDeAlmacen>().HasMany(v => v.Productos).WithRequired(d => d.Vale).WillCascadeOnDelete(false);
@@ -32,6 +29,14 @@ namespace ErpMvc.Models
             modelBuilder.Entity<Venta>().HasRequired(v => v.Vendedor).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<TarjetaDeAsistencia>().HasKey(v => v.VendedorId).HasRequired(v => v.Vendedor).WithOptional().WillCascadeOnDelete(false);
             modelBuilder.Entity<Trabajador>().HasOptional(t => t.Caracteristicas).WithRequired();
+
+            //modulo contabilidad
+            modelBuilder.Configurations.Add(new AsientoConfig());
+            modelBuilder.Configurations.Add(new CuentaConfig());
+            modelBuilder.Configurations.Add(new DisponibilidadConfig());
+            modelBuilder.Configurations.Add(new MovimientoConfig());
+            modelBuilder.Configurations.Add(new NivelConfig());
+            modelBuilder.Configurations.Add(new ConfiguracionCuentaModuloConfig());
 
 
             base.OnModelCreating(modelBuilder);
@@ -61,6 +66,15 @@ namespace ErpMvc.Models
         public DbSet<CentroDeCosto> CentrosDeCostos { get; set; }
         public DbSet<Asistencia> Asistencias { get; set; }
         public DbSet<TarjetaDeAsistencia> TarjetasDeAsistencia { get; set; }
-        
+        public DbSet<DenominacionDeMoneda> DenominacionDeMoneda { get; set; }
+        public DbSet<Caja> Cajas { get; set; }
+
+        //contabilidad
+        public DbSet<Asiento> Asientos { get; set; }
+        public DbSet<Cuenta> Cuentas { get; set; }
+        public DbSet<ConfiguracionCuentaModulo> CofiguracionesCuentasModulos { get; set; }
+        public DbSet<Disponibilidad> Disponibilidades { get; set; }
+        public DbSet<Movimiento> Movimientos { get; set; }
+        public DbSet<Nivel> Niveles { get; set; }
     }
 }

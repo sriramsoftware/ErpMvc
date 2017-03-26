@@ -44,24 +44,28 @@
       <HintPath>..\packages\AlmacenCore.1.3.2\lib\net45\AlmacenCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CajaCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CajaCore.1.0.0\lib\net45\CajaCore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ComercialCore, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ComercialCore.1.4.0\lib\net45\ComercialCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaBL, Version=1.17.23.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaBL.1.17.23\lib\net45\CompraVentaBL.dll</HintPath>
+    <Reference Include="CompraVentaBL, Version=1.18.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaBL.1.18.3\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaCore, Version=1.7.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaCore.1.7.1\lib\net45\CompraVentaCore.dll</HintPath>
+    <Reference Include="CompraVentaCore, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaCore.1.8.0\lib\net45\CompraVentaCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ContabilidadBL, Version=1.3.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ContabilidadBL.1.3.6\lib\net45\ContabilidadBL.dll</HintPath>
+    <Reference Include="ContabilidadBL, Version=1.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ContabilidadBL.1.4.3\lib\net45\ContabilidadBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ContabilidadCore, Version=1.3.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ContabilidadCore.1.3.0.1\lib\net45\ContabilidadCore.dll</HintPath>
+    <Reference Include="ContabilidadCore, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ContabilidadCore.1.4.1\lib\net45\ContabilidadCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DevExpress.Charts.v14.1.Core, Version=14.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
@@ -206,8 +210,8 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SeguridadCore, Version=1.2.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SeguridadCore.1.2.0.3\lib\net45\SeguridadCore.dll</HintPath>
+    <Reference Include="SeguridadCore, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SeguridadCore.1.4.0\lib\net45\SeguridadCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -371,10 +375,11 @@
       <DependentUpon>Inventario.cs</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\DenominacionViewModel.cs" />
+    <Compile Include="ViewModels\DesgloceEfectivoViewModel.cs" />
     <Compile Include="ViewModels\ParametrosViewModel.cs" />
     <Compile Include="ViewModels\ProductoConcretoViewModel.cs" />
     <Compile Include="ViewModels\ProductoViewModel.cs" />
-    <Compile Include="ViewModels\ResetearContraseñaViewModel.cs" />
     <Compile Include="ViewModels\ResumenDeOperaciones.cs" />
     <Compile Include="ViewModels\VendedorViewModel.cs" />
   </ItemGroup>
@@ -1409,6 +1414,9 @@
     <Content Include="Views\OtrosGastos\Eliminar.cshtml" />
     <Content Include="Views\Menus\Eliminar.cshtml" />
     <Content Include="Views\PeriodoContable\AbrirDia.cshtml" />
+    <Content Include="Views\PeriodoContable\CerrarPeriodo.cshtml" />
+    <Content Include="Views\PeriodoContable\_DesgloseEfectivoPartial.cshtml" />
+    <Content Include="Views\PeriodoContable\_ResumenDeEfectivoPartial.cshtml" />
     <None Include="Views\Productos\Agregar.cshtml" />
     <Content Include="Views\Productos\Listado.cshtml" />
     <Content Include="Views\UnidadesDeMedidas\Listado.cshtml" />
