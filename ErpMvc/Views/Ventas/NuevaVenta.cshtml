@@ -43,25 +43,25 @@
                     Punto de venta
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-6">
-                    @Html.DropDownList("PuntoDeVentaId", null, new {@class = "form-control select"})
+                    @Html.DropDownList("PuntoDeVentaId", null, new { @class = "form-control select" })
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div id="tabla-detalle-de-venta"  data-ng-controller="ventasController">
+        <div id="tabla-detalle-de-venta" data-ng-controller="ventasController">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 @{
                     Html.RenderAction("DetalleDeVentaPartial");
                 }
             </div>
             <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="col-md-6 col-sm-6 col-xs-6 text-right">
+                <div class="col-md-8 text-right">
                     total
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-6">
-                    @Html.TextBoxFor(m => m.Importe,new {@class="form-control", @data_ng_model="importeTotal"})
+                <div class="col-md-4">
+                    @Html.TextBoxFor(m => m.Importe, new { @class = "form-control", @data_ng_model = "importeTotal" })
                 </div>
             </div>
         </div>
@@ -113,7 +113,7 @@
         $(document).ready(function () {
             $('btn').tooltip();
 
-            $('#submit-btn').click(function() {
+            $('#submit-btn').click(function () {
                 $('#form-detalle-compra').remove();
             });
 

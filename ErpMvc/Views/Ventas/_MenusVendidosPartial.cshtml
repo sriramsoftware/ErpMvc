@@ -20,7 +20,7 @@
                 @Html.DisplayFor(m => item.Cantidad)
             </td>
             <td>
-                @Html.DisplayFor(m => item.ImporteTotal)
+               @String.Format("{0:C}", item.ImporteTotal)
             </td>
         </tr>
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CompraVentaBL;
@@ -40,12 +41,12 @@ namespace ErpMvc.Controllers
                 ? _periodoContableService.GetDiaContableActual()
                 : _periodoContableService.BuscarDiaContable(id);
             ViewBag.DiaContable = diaContable;
-            return View(_ventasService.Ventas().Where(v => v.DiaContableId == diaContable.Id).ToList());
+            return View();
         }
 
         public PartialViewResult ListaDeVentasPartial(int id)
         {
-            return PartialView("_ListaDeVentasPartial",_ventasService.Ventas().Where(v => v.DiaContableId == id).ToList());
+            return PartialView("_ListaDeVentasPartial", _ventasService.Ventas().Where(v => v.DiaContableId == id).ToList());
         }
 
         public ActionResult NuevaVenta()
@@ -63,7 +64,7 @@ namespace ErpMvc.Controllers
             {
                 return RedirectToAction("ListaDeVentasPartial", new { Id = -1 });
             }
-            return RedirectToAction("ListaDeVentasPartial", new {Id=diaContable.Id});
+            return RedirectToAction("ListaDeVentasPartial", new { Id = diaContable.Id });
         }
 
         [HttpPost]
@@ -128,7 +129,6 @@ namespace ErpMvc.Controllers
             return View(centroDeCosto);
         }
 
-
         [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult Eliminar(int id)
         {
@@ -158,6 +158,40 @@ namespace ErpMvc.Controllers
         {
             var result = _ventasService.SePuedeVender(menuId, cantidad);
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ImporteVenta(int id)
+        {
+            var venta = _ventasService.Ventas().Find(id);
+            return Json(venta.Importe, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult PagarVale(int? id)
+        {
+            //var lqv = Request.Form["id"];
+            //int? id = int.Parse(lqv);
+            
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var venta = _ventasService.Ventas().Find(id);
+            if (venta == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+            var result =_ventasService.PagarVentaEnEfectivo(venta.Id, User.Identity.GetUserId());
+            if (result)
+            {
+                TempData["exito"] = "Se pago el vale correctamente";
+            }
+            else
+            {
+                TempData["errro"] = "Error al pagar";
+            }
+            return RedirectToAction("Index");
         }
 
     }

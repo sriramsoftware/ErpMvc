@@ -41,53 +41,9 @@
 </div>
 
 
-
 <div id="ventas-div">
-    <h1 class="message-body ">Subtotal de Ventas del Día: @String.Format("{0:C}", Model.Sum(v => v.Importe))</h1>
-    @if (Model.Any())
-    {
-        <div class="row text-center">
-            @{
-                var puntosDeVenta = Model.GroupBy(v => v.PuntoDeVenta).Select(v => new { PuntoDeVenta = v.Key.Nombre, Importe = v.Sum(ve => ve.Importe) });
-            }
-            @foreach (var pto in puntosDeVenta)
-            {
-                <div class="col-md-3 col-sm-3 col-xs-12">
-                    <h4 class="title_insight ">@pto.PuntoDeVenta:<br /> @String.Format("{0:C}", pto.Importe)</h4>
-                </div>
-            }
-            <div class="col-md-3 col-sm-3 col-xs-12">
-                <h4 class="title_insight ">Total:<br /> @String.Format("{0:C}", Model.Sum(v => v.Importe))</h4>
-            </div>
-        </div>
-                }
-    <hr />
-    @if (ViewBag.TotalDeVentasEnEspera > 0)
-    {
-        <div class="alert alert-warning text-center">
-            Por favor, recuerde que tiene @ViewBag.TotalDeVentasEnEspera ventas
-            en espera de pago del cliente.
-        </div>
-    }
-
-    @foreach (var venta in Model)
-    {
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-                <label class="badge badge-title">
-                    @String.Format("{0:C}", venta.Importe)
-                </label>
-            </div>
-            <div class="col-md-8 col-sm-8 col-xs-12">
-                <h4 class="title_insight">@venta.DiaContable.Fecha.ToShortDateString() @venta.Hora.ToString(@"hh\:mm")</h4>
-
-            </div>
-            <div class="col-md-4 col-sm-4 col-xs-12">
-                @Ajax.ActionLink("Ver Menus Consumidos", "MenusEnVentaPartial", "Ventas", new { Id = venta.Id }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, HttpMethod = "Get", UpdateTargetId = "modal-detalle", OnComplete = "mostrarModal" }, new { @class = "btn btn-primary btn-sm col-md-12" })
-
-            </div>
-        </div>
-        <hr />
+    @{
+        Html.RenderAction("ListaDeVentasPartial", new {Id = ViewBag.DiaContable.Id});
     }
 </div>
 
@@ -103,7 +59,7 @@
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
             <p>Observe las ventas registradas en la fecha contable actual y sus menús asociados</p>
-            <p>Hoy se han registrado un total de @Model.Count() ventas.</p>
+            <p>Hoy se han registrado un total de 0 ventas.</p>
         </div>
     </div>
     <div class="row">
@@ -134,11 +90,88 @@
 </div>
 <!-- TERMINA MODAL AGREGAR MENU -->
 
+<div id="modalPagarVale" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true" data-ng-controller="pagarValeController">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("PagarVale", "Ventas", FormMethod.Post, new { @id = "pagarvale" }))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Pagar Vale</h4>
+                </div>
+                <div id="modal-body" class="modal-body">
+                    <input type="hidden" id="VentaId" name="id" value="{{idVenta}}" />
+                    <div id="alert-vuelto" class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 text-center alert alert-info">
+                            El vuelto a devolverle al cliente es de <b id="vueltoCuc">{{ aDevolver | currency}} CUC</b>
+                            o de <b id="vueltoCup">{{ aDevolver * 24 | currency}} CUP</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            Entrada en CUC
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            <input class="form-control efectivo" type="text" id="entradaCuc" name="entradaCuc" data-ng-model="efectivoCuc" data-ng-change="efectivoTotalUpdate()" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            Entrada en CUP
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            <input class="form-control efectivo" type="text" id="entradaCup" name="entradaCup" data-ng-model="efectivoCup" data-ng-change="efectivoTotalUpdate()" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            Entrada de Efectivo Total
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            <label class="form-control" disabled="disabled">{{efectivoTotal | currency}}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            Importe Total
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            <label class="form-control" disabled="disabled">{{aCobrar | currency}}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="pagarValeButton" type="submit" class="btn btn-primary" data-ng-disabled="cobrarDisabled" data-ng-click="pagarVale()">Pagar Vale</button>
+                    <a class="btn btn-default" data-dismiss="modal">Cerrar</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="modalEliminarVenta" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Eliminar Venta</h4>
+            </div>
+            <div id="modal-body" class="modal-body">
+                ¿Desea realmente eliminar los datos de esta venta?
+            </div>
+            <div class="modal-footer">
+                <a id="button-eliminar-venta" class="btn btn-primary">Eliminar Venta</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/datatables.min.js"></script>
     <script src="~/Scripts/mbs-qdtf.js"></script>
-    <script src="~/Scripts/com.bar.menu.js"></script>
     <script>
         $(document).ready(function () {
             $('btn').tooltip();
@@ -146,7 +179,7 @@
                 console.log("cambio de fecha");
                 var fecha = $("#date").val();
                 $.ajax({
-                    url: "@Url.Action("BuscarVentas","Ventas")",
+                    url: "@Url.Action("BuscarVentas", "Ventas")",
                     type: "POST",
                     data: { fecha: fecha },
                     dataType: "html",
@@ -157,11 +190,56 @@
                     error: function (data) { }
                 });
             });
-            
+
+            $(document).on('click', "#pagar-vale-btn", function () {
+                angular.element('#modalPagarVale').scope().fetchImporte($(this).attr("data-id"));
+                angular.element('#modalPagarVale').scope().$apply();
+                $("#modalPagarVale").modal('show');
+            });
+
+            $(document).on('click', "#eliminar-venta-btn", function () {
+                $("#modalEliminarVenta").modal('show');
+            });
         });
 
         function mostrarModal() {
             $("#modal").modal('show');
         }
+
+        erp.controller('pagarValeController', [
+            '$scope', '$http', function ($scope, $http) {
+                $scope.efectivoCup = 0.0;
+                $scope.efectivoCuc = 0.0;
+                $scope.efectivoTotal = 0.0;
+                $scope.aCobrar = 0.0;
+                $scope.aDevolver = 0.0;
+                $scope.cobrarDisabled = true;
+                $scope.idVenta = 0;
+
+                $scope.fetchImporte = function (id) {
+                    $scope.idVenta = id;
+                    $http.get('@Url.Action("ImporteVenta","Ventas")' + "/" + id).then(function (result) {
+                        $scope.aCobrar = result.data;
+                    });
+                };
+
+                $scope.pagarVale = function () {
+                    $("#pagarvale").submit();
+                };
+
+                $scope.efectivoTotalUpdate = function () {
+                    $scope.efectivoTotal = ($scope.efectivoCuc * 1) + ($scope.efectivoCup / 24);
+                    $scope.aDevolver = $scope.efectivoTotal - $scope.aCobrar;
+                    if ($scope.aDevolver < 0) {
+                        $scope.aDevolver = 0;
+                    }
+                    if ($scope.aCobrar <= $scope.efectivoTotal) {
+                        $scope.cobrarDisabled = false;
+                    } else {
+                        $scope.cobrarDisabled = true;
+                    }
+                };
+            }
+        ]);
     </script>
 }

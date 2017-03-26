@@ -10,30 +10,29 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th class="col-md-7">
                 Menu
             </th>
-            <th>Cantidad</th>
-            <th>Importe Total</th>
-            <th></th>
+            <th class="col-md-2">Cantidad</th>
+            <th class="col-md-2">Importe Total</th>
+            <th class="col-md-1"></th>
         </tr>
     </thead>
     <tbody>
         <tr id="form-detalle-compra">
-            <td>
+            <td class="col-md-7">
                 <select id="ElaboracionId" name="ElaboracionId" class="form-control" chosen data-ng-model="newDetalle.ElaboracionId" data-ng-options="menu.Nombre for menu in menus track by menu.Id"></select>
                 @Html.ValidationMessageFor(model => model.ElaboracionId)
 
             </td>
-            <td>
+            <td class="col-md-2">
                 @Html.TextBoxFor(model => model.Cantidad, new { @class = "form-control", @style = "max-width: 100px !important", @data_ng_model = "newDetalle.Cantidad" })
                 @Html.ValidationMessageFor(model => model.Cantidad)
             </td>
-            <td>
-                @*@Html.TextBoxFor(model => model.ImporteTotal, new { @class = "form-control", @style = "max-width: 100px !important", @data_ng_model = "newDetalle.ImporteTotal" })
-                @Html.ValidationMessageFor(model => model.ImporteTotal)*@
+            <td class="col-md-2">
+                
             </td>
-            <td>
+            <td class="col-md-1">
                 <a id="add_aprob" data-ng-click="agregarDetalle()" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
             </td>
         </tr>
