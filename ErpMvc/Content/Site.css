@@ -34,6 +34,10 @@ textarea {
 	max-width: 280px;
 }
 
+#ElaboracionId {
+    max-width: 380px;
+}
+
 /* styles for validation helpers */
 .field-validation-error {
 	color: #b94a48;
@@ -156,111 +160,6 @@ hr{
 	font-family: Gaviota;
 	text-align: center
 }
-
-.icomoon{
- font-family: icomoon !important;
-}
-/*
-.icon-file-pdf:before {
-	content: "\e92b";
-}
-
-.icon-user8:before {
-	content: "\e973";
-}
-
-.icon-user18:before {
-	content: "\eda9";
-}
-
-.icon-user4:before {
-	content: "\e7e9";
-}
-.icon-users2:before {
-	content: "\e7ea";
-}
-.icon-user5:before {
-	content: "\e7eb";
-}
-.icon-users3:before {
-	content: "\e7ec";
-}
-.icon-user6:before {
-	content: "\e7ed";
-}
-.icon-user7:before {
-	content: "\e7ee";
-}
-
-.icon-hand:before {
-	content: "\ea1b";
-}
-
-.icon-move3:before {
-	content: "\e118";
-}
-
-.icon-hand-o-right:before {
-	content: "\f0a4";
-}
-.icon-hand-o-left:before {
-	content: "\f0a5";
-}
-.icon-hand-o-up:before {
-	content: "\f0a6";
-}
-.icon-hand-o-down:before {
-	content: "\f0a7";
-}
-
-.icon-history:before {
-	content: "\e7c0";
-}
-
-.icon-money:before {
-	content: "\f0d6";
-	font-family : icomoon;
-}
-
-.icon-moneybag:before {
-	content: "\ea4d";
-	font-family : icomoon;
-}
-
-.icon-dollar:before {
-	content: "\ea94";
-	font-family : icomoon;
-}
-.icon-dollar2:before {
-	content: "\ea95";
-	font-family : icomoon;
-}
-.icon-coin:before {
-	content: "\e7b1";
-	font-family : icomoon !important;
-}
-
-.icon-dollar3:before {
-	content: "\f155";
-	font-family : icomoon;
-}
-
-.icon-coins:before {
-	content: "\ea96"; 
-	font-family : icomoon;
-}
-
-.icon-bargraph:before {
-	content: "\e018";
-}
-
-.icon-pie-graph:before {
-	content: "\e0c0";
-}
-
-.icon-graph2:before {
-	content: "\ee0e";
-}*/
 
 .cantidad-menu{
 	margin: 0px 5px; 
@@ -734,4 +633,9 @@ img{
 .menu-izquierda > ul > li {
 	height: 80px;
 	/*line-height: 0 !important;*/
+}
+
+.botones br{
+	margin-top: 10px !important;
+	margin-bottom: 10px !important;
 }
