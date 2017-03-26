@@ -11,5 +11,9 @@ namespace ErpMvc.ViewModels
         public string Tipo { get; set; }
 
         public decimal Importe { get; set; }
+
+        public string CentroDeCosto { get; set; }
+
+        public string Usuario { get; set; }
     }
 }

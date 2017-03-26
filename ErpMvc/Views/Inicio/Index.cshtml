@@ -4,22 +4,23 @@
 
 @if (TempData["exito"] != null)
 {
-<div class="alert alert-dismissable alert-success">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <strong>Éxito!</strong> @TempData["exito"]
-</div>
+    <div class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Éxito!</strong> @TempData["exito"]
+    </div>
 }
 @if (TempData["error"] != null)
 {
-<div class="alert alert-dismissable alert-danger">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <strong>ERROR!</strong> @TempData["error"]
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>ERROR!</strong> @TempData["error"]
+    </div>
+}
+<div id="div-historial">
+    @{
+        Html.RenderAction("ResumenDeOperaciones", "Operaciones", new { Id = ViewBag.DiaContable.Id });
+    }
 </div>
-}
-@{
-    Html.RenderAction("ResumenDeOperacion", "Operaciones", new { Id = ViewBag.DiaContable.Id });
-}
-
 @section SeccionDerecha
 {
     <div class="row">
@@ -68,7 +69,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">NO</button>
-                <a class="btn btn-success" href="@Url.Action("CerrarDia","PeriodoContable")">SI</a>
+                <a class="btn btn-success" href="@Url.Action("CerrarPeriodo","PeriodoContable")">SI</a>
             </div>
         </div>
     </div>
@@ -77,9 +78,11 @@
 
 @section scripts
 {
+<script src="~/Scripts/datatables.min.js"></script>
+<script src="~/Scripts/mbs-qdtf.js"></script>
     <script>
-        $(document).ready(function () {
-            $("#cierreDia").click(function () {
+        $(document).ready(function() {
+            $("#cierreDia").click(function() {
                 $("#modal").modal();
             });
         });
