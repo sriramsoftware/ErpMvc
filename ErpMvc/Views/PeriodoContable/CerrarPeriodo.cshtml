@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "Cerrar Periodo";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row" data-ng-controller="cierreController">
+    @{
+        Html.RenderAction("ResumenDeEfectivo");
+    }
+
+    @{
+        Html.RenderAction("DesgloseEfectivo");
+    }
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#cierre_btn").click(function () {
+                $("#modalConfirmacion").modal('show');
+            });
+        });
+
+        erp.controller('cierreController', [
+            '$scope', '$http', function ($scope, $http) {
+
+                $scope.urlResumen = '@Url.Action("ResumenEfectivoData","PeriodoContable")';
+                $scope.fetchResumen = function () {
+                    $http.get($scope.urlResumen).then(function (result) {
+                        $scope.efectivo_inicial = result.data.EfectivoAnterior;
+                        $scope.ventas = result.data.Ventas;
+                        $scope.depositos = result.data.Depositos;
+                        $scope.extracciones = result.data.Extracciones;
+                        $scope.efectivo_antes_cierre = $scope.efectivo_inicial + $scope.ventas - $scope.extracciones + $scope.depositos;
+                        $scope.efectivo_a_dejar_en_caja = 0;
+                        $scope.efectivo_a_extraer = $scope.efectivo_antes_cierre - $scope.efectivo_a_dejar_en_caja;
+                    });
+                }
+
+                $scope.fetchResumen();
+
+                $scope.urlDenominaciones = '@Url.Action("DenominacionesData","PeriodoContable")';
+                $scope.fetchDenominaciones = function () {
+                    $http.get($scope.urlDenominaciones).then(function (result) {
+                        $scope.billetes = result.data.Billetes;
+                        $scope.monedas = result.data.Monedas;
+                    });
+                }
+                $scope.fetchDenominaciones();
+
+                $scope.calculaEfectivoEnCaja = function () {
+                    var valorEnBilleteCup = 0.00;
+                    var valorEnBilleteCuc = 0.00;
+
+                    angular.forEach($scope.billetes, function (value, key) {
+                        valorEnBilleteCup += value.CantidadCup * value.Valor;
+                        valorEnBilleteCuc += value.CantidadCuc * value.Valor;
+                    });
+
+                    var valorEnMonedaCup = 0.00;
+                    var valorEnMonedaCuc = 0.00;
+                    angular.forEach($scope.monedas, function (value, key) {
+                        valorEnMonedaCup += value.CantidadCup * value.Valor;
+                        valorEnMonedaCuc += value.CantidadCuc * value.Valor;
+                    });
+
+                    $scope.efectivo_a_dejar_en_caja = valorEnBilleteCuc + valorEnMonedaCuc + (valorEnBilleteCup / 24) + (valorEnMonedaCup / 24);
+                    $scope.efectivo_a_extraer = $scope.efectivo_antes_cierre - $scope.efectivo_a_dejar_en_caja;
+                };
+                
+                $scope.realizarCierre = function () {
+                    var desgloceEfectivoViewModel = {};
+                    desgloceEfectivoViewModel.Billetes = $scope.billetes;
+                    desgloceEfectivoViewModel.Monedas = $scope.monedas;
+
+                    $http.post('@Url.Action("CerrarPeriodo","PeriodoContable")', desgloceEfectivoViewModel);
+                }
+
+            }
+        ]);
+    </script>
+}

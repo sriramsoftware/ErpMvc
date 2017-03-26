@@ -1,0 +1,72 @@
+﻿<!-- DESGLOCE DE EFECTIVO -->
+<div class="row">
+    <form id="cerrarcaja" action="cerrarcaja" method="post">
+        <!-- DESGLOCE DE EFECTIVO EN CAJA -->
+        <div class="col-md-6">
+            <table id="efectivo_caja" class="table table-hover panel panel-default table-condensed">
+                <tr>
+                    <td colspan="3" class="primary text-center">EFECTIVO RESTANTE EN CAJA</td>
+                </tr>
+                <tr>
+                    <td class="primary col-md-4">Billetes</td>
+                    <td class="primary col-md-4 text-center">MN</td>
+                    <td class="primary col-md-4 text-center">CUC</td>
+                </tr>
+                <tr data-ng-repeat="billete in billetes">
+                    <td>{{billete.Valor}}</td>
+                    <td>
+                        <input class="efectivo form-control" data-ng-show="billete.Cup" type="number" data-ng-model="billete.CantidadCup" data-ng-change="calculaEfectivoEnCaja()"/>
+                    </td>
+                    <td>
+                        <input class="efectivo form-control" data-ng-show="billete.Cuc" type="number" data-ng-model="billete.CantidadCuc" data-ng-change="calculaEfectivoEnCaja()"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="primary col-md-4">Monedas</td>
+                    <td class="primary col-md-4 text-center">MN</td>
+                    <td class="primary col-md-4 text-center">CUC</td>
+                </tr>
+
+                <tr data-ng-repeat="moneda in monedas">
+                    <td>{{moneda.Valor}}</td>
+                    <td>
+                        <input class="efectivo form-control" data-ng-show="moneda.Cup" type="number" data-ng-model="moneda.CantidadCup" data-ng-change="calculaEfectivoEnCaja()"/>
+                    </td>
+                    <td>
+                        <input class="efectivo form-control" data-ng-show="moneda.Cuc" type="number" data-ng-model="moneda.CantidadCuc" data-ng-change="calculaEfectivoEnCaja()"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- DESGLOCE DE EFECTIVO EN CAJA (TERMINA AQUI)-->
+
+
+        <div id="modalConfirmacion" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Realizar Cierre del Día</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="modal-body"></div>
+                        <div id="option-copies" class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                <label>
+                                    Debe extraer de caja {{efectivo_a_extraer | currency}}, si esta seguro con la cantidad realize el cierre.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-primary" data-dismiss="modal" data-ng-click="realizarCierre()">Realizar Cierre</a>
+                        <a class="btn btn-default" data-dismiss="modal">Cerrar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+</div>
+<!-- DESGLOCE DE EFECTIVO (TERMINA AQUI) -->
