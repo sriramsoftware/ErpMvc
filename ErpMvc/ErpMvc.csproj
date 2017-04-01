@@ -52,20 +52,20 @@
       <HintPath>..\packages\ComercialCore.1.4.0\lib\net45\ComercialCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaBL, Version=1.18.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaBL.1.18.3\lib\net45\CompraVentaBL.dll</HintPath>
+    <Reference Include="CompraVentaBL, Version=1.20.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaBL.1.20.2\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaCore, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaCore.1.8.0\lib\net45\CompraVentaCore.dll</HintPath>
+    <Reference Include="CompraVentaCore, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaCore.1.9.0\lib\net45\CompraVentaCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ContabilidadBL, Version=1.4.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ContabilidadBL.1.4.3\lib\net45\ContabilidadBL.dll</HintPath>
+    <Reference Include="ContabilidadBL, Version=1.4.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ContabilidadBL.1.4.4\lib\net45\ContabilidadBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ContabilidadCore, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ContabilidadCore.1.4.1\lib\net45\ContabilidadCore.dll</HintPath>
+    <Reference Include="ContabilidadCore, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ContabilidadCore.1.4.2\lib\net45\ContabilidadCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DevExpress.Charts.v14.1.Core, Version=14.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
@@ -319,6 +319,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="Controllers\AgregadosController.cs" />
     <Compile Include="Controllers\CentrosDeCostosController.cs" />
     <Compile Include="Controllers\ClasificacionesDeProductosController.cs" />
     <Compile Include="Controllers\ComprasController.cs" />
@@ -326,6 +327,7 @@
     <Compile Include="Controllers\ControlDeAsistenciaController.cs" />
     <Compile Include="Controllers\GruposDeProductosController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
+    <Compile Include="Controllers\InventarioController.cs" />
     <Compile Include="Controllers\MenusController.cs" />
     <Compile Include="Controllers\OperacionesController.cs" />
     <Compile Include="Controllers\OtrosGastosController.cs" />
@@ -377,6 +379,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\DenominacionViewModel.cs" />
     <Compile Include="ViewModels\DesgloceEfectivoViewModel.cs" />
+    <Compile Include="ViewModels\ExistenciaViewModel.cs" />
     <Compile Include="ViewModels\ParametrosViewModel.cs" />
     <Compile Include="ViewModels\ProductoConcretoViewModel.cs" />
     <Compile Include="ViewModels\ProductoViewModel.cs" />
@@ -384,10 +387,6 @@
     <Compile Include="ViewModels\VendedorViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\aspnet-PruebaSeguridadMvc-20170108013958.mdf" />
-    <Content Include="App_Data\aspnet-PruebaSeguridadMvc-20170108013958_log.ldf">
-      <DependentUpon>aspnet-PruebaSeguridadMvc-20170108013958.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -1396,6 +1395,9 @@
     <Content Include="Views\Compras\TramitarCompra.cshtml" />
     <Content Include="Views\ClasificacionesDeProductos\Agregar.cshtml" />
     <Content Include="Views\ClasificacionesDeProductos\Listado.cshtml" />
+    <Content Include="Views\Agregados\Agregar.cshtml" />
+    <Content Include="Views\Agregados\Editar.cshtml" />
+    <Content Include="Views\Agregados\Index.cshtml" />
     <None Include="Views\GruposDeProductos\Agregar.cshtml" />
     <Content Include="Views\GruposDeProductos\Listado.cshtml" />
     <Content Include="Views\PeriodoContable\_DiaContablePartial.cshtml" />
@@ -1417,6 +1419,13 @@
     <Content Include="Views\PeriodoContable\CerrarPeriodo.cshtml" />
     <Content Include="Views\PeriodoContable\_DesgloseEfectivoPartial.cshtml" />
     <Content Include="Views\PeriodoContable\_ResumenDeEfectivoPartial.cshtml" />
+    <Content Include="Views\Operaciones\_ResumenDeOperacionesConteblesPartial.cshtml" />
+    <Content Include="Views\Operaciones\Index.cshtml" />
+    <Content Include="Views\Menus\Agregados.cshtml" />
+    <Content Include="Views\Menus\_AgregadosPorMenuPartial.cshtml" />
+    <Content Include="Views\Inventario\_ListaProductosPartial.cshtml" />
+    <Content Include="Views\Inventario\Almacen.cshtml" />
+    <Content Include="Views\Inventario\CentroDeCosto.cshtml" />
     <None Include="Views\Productos\Agregar.cshtml" />
     <Content Include="Views\Productos\Listado.cshtml" />
     <Content Include="Views\UnidadesDeMedidas\Listado.cshtml" />
@@ -1447,6 +1456,7 @@
     <Content Include="Views\Seguridad\ResetearContraseña.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Content\uploads\productos\" />
     <Folder Include="Utiles\" />
   </ItemGroup>

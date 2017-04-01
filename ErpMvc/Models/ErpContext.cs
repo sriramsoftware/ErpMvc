@@ -38,19 +38,31 @@ namespace ErpMvc.Models
             modelBuilder.Configurations.Add(new NivelConfig());
             modelBuilder.Configurations.Add(new ConfiguracionCuentaModuloConfig());
 
+            modelBuilder.Entity<Agregado>()
+                .ToTable("cv_agregados")
+                .HasRequired(a => a.Elaboracion)
+                .WithMany(e => e.Agregados).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Agregado>()
+                            .HasRequired(a => a.Producto)
+                            .WithMany().WillCascadeOnDelete(false);
 
+           
             base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<LogDeAcceso> LogsDeAccesos { get; set; }
 
-        public DbSet<Compra> Compras { get; set; } 
-        public DbSet<ExistenciaAlmacen> ExistenciasEnAlmacenes { get; set; } 
-        public DbSet<Almacen> Almacenes { get; set; } 
-        public DbSet<ProductoConcreto> ProductosConcretos { get; set; } 
-        public DbSet<Producto> Productos { get; set; } 
-        public DbSet<EntradaAlmacen> EntradasAAlmacenes { get; set; } 
-        public DbSet<Elaboracion> Elaboraciones { get; set; } 
+        public DbSet<Compra> Compras { get; set; }
+        public DbSet<ExistenciaAlmacen> ExistenciasEnAlmacenes { get; set; }
+        public DbSet<Almacen> Almacenes { get; set; }
+        public DbSet<ProductoConcreto> ProductosConcretos { get; set; }
+        public DbSet<Producto> Productos { get; set; }
+        public DbSet<ClasificacionDeProducto> ClasificacionesDeProductos { get; set; }
+        public DbSet<GrupoDeProducto> GruposDeProductos { get; set; }
+        public DbSet<EntradaAlmacen> EntradasAAlmacenes { get; set; }
+        public DbSet<Elaboracion> Elaboraciones { get; set; }
+        public DbSet<Agregado> Agregados { get; set; }
+        public DbSet<AgregadosVendidos> AgregadosVendidos { get; set; }
         public DbSet<ProductosPorElaboracion> ProductosPorElaboraciones { get; set; }
         public DbSet<UnidadDeMedida> UnidadesDeMedidas { get; set; }
         public DbSet<TipoDeUnidadDeMedida> TiposDeUnidadesDeMedidas { get; set; }
@@ -76,5 +88,7 @@ namespace ErpMvc.Models
         public DbSet<Disponibilidad> Disponibilidades { get; set; }
         public DbSet<Movimiento> Movimientos { get; set; }
         public DbSet<Nivel> Niveles { get; set; }
+
+        public DbSet<Entidad> Entidades { get; set; }
     }
 }

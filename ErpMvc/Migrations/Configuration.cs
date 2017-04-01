@@ -69,11 +69,16 @@ namespace ErpMvc.Migrations
                 new Almacen() { Id = 1, Codigo = "01", Descripcion = "Almacen" }
                 );
             context.CentrosDeCostos.AddOrUpdate(c => c.Id,
-                new CentroDeCosto() { Id = 1, Codigo = "01", Nombre = "Montin Cubano" }
+                new CentroDeCosto() { Id = 1, Codigo = "01", Nombre = "Bar" },
+                new CentroDeCosto() { Id = 2, Codigo = "02", Nombre = "Restaurant" }
                 );
 
             context.PuntosDeVentas.AddOrUpdate(c => c.Id,
-                new PuntoDeVenta() { Id = 1, Nombre = "Montin Cubano", CentroDeCostoId = 1 }
+                new PuntoDeVenta() { Id = 1, Nombre = "Barra", CentroDeCostoId = 1 },
+                new PuntoDeVenta() { Id = 2, Nombre = "Mesa 1", CentroDeCostoId = 2 },
+                new PuntoDeVenta() { Id = 3, Nombre = "Mesa 2", CentroDeCostoId = 2 },
+                new PuntoDeVenta() { Id = 3, Nombre = "Mesa 3", CentroDeCostoId = 2 },
+                new PuntoDeVenta() { Id = 5, Nombre = "Mesa 4", CentroDeCostoId = 2 }
                 );
 
             context.Cajas.AddOrUpdate(c => c.Id,
@@ -125,6 +130,26 @@ namespace ErpMvc.Migrations
                 new Cuenta() {Id = 2, NivelId = 2,Naturaleza = Naturaleza.Deudora}
                 
                 );
+
+            context.ClasificacionesDeProductos.AddOrUpdate(c => c.Id,
+                new ClasificacionDeProducto() { Id = 1, Descripcion = "Comestibles"},
+                new ClasificacionDeProducto() { Id = 2, Descripcion = "Bebidas"},
+                new ClasificacionDeProducto() { Id = 3, Descripcion = "Utiles y herramientas"}
+                );
+
+            context.GruposDeProductos.AddOrUpdate(g => g.Id,
+                new GrupoDeProducto() { Id = 1, Descripcion = "Embutidos", ClasificacionId = 1},
+                new GrupoDeProducto() { Id = 2, Descripcion = "Quesos", ClasificacionId = 1},
+                new GrupoDeProducto() { Id = 3, Descripcion = "Carnes", ClasificacionId = 1},
+                new GrupoDeProducto() { Id = 4, Descripcion = "Jugos", ClasificacionId = 2},
+                new GrupoDeProducto() { Id = 5, Descripcion = "Cervezas", ClasificacionId = 2},
+                new GrupoDeProducto() { Id = 6, Descripcion = "Rones", ClasificacionId = 2},
+                new GrupoDeProducto() { Id = 7, Descripcion = "Pastas", ClasificacionId = 1},
+                new GrupoDeProducto() { Id = 8, Descripcion = "Detergentes", ClasificacionId = 3},
+                new GrupoDeProducto() { Id = 9, Descripcion = "Cubiertos", ClasificacionId = 3}
+                );
+
+            
         }
     }
 }
