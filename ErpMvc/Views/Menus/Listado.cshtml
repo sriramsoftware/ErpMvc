@@ -60,16 +60,16 @@
                     <a href="@Url.Action("FichaDeCosto",new {Id = item.Id})" class="btn btn-primary btn-sm col-md-12">
                         <i class="glyphicon glyphicon-folder-open"></i>&nbsp;Modificar Ficha de Costo
                     </a>
-                    @*<a class="ver-productos-relacionados btn btn-primary btn-sm col-md-12" value="${row.id }"
-                       style="margin-top: 5px;">
-                        <i class="glyphicon glyphicon-glass"></i>&nbsp;Productos Relacionados
-                    </a>*@
+                    <a href="@Url.Action("Agregados", new {Id = item.Id})" class="btn btn-primary btn-sm col-md-12" style="margin-top: 5px;">
+                        <i class="glyphicon glyphicon-glass"></i>&nbsp;Agregados
+                    </a>
                     <form action="AgregarImagen" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="id" value="@item.Id"/>
                         <input class="select-image hidden" type="file" name="file" accept="image/*"/>
                         <a class="btn btn-primary btn-sm col-md-12 edit-image"
                            style="margin-top: 5px;"><i class="icon-picture"></i>&nbsp;Editar Imagen</a>
                     </form>
+                    <br/>
                     @if (User.IsInRole(RolesMontin.Administrador))
                     {
                         <a href="@Url.Action("Eliminar",new {Id = item.Id})" class="btn btn-primary btn-sm col-md-12">

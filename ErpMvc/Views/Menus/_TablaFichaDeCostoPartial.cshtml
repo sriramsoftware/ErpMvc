@@ -2,20 +2,12 @@
 
 <table class="mytable table table-bordered" style="width: 100%">
     <tr>
-        <td colspan="6">
-            Montin Cubano
+        <td colspan="6" class="text-center">
+            FICHA DE COSTO
         </td>
     </tr>
     <tr>
-        <td colspan="6">
-            Ficha de Costo
-        </td>
-    </tr>
-    <tr>
-        <td>FECHA DE APROBACIÓN</td>
-        <td colspan="2"></td>
-        <td colspan="2">NOMBRE DE LA OFERTA</td>
-        <td colspan="1" class="data">@Model.Nombre</td>
+        <td colspan="6" class="data text-center">@Model.Nombre</td>
     </tr>
     <tr>
         <td colspan="2">INGREDIENTES</td>
@@ -41,7 +33,7 @@
                     decimal costo = precio * producto.Cantidad;
                     costoTotal += costo;
                 }
-                @String.Format("{0:C}", precio) 
+                @String.Format("{0:C}", precio)
             </td>
             <td class="text-right">
                 @String.Format("{0:C}", costo)
@@ -95,7 +87,7 @@
         </td>
         <td>Índice Aplicado</td>
         <td class="data">
-            @String.Format("{0:##.##}", costoTotal != 0 ? Model.PrecioDeVenta / costoTotal : 0 )
+            @String.Format("{0:##.##}", costoTotal != 0 ? Model.PrecioDeVenta / costoTotal : 0)
         </td>
     </tr>
     <tr><td colspan="6">CARTA TÉCNICA</td></tr>

@@ -1,4 +1,4 @@
-﻿@model CompraVentaCore.Models.ProductosPorElaboracion
+﻿@model CompraVentaCore.Models.Agregado
 
 <div class="col-md-12">
     <div class="alert alert-danger" data-ng-show="tieneError">
@@ -31,6 +31,10 @@
                 @Html.ValidationMessageFor(model => model.UnidadDeMedidaId)
             </td>
             <td>
+                @Html.TextBoxFor(model => model.Precio, new { @class = "form-control", @style = "max-width: 100px !important", ng_model = "newDetalle.Precio" })
+                @Html.ValidationMessageFor(model => model.Precio)
+            </td>
+            <td>
                 <a id="add_aprob" data-ng-click="agregarDetalle()" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
             </td>
         </tr>
@@ -46,6 +50,10 @@
             <td>
                 <p data-ng-hide="carga.editMode">{{ detalle.Unidad }}</p>
                 <input name="Productos[{{ $index }}].UnidadDeMedidaId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.UnidadId" class="form-control"/>
+            </td>
+            <td>
+                <p data-ng-hide="carga.editMode">{{ detalle.Precio | currency }}</p>
+                <input name="Productos[{{ $index }}].Precio" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.Precio" class="form-control" />
             </td>
             <td>
                 <p data-ng-hide="carga.editMode">

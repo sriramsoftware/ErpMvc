@@ -20,30 +20,23 @@
     </div>
 }
 
-<div id="menuController" class="form-group" data-ng-controller="menuController">
+<div id="agregadosController" class="form-group" data-ng-controller="agregadosController">
     @{
-        Html.RenderPartial("_ProductoPorMenuPartial", new ProductosPorElaboracion());
+        Html.RenderPartial("_AgregadosPorMenuPartial", new Agregado());
     }
-</div>
-
-
-<div id="tabla-ficha-de-costo">
-    
 </div>
 
 @section SeccionDerecha
 {
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 text-left">
-            <p class="parrafo_derecha_historial">Ficha de Costo del Menú @Model.Nombre</p>
+            <p class="parrafo_derecha_historial">Agregados del Menú @Model.Nombre</p>
         </div>
     </div>
     <div class="row">
         <div class="contenido_derecho_descripcion">
             <p>
-                Escriba los productos que desee agregar a la ficha de costo escogiendo la opción deseada
-                del autocompletador. Una vez que tenga los productos definidos debe editar la cantidad y la
-                unidad de medida.
+                Agrege los productos que se pueden usar como agregados de este menú.
             </p>
             <p>En caso de haberse equivocado entrando un producto siempre tiene la opción de eliminarlo.</p>
             <a href="@Url.Action("Listado")" class="btn btn-default col-md-12"><i class="icon-book"></i>&nbsp;Volver al Menú</a>
@@ -82,20 +75,20 @@
 
             $("#ProductoId").change(function() {
                 var msg = $("#ProductoId option:selected").val();
-                angular.element('#menuController').scope().fetchUnidades(msg);
-                angular.element('#menuController').scope().$apply();
+                angular.element('#agregadosController').scope().fetchUnidades(msg);
+                angular.element('#agregadosController').scope().$apply();
             });
         });
         
         function cargaAgregada() {
             $("#carga-modal").modal('hide');
-            angular.element('#menuController').scope().fetchProductos();
-            angular.element('#menuController').scope().$apply();
+            angular.element('#agregadosController').scope().fetchProductos();
+            angular.element('#agregadosController').scope().$apply();
         };
 
 
 
-        erp.controller('menuController', [
+        erp.controller('agregadosController', [
             '$scope', '$http', function ($scope, $http) {
                 $scope.loading = true;
                 $scope.addMode = false;
@@ -117,7 +110,7 @@
 
                 $scope.unidades = [];
                 $scope.urlUnidades = '@Url.Action("ListaUnidadesDeMedida", "Productos")';
-                $scope.urlProductosEnMenu = '@Url.Action("ProductosEnMenu", "Menus",new {menuId = Model.Id})';
+                $scope.urlAgregadoEnMenu = '@Url.Action("AgregadosEnMenu", "Menus",new {menuId = Model.Id})';
 
                 $scope.fetchUnidades = function (id) {
                     $http.get($scope.urlUnidades + "/" + id).then(function (result) {
@@ -126,18 +119,16 @@
                     });
                 }
 
-                $scope.fetchProductosEnMenu = function () {
-                    $http.get($scope.urlProductosEnMenu).then(function (result) {
+                $scope.fetchAgregadosEnMenu = function () {
+                    $http.get($scope.urlAgregadoEnMenu).then(function (result) {
                         $scope.productosEnMenu = result.data;
-                        var urlTablaFichaDeCosto = '@Url.Action("FichaDeCostoResumen", new { id = Model.Id })';
-                                $("#tabla-ficha-de-costo").load(urlTablaFichaDeCosto);
                     });
                 }
 
                 //$scope.fetchUnidades();
 
                 $scope.productosEnMenu = [];
-                $scope.fetchProductosEnMenu();
+                $scope.fetchAgregadosEnMenu();
 
                 $scope.newDetalle = {};
                 
@@ -173,9 +164,9 @@
                         $scope.newDetalle.Cantidad = 0;
                         
                         $http.post(
-                            '@Url.Action("AgregarProductoAMenu","Menus")',
+                            '@Url.Action("AgregarAgregadoAMenu","Menus")',
                             detalleNuevo).then(function(result) {
-                                $scope.fetchProductosEnMenu();
+                                $scope.fetchAgregadosEnMenu();
                             
                             });
                         
@@ -213,9 +204,9 @@
                     detalle.productoId = this.detalle.ProductoId;
                     detalle.menuId = '@Model.Id';
                     $http.post(
-                            '@Url.Action("QuitarProductoDeMenu","Menus")',
+                            '@Url.Action("QuitarAgregadoDeMenu","Menus")',
                             detalle).then(function(result) {
-                                $scope.fetchProductosEnMenu();
+                                $scope.fetchAgregadosEnMenu();
                             });
                     $scope.loading = false;
                 };
