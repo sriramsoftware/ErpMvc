@@ -61,9 +61,53 @@
                     total
                 </div>
                 <div class="col-md-4">
-                    @Html.TextBoxFor(m => m.Importe, new { @class = "form-control", @data_ng_model = "importeTotal" })
+                    @Html.TextBoxFor(m => m.Importe, new { @class = "form-control", @ng_model = "importeTotal|number:2" })
                 </div>
             </div>
+            @*<a class="btn btn-primary" ng-click="pruebaAccion()" >Probando POST</a>*@
+            <!-- MODAL AGREGAR MENU -->
+            <div id="modal-agregados" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="agregados-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 id="modal-title" class="modal-title">Agregados del menú</h4>
+                        </div>
+                        <div id="modal-detalle" class="modal-body">
+                            <div class="container">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th class="col-md-6"></th>
+                                        <th class="col-md-6"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="a in agregados">
+                                        <td class="col-md-6">{{a.Nombre}}</td>
+                                        <td class="col-md-6">
+                                            <a class="btn btn-primary btn-sm rest-menu" ng-disabled="menosADisabled" ng-click="disminuirAgregado(a)">
+                                                <i class="glyphicon glyphicon-minus-sign"></i>
+                                            </a>
+                                            <label class="cantidad-menu">{{ cantidadAgregado(a) }}</label>
+                                            <a class="btn btn-primary btn-sm add-menu" ng-disabled="masADisabled" ng-click="aumentarAgregado(a)">
+                                                <i class="glyphicon glyphicon-plus-sign"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- TERMINA MODAL AGREGAR MENU -->
         </div>
     </div>
 
@@ -94,16 +138,6 @@
 
 }
 
-<!-- MODAL AGREGAR MENU -->
-<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-        </div>
-    </div>
-</div>
-<!-- TERMINA MODAL AGREGAR MENU -->
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/datatables.min.js"></script>
@@ -120,7 +154,6 @@
         });
 
 
-
         erp.controller('ventasController', [
             '$scope', '$http', function ($scope, $http) {
                 $scope.loading = true;
@@ -129,7 +162,8 @@
                 $scope.error = "";
                 $scope.select_changed = 0;
                 $scope.precioDeVentaDeMenu = 0;
-                $scope.importeTotal = 0;
+                $scope.importeTotal = 0.00;
+                $scope.detalleActual = {};
 
                 $scope.menus = [];
                 $scope.urlMenus = '@Url.Action("Menus","Menus")';
@@ -140,6 +174,85 @@
                         $scope.select_changed++;
                     });
                 }
+                @*$scope.test = { Nombre : "Valor de prueba"};
+                $scope.pruebaAccion = function() {
+                    $http.post("@Url.Action("PruebaPost")",$scope.test);
+                }*@
+
+                $scope.agregados = [];
+
+                $scope.urlAgregados = '@Url.Action("AgregadosData","Menus")';
+
+                $scope.fetchAgregados = function (id) {
+                    $http.get($scope.urlAgregados + "/" + id).then(function (result) {
+                        $scope.agregados = result.data;
+                    });
+                }
+
+                $scope.cantidadAgregado = function (agregado) {
+                    var ag = $scope.detalleActual.Agregados.find(function(a) {
+                        if (agregado.Id === a.Id) {
+                            return a;
+                        }
+                        return null;
+                    });
+                    if (ag == null) {
+                        return 0;
+                    } else {
+                        return ag.Cantidad;
+                    }
+                };
+
+                $scope.menosADisabled = false;
+
+                $scope.disminuirAgregado = function (agregado) {
+                    var ag = $scope.detalleActual.Agregados.find(function (a) {
+                        if (agregado.Id === a.Id) {
+                            return a;
+                        }
+                        return null;
+                    });
+                    if (ag == null) {
+                        $scope.menosDisabled = true;
+                    } else {
+                        if (ag.Cantidad > 1) {
+                            var precio = ag.Precio * $scope.detalleActual.Cantidad;
+                            ag.Cantidad--;
+                            $scope.importeTotal -= precio;
+                            $scope.detalleActual.ImporteTotal -= precio;
+                            $scope.masADisabled = false;
+                        } else {
+                            $scope.menosADisabled = true;
+                            ag.Cantidad = 0;
+                            var precio = ag.Precio * $scope.detalleActual.Cantidad;
+                            $scope.importeTotal -= precio;
+                            $scope.detalleActual.ImporteTotal -= precio;
+                        }
+                    }
+                }
+
+                $scope.masADisabled = false;
+
+                $scope.aumentarAgregado = function (agregado) {
+                    var ag = $scope.detalleActual.Agregados.find(function (a) {
+                        if (agregado.Id === a.Id) {
+                            return a;
+                        }
+                        return null;
+                    });
+                    if (ag == null) {
+                        agregado.Cantidad = 1;
+                        var precio = agregado.Precio * $scope.detalleActual.Cantidad;
+                        $scope.importeTotal += precio;
+                        $scope.detalleActual.ImporteTotal += precio;
+                        $scope.detalleActual.Agregados.push(agregado);
+                    } else {
+                        var precio = ag.Precio * $scope.detalleActual.Cantidad;
+                        $scope.importeTotal += precio;
+                        $scope.detalleActual.ImporteTotal += precio;
+                        ag.Cantidad++;
+                    }
+                }
 
                 $scope.fetchMenus();
 
@@ -149,6 +262,16 @@
                 $scope.toggleEdit = function () {
                     this.detalle.editMode = !this.detalle.editMode;
                 };
+
+                $scope.mostrarAgregados = function (detalle) {
+                    $scope.fetchAgregados(detalle.ElaboracionId);
+                    $scope.detalleActual = detalle;
+                    if ($scope.detalleActual.Agregados == null) {
+                        $scope.detalleActual.Agregados = [];
+                    }
+                    $("#modal-agregados").modal('show');
+                }
+
                 $scope.agregarDetalle = function () {
                     $scope.show = false;
                     var detalleNuevo = {};
@@ -158,17 +281,11 @@
                         $scope.tieneError = true;
                         valido = false;
                     }
-                    //var form = $("#form-detalle-compra");
-                    //if (valido && !form.valid()) {
-                    //    $scope.error = "Datos incorrectos en el producto.";
+                    //if (valido && $scope.detallesVenta.find(function (a) { if ($scope.newDetalle.ElaboracionId === a.ElaboracionId) { return true; } return false; })) {
+                    //    $scope.error = "Ya tiene agregado este menu.";
                     //    $scope.tieneError = true;
                     //    valido = false;
                     //}
-                    if (valido && $scope.detallesVenta.find(function (a) { if ($scope.newDetalle.ElaboracionId === a.ElaboracionId) { return true; } return false; })) {
-                        $scope.error = "Ya tiene agregado este menu.";
-                        $scope.tieneError = true;
-                        valido = false;
-                    }
                     var url = "@Url.Action("SePuedeVender","Ventas")" + "?menuId=" + $scope.newDetalle.ElaboracionId.Id + "&cantidad=" + $scope.newDetalle.Cantidad;
                     $http.get(url).then(function (result) {
                         valido = result.data;
@@ -192,26 +309,43 @@
                     });
                 };
 
+                $scope.menosDisabled = false;
+
+                $scope.disminuirCantidad = function (detalle) {
+                    if (detalle.Cantidad > 1) {
+                        var precio = detalle.ImporteTotal / detalle.Cantidad;
+                        detalle.Cantidad--;
+                        $scope.importeTotal -= precio;
+                        detalle.ImporteTotal -= precio;
+                        $scope.masDisabled = false;
+                    } else {
+                        $scope.menosDisabled = true;
+                    }
+                }
+
+                $scope.masDisabled = false;
+
+                $scope.aumentarCantidad = function (detalle) {
+                    var url = "@Url.Action("SePuedeVender","Ventas")" + "?menuId=" + detalle.ElaboracionId + "&cantidad=" + detalle.Cantidad;
+                    $http.get(url).then(function (result) {
+                        valido = result.data;
+                        if (valido) {
+                            var precio = detalle.ImporteTotal / detalle.Cantidad;
+                            $scope.importeTotal += precio;
+                            detalle.ImporteTotal += precio;
+                            detalle.Cantidad++;
+
+                            $scope.menosDisabled = false;
+                        } else {
+                            $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";
+                            $scope.tieneError = true;
+                            $scope.masDisabled = true;
+                        }
+                    });
+                }
+
                 $scope.closeAlert = function () {
                     $scope.tieneError = false;
-                };
-
-                //Used to save a record after edit
-                $scope.save = function (data) {
-                    $scope.loading = true;
-                    var carga = this.carga;
-                    carga.CargaId = data.CargaId;
-                    carga.Cantidad = data.Cantidad;
-                    var cargaNombre = $("#carga_" + carga.Id + " option:selected").html();
-                    carga.CargaNombre = cargaNombre;
-                    carga.editMode = false;
-                    $scope.loading = false;
-                };
-
-                $scope.cancelar = function () {
-                    $scope.detallesCompra = [];
-                    $("#save-carga-btn").addClass('disabled');
-                    $scope.newDetalle = {};
                 };
 
                 //Used to edit a record

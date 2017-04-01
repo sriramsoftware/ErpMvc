@@ -21,7 +21,7 @@
     <tbody>
         <tr id="form-detalle-compra">
             <td class="col-md-7">
-                <select id="ElaboracionId" name="ElaboracionId" class="form-control" chosen data-ng-model="newDetalle.ElaboracionId" data-ng-options="menu.Nombre for menu in menus track by menu.Id"></select>
+                <select id="ElaboracionId" name="ElaboracionId" class="form-control" chosen ng-model="newDetalle.ElaboracionId" ng-options="menu.Nombre for menu in menus track by menu.Id"></select>
                 @Html.ValidationMessageFor(model => model.ElaboracionId)
 
             </td>
@@ -29,24 +29,32 @@
                 @Html.TextBoxFor(model => model.Cantidad, new { @class = "form-control", @style = "max-width: 100px !important", @data_ng_model = "newDetalle.Cantidad" })
                 @Html.ValidationMessageFor(model => model.Cantidad)
             </td>
-            <td class="col-md-2">
-                
-            </td>
+            <td class="col-md-2"></td>
             <td class="col-md-1">
                 <a id="add_aprob" data-ng-click="agregarDetalle()" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
             </td>
         </tr>
-        <tr data-ng-repeat="detalle in detallesVenta">
+        <tr ng-repeat="detalle in detallesVenta">
             <td>
-                <strong data-ng-hide="detalle.editMode">{{ detalle.NombreMenu }}</strong>
-                <input name="Elaboraciones[{{ $index }}].ElaboracionId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ElaboracionId" class="form-control" />
+                <a class="btn btn-sm btn-default" data-ng-click="mostrarAgregados(detalle)"><i class="glyphicon glyphicon-bell"></i></a>
+                <strong data-ng-hide="detalle.editMode">{{ detalle.NombreMenu }}</strong><span ng-if="detalle.Agregados.length > 0"> con :</span>
+                <span ng-repeat-start="agregado in detalle.Agregados">{{agregado.Nombre}} ({{agregado.Cantidad}})</span><span ng-if="$index < detalle.Agregados.length -1">,</span>
+                <input name="Elaboraciones[{{ $parent.$index }}].Agregados[{{$index}}].AgregadoId" type="hidden" value="{{agregado.Id}}" />
+                <input ng-repeat-end name="Elaboraciones[{{ $parent.$index }}].Agregados[{{$index}}].Cantidad" type="hidden"  value="{{agregado.Cantidad}}" />
+                <input name="Elaboraciones[{{ $index }}].ElaboracionId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ElaboracionId" class="form-control"/>
             </td>
             <td>
-                <p data-ng-hide="carga.editMode">{{ detalle.Cantidad }}</p>
+                <a class="btn btn-primary btn-sm rest-menu" data-ng-disabled="menosDisabled" data-ng-click="disminuirCantidad(detalle)">
+                    <i class="glyphicon glyphicon-minus-sign"></i>
+                </a>
+                <label class="cantidad-menu">{{ detalle.Cantidad }}</label>
+                <a class="btn btn-primary btn-sm add-menu"  data-ng-disabled="masDisabled" data-ng-click="aumentarCantidad(detalle)">
+                    <i class="glyphicon glyphicon-plus-sign"></i>
+                </a>
                 <input name="Elaboraciones[{{ $index }}].Cantidad" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.Cantidad" class="form-control" />
             </td>
             <td>
-                <p data-ng-hide="carga.editMode">{{ detalle.ImporteTotal }}</p>
+                <p data-ng-hide="carga.editMode">{{ detalle.ImporteTotal | currency }}</p>
                 <input name="Elaboraciones[{{ $index }}].ImporteTotal" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ImporteTotal" class="form-control" />
             </td>
             <td>

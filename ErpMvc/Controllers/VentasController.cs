@@ -28,6 +28,12 @@ namespace ErpMvc.Controllers
             _periodoContableService = new PeriodoContableService(context);
         }
 
+        //public ActionResult PruebaPost(string test)
+        //{
+        //    TempData["exito"] = test;
+        //    return RedirectToAction("Index");
+        //}
+
 
         // GET: Ventas
         public ActionResult Index(int id = 0)
