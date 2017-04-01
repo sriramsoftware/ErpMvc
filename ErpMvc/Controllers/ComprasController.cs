@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ComercialCore.Models;
 using CompraVentaBL;
 using CompraVentaCore.Models;
 using ContabilidadCore.Models;
@@ -16,11 +17,13 @@ namespace ErpMvc.Controllers
     public class ComprasController : Controller
     {
         private ComprasService _comprasService;
+        private DbContext _db;
 
 
-        public ComprasController(ComprasService comprasService)
+        public ComprasController(DbContext context)
         {
-            _comprasService = comprasService;
+            _db = context;
+            _comprasService = new ComprasService(context);
         }
 
         // GET: Compra
@@ -28,6 +31,28 @@ namespace ErpMvc.Controllers
         public ActionResult TramitarCompra()
         {
             return View();
+        }
+
+        public JsonResult Entidades()
+        {
+            return Json(_db.Set<Entidad>().Select(e => new {e.Id, e.Nombre}), JsonRequestBehavior.AllowGet);
+        }
+
+
+        public JsonResult AgregarEntidad(string nombre)
+        {
+            var entidad = new Entidad()
+            {
+                Nombre = nombre,
+                CodigoReup = "0",
+                CtaBancariaCuc = "0",
+                CtaBancariaMn = "0",
+                Direccion = "ninguna",
+                Nit = "00000000000",
+            };
+            _db.Set<Entidad>().Add(entidad);
+            _db.SaveChanges();
+            return Json(_db.Set<Entidad>().Select(e => new { e.Id, e.Nombre }), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -43,7 +68,7 @@ namespace ErpMvc.Controllers
                     TempData["error"] = "No se puede efectuar una compra vacia";
                     return View();
                 }
-                if (_comprasService.ComprarYPasarACentroDeCosto(compra,usuario))
+                if (_comprasService.ComprarYDarEntradaAAlmacen(compra,usuario))
                 {
 
                     return RedirectToAction("Index", "Inicio");

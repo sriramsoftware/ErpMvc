@@ -7,12 +7,12 @@
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Unidad</th>
-                <th>Importe Total</th>
-                <th></th>
+            <tr class="text-center">
+                <th class="col-md-6">Producto</th>
+                <th class="col-md-2">Cantidad</th>
+                <th class="col-md-1">Unidad</th>
+                <th class="col-md-2">Importe Total</th>
+                <th class="col-md-1"></th>
             </tr>
         </thead>
         <tbody>
@@ -27,7 +27,7 @@
                     @Html.ValidationMessageFor(model => model.Cantidad)
                 </td>
                 <td>
-                    <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" data-ng-model="newDetalle.UnidadId" data-ng-options="unidad.Nombre for unidad in unidades track by unidad.Id"></select>
+                    <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" data-ng-model="newDetalle.UnidadId" chosen="" data-ng-options="unidad.Siglas for unidad in unidades track by unidad.Id"></select>
                     @Html.ValidationMessageFor(model => model.UnidadDeMedidaId)
                 </td>
                 <td>

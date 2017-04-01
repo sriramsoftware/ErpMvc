@@ -24,32 +24,68 @@
     @Html.AntiForgeryToken()
     <hr />
     @Html.ValidationSummary()
-    <div class="col-md-12">
-        <div class="form-group">
-            @{
-                Html.RenderAction("DiaContable", "PeriodoContable");
-            }
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(m => m.Descripcion,"Observaciones", new {@class = "col-md-4 control-label"})
-            <div class="col-md-8">
-                @Html.TextAreaFor(m => m.Descripcion, new {@class = "form-control"})
-                @Html.ValidationMessageFor(m => m.Descripcion)
+    <div id="compraController"  data-ng-controller="compraController">
+        <div class="col-md-12">
+            <div class="form-group">
+                @{
+                    Html.RenderAction("DiaContable", "PeriodoContable");
+                }
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.EntidadId, "Tienda", new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    <select id="EntidadId" name="EntidadId" class="form-control" ng-model="entidad" ng-options="e.Nombre for e in entidades track by e.Id" chosen=""></select>
+                    <a class="btn btn-info" ng-click="agregarEntidadModal()"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                    @Html.ValidationMessageFor(m => m.EntidadId)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Fecha, new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    @Html.TextBoxFor(m => m.Fecha, new { @class = "form-control datepicker" })
+                    @Html.ValidationMessageFor(m => m.Fecha)
+                </div>
+            </div>
+            <div class="form-group">
+                @{
+                    Html.RenderPartial("_DetalleCompraPartial", ViewData);
+                }
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-4 col-md-8">
+                    @Html.ActionLink("Atrás", "Index", "Inicio", null, new { @class = "btn btn-default" })
+                    <input id="comprar-btn" type="submit" class="btn btn-success" value="Comprar" />
+                </div>
             </div>
         </div>
-        <div id="compraController" class="form-group" data-ng-controller="compraController">
-            @{
-                Html.RenderPartial("_DetalleCompraPartial", ViewData);
-            }
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-4 col-md-8">
-                @Html.ActionLink("Atrás", "Index", "Inicio",null, new {@class = "btn btn-default"})
-                <input id="comprar-btn" type="submit" class="btn btn-success" value="Comprar"/>
+
+        <!-- MODAL AGREGAR MENU -->
+        <div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 id="modal-title" class="modal-title">Agregar Tienda</h4>
+                    </div>
+                    <div id="modal-detalle" class="modal-body">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="nombreEntidad">Nombre</label>
+                            <div class="col-md-8">
+                                <input class="form-control" id="nombreEntidad" ng-model="newEntidad.Nombre"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-success" ng-click="agregarEntidad(newEntidad.Nombre)" data-dismiss="modal">Guardar</button>
+                    </div>
+                </div>
             </div>
         </div>
+        <!-- TERMINA MODAL AGREGAR MENU -->
     </div>
-}
+                    }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -121,6 +157,8 @@
                 $scope.tieneError = false;
                 $scope.error = "";
                 $scope.select_changed = 0;
+                $scope.entidad = {};
+                $scope.newEntidad = {};
 
                 $scope.productos = [];
                 $scope.urlProductos = '@Url.Action("ListaProductos","Productos")';
@@ -132,6 +170,10 @@
                     });
                 }
 
+                $scope.agregarEntidadModal = function() {
+                    $("#modal").modal('show');
+                }
+
                 $scope.fetchProductos();
 
                 $scope.unidades = [];
@@ -140,6 +182,26 @@
                 $scope.fetchUnidades = function (id) {
                     $http.get($scope.urlUnidades + "/" + id).then(function (result) {
                         $scope.unidades = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+
+                $scope.entidades = [];
+                $scope.urlEntidades = '@Url.Action("Entidades","Compras")';
+
+                $scope.fetchEntidades = function () {
+                    $http.get($scope.urlEntidades).then(function (result) {
+                        $scope.entidades = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+
+                $scope.fetchEntidades();
+
+                $scope.urlAgregarEntidad = '@Url.Action("AgregarEntidad")';
+                $scope.agregarEntidad = function(nombre) {
+                    $http.post($scope.urlAgregarEntidad, {nombre: nombre}).then(function(result) {
+                        $scope.entidades = result.data;
                         $scope.select_changed++;
                     });
                 }
