@@ -35,18 +35,35 @@ namespace ErpMvc.Controllers
             var productos = new List<ProductoConcretoViewModel>();
             foreach (var prod in _db.Set<ProductoConcreto>().Where(p => p.Producto.Activo).ToList())
             {
+                var prodConcreto = new ProductoConcretoViewModel() { Producto = prod };
                 if (_db.Set<ExistenciaCentroDeCosto>().Any(e => e.ProductoId == prod.Id))
                 {
-                    productos.Add(new ProductoConcretoViewModel() {Producto = prod, Existencia = _db.Set<ExistenciaCentroDeCosto>().SingleOrDefault(e => e.ProductoId == prod.Id) });
+                    prodConcreto.Existencias =
+                        _db.Set<ExistenciaCentroDeCosto>()
+                            .Include(e => e.CentroDeCosto)
+                            .Where(e => e.ProductoId == prod.Id)
+                            .Select(e => new ExistenciaViewModel()
+                            {
+                                Lugar = e.CentroDeCosto.Nombre,
+                                Cantidad = e.Cantidad
+                            }).ToList();
                 }
-                else
+                if (_db.Set<ExistenciaAlmacen>().Any(e => e.ProductoId == prod.Id))
                 {
-                    productos.Add(new ProductoConcretoViewModel()
+                    var existencias = _db.Set<ExistenciaAlmacen>()
+                            .Include(e => e.Almacen)
+                            .Where(e => e.ProductoId == prod.Id)
+                            .Select(e => new ExistenciaViewModel()
+                            {
+                                Lugar = e.Almacen.Descripcion,
+                                Cantidad = e.ExistenciaEnAlmacen
+                            }).ToList();
+                    foreach (var ex in existencias)
                     {
-                        Producto = prod,
-                        Existencia = new ExistenciaCentroDeCosto() { Cantidad = 0, Producto = prod, ProductoId = prod.Id}
-                    });
+                        prodConcreto.Existencias.Add(ex);
+                    }
                 }
+                productos.Add(prodConcreto);
             }
             //productos.AddRange(_db.Set<ProductoConcreto>().Where(p=> p.));
             return View(productos);
@@ -56,16 +73,16 @@ namespace ErpMvc.Controllers
         {
             var producto = _db.Set<ProductoConcreto>().Find(id);
             var movimientos = _db.Set<MovimientoDeProducto>().Include(m => m.Tipo).Include(m => m.Usuario).Include(m => m.Producto).Where(m => m.ProductoId == id).ToList();
-            var existencia = _db.Set<ExistenciaCentroDeCosto>().SingleOrDefault(e => e.ProductoId == id);
-            if (existencia == null)
-            {
-                existencia = new ExistenciaCentroDeCosto() {Cantidad = 0};
-            }
+            var existencia = _db.Set<ExistenciaCentroDeCosto>().Where(e => e.ProductoId == id).Select(e => new ExistenciaViewModel() {Lugar = e.CentroDeCosto.Nombre, Cantidad = e.Cantidad}).ToList();
+            //if (!existencia.Any())
+            //{
+            //    existencia = new List<ExistenciaCentroDeCosto>();
+            //}
             var viewModel = new ProductoConcretoViewModel()
             {
                 Producto = producto,
                 Movimientos = movimientos,
-                Existencia = existencia
+                Existencias = existencia
             };
             return View(viewModel);
         }
@@ -74,7 +91,7 @@ namespace ErpMvc.Controllers
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Agregar()
         {
-            ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(),"Id", "Descripcion");
+            ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion");
             return View();
         }
 
@@ -87,10 +104,10 @@ namespace ErpMvc.Controllers
                 if (_service.AgregarProducto(producto))
                 {
                     TempData["exito"] = "Producto agregado correctamente!";
-                    return RedirectToAction("Listado"); 
+                    return RedirectToAction("Listado");
                 }
             }
-            ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion",producto.GrupoId);
+            ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion", producto.GrupoId);
             return View(producto);
         }
 
@@ -106,8 +123,8 @@ namespace ErpMvc.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion",producto.Producto.GrupoId);
-            ViewBag.UnidadDeMedidaId = new SelectList(_service.ListaDeUnidadesDeMedida(), "Id", "Nombre",producto.UnidadDeMedidaId);
+            ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion", producto.Producto.GrupoId);
+            ViewBag.UnidadDeMedidaId = new SelectList(_service.ListaDeUnidadesDeMedida(), "Id", "Nombre", producto.UnidadDeMedidaId);
             return View(new ProductoViewModel(producto));
         }
 
@@ -128,8 +145,8 @@ namespace ErpMvc.Controllers
                 _db.Entry(producto).State = EntityState.Modified;
                 _db.Entry(productoConcreto).State = EntityState.Modified;
                 _db.SaveChanges();
-                    return RedirectToAction("Listado");
-                
+                return RedirectToAction("Listado");
+
             }
             ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion", productoViewModel.GrupoId);
             ViewBag.UnidadDeMedidaId = new SelectList(_service.ListaDeUnidadesDeMedida(), "Id", "Nombre", productoViewModel.UnidadDeMedidaId);
@@ -144,7 +161,7 @@ namespace ErpMvc.Controllers
 
         public JsonResult ListaUnidadesDeMedida(int id)
         {
-            var unidades = _service.UnidadesDeMismoTipoALaDeProducto(id).Select(c => new { c.Id, c.Nombre });
+            var unidades = _service.UnidadesDeMismoTipoALaDeProducto(id).Select(c => new { c.Id, c.Siglas });
             return Json(unidades, JsonRequestBehavior.AllowGet);
         }
 
@@ -160,7 +177,7 @@ namespace ErpMvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var producto = new Producto() {Activo = true, Nombre = productoViewModel.Nombre, GrupoId = productoViewModel.GrupoId, EsInventariable = productoViewModel.EsInventariable};
+                var producto = new Producto() { Activo = true, Nombre = productoViewModel.Nombre, GrupoId = productoViewModel.GrupoId, EsInventariable = productoViewModel.EsInventariable };
                 var unidad = _service.ListaDeUnidadesDeMedida().Find(productoViewModel.UnidadDeMedidaId);
                 _service.AgregarProducto(producto, unidad, productoViewModel.PrecioUnitario,
                     productoViewModel.Cantidad);
@@ -240,7 +257,7 @@ namespace ErpMvc.Controllers
                 var centrocostoId = _db.Set<CentroDeCosto>().FirstOrDefault().Id;
                 foreach (var prod in compra.Productos)
                 {
-                    _centroCostoService.DarSalidaPorMerma(prod.ProductoId, centrocostoId,prod.Cantidad,prod.UnidadDeMedidaId,User.Identity.GetUserId() );
+                    _centroCostoService.DarSalidaPorMerma(prod.ProductoId, centrocostoId, prod.Cantidad, prod.UnidadDeMedidaId, User.Identity.GetUserId());
                 }
 
                 if (_centroCostoService.GuardarCambios())
@@ -258,7 +275,7 @@ namespace ErpMvc.Controllers
         {
             var centroCostoId = _centroCostoService.CentrosDeCosto().FirstOrDefault().Id;
             var productoConcretoId = _db.Set<ProductoConcreto>().SingleOrDefault(p => p.ProductoId == productoId).Id;
-            var result = _centroCostoService.PuedeDarSalida(productoConcretoId,centroCostoId, cantidad,unidadId);
+            var result = _centroCostoService.PuedeDarSalida(productoConcretoId, centroCostoId, cantidad, unidadId);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
     }

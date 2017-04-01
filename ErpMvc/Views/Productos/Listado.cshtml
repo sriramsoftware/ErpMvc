@@ -26,7 +26,6 @@
 <table class="table dynamic">
     <thead>
         <tr>
-        
             <th></th>
         </tr>
     </thead>
@@ -35,44 +34,46 @@
         {
             <tr>
                 <td>
-                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                    <div class="col-md-4">
+                        <h4 class="title_insight">@String.Format("{0} ({1} {2})", item.Producto.Producto.Nombre, item.Producto.Cantidad, item.Producto.UnidadDeMedida.Siglas)</h4>
+                        <br/>
+                        Grupo: @item.Producto.Producto.Grupo.Descripcion
+                        <br/>
+                        Precio de Compra Promedio por Unidad: @Html.DisplayFor(modelItem => item.Producto.PrecioUnitario)
+                        <br/>
+                        @if (item.Producto.Producto.EsInventariable)
+                        {
+                            @:Este producto es inventariable
+                        }
+                        else
+                        {
+                            @:Este producto no es inventariable
+                        }
+                    </div>
+                    <div class="col-md-4 text-center">
                         <label class="badge badge-title">
                             @if (item.Producto.Cantidad <= 1)
                             {
-                                @String.Format("{0} {1}", item.Existencia.Cantidad, item.Producto.UnidadDeMedida.Nombre)
+                                @String.Format("{0} {1}", item.Existencias.Sum(e => e.Cantidad), item.Producto.UnidadDeMedida.Siglas)
                             }
                             else
                             {
-                                @String.Format("{0} {1}, en {2} envaces", item.Existencia.Cantidad,item.Producto.UnidadDeMedida.Nombre,Math.Round(item.Existencia.Cantidad/item.Producto.Cantidad,2))
+                                @String.Format("{0} {1}, en {2} envaces", item.Existencias.Sum(e => e.Cantidad), item.Producto.UnidadDeMedida.Siglas, Math.Round(item.Existencias.Sum(e => e.Cantidad)/ item.Producto.Cantidad, 2))
                             }
                         </label>
+                        @foreach (var ex in item.Existencias)
+                        {
+                            <br/>
+                            <span> @ex.Lugar : @ex.Cantidad @item.Producto.UnidadDeMedida.Siglas</span>
+                        }
                     </div>
-                    <div class="col-md-8 col-sm-8 col-xs-12">
-                        <h4 class="title_insight">@String.Format("{0} ({1} {2})", item.Producto.Producto.Nombre, item.Producto.Cantidad, item.Producto.UnidadDeMedida.Siglas)</h4>
-                        <br />
-                        Grupo: @item.Producto.Producto.Grupo.Descripcion
-                        <br />
-                        Precio de Compra Promedio por Unidad: @Html.DisplayFor(modelItem => item.Producto.PrecioUnitario)
-                        <br />
-                        @if (item.Producto.Producto.EsInventariable)
-                {
-                            @:Este producto es inventariable
-                }
-                else
-                {
-                            @:Este producto no es inventariable
-                }
-                    </div>
-
-                    <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-md-4">
                         @if (User.IsInRole(RolesMontin.UsuarioAvanzado) || User.IsInRole(RolesMontin.Administrador))
                         {
                             <a href="@Url.Action("Editar", new {Id = item.Producto.Id})" class="edit_grupo btn btn-primary btn-sm col-md-12 productoupd" data-toggle="tooltip" data-placement="top" title="Editar">
                                 <i class="glyphicon glyphicon-edit"></i>&nbsp;Editar este Producto
                             </a>
-
                         }
-
                         <a href="@Url.Action("Historial",new {Id = item.Producto.Id})" class="btn btn-primary btn-sm col-md-12 productoentrar" value="${row.id }">
                             <i class="glyphicon glyphicon-bookmark"></i>&nbsp;Movimientos / Historial
                         </a>

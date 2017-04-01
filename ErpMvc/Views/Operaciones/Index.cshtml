@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Página Principal";
+}
+
+@if (TempData["exito"] != null)
+{
+    <div class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Éxito!</strong> @TempData["exito"]
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>ERROR!</strong> @TempData["error"]
+    </div>
+}
+<div id="div-historial">
+    @{
+        Html.RenderAction("ResumenDeOperacionesContables", "Operaciones", new { Id = ViewBag.DiaContable.Id });
+    }
+</div>
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha">&nbsp;Pagina inicial</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
+            <p>
+                Dia contable: @ViewBag.DiaContable.Fecha.ToShortDateString()
+            </p>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <a id="cierreDia" class="col-md-12 col-sm-12 col-xs-12 btn btn-default">Cierre del Día</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
+            <p>
+                Registre la asistencia aqui<i class="glyphicon glyphicon-arrow-down"></i>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <a class="col-md-12 col-sm-12 col-xs-12 btn btn-default" href="@Url.Action("Index","ControlDeAsistencia")">Registrar asistencia</a>
+        </div>
+    </div>
+}
+
+<!-- MODAL AGREGAR MENU -->
+<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 id="modal-title" class="modal-title">Cierre del dia</h4>
+            </div>
+            <div id="modal-detalle" class="modal-body">
+                <p>Esta seguro que desea cerrar el día?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">NO</button>
+                <a class="btn btn-success" href="@Url.Action("CerrarPeriodo","PeriodoContable")">SI</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- TERMINA MODAL AGREGAR MENU -->
+
+@section scripts
+{
+<script src="~/Scripts/datatables.min.js"></script>
+<script src="~/Scripts/mbs-qdtf.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#cierreDia").click(function() {
+                $("#modal").modal();
+            });
+        });
+
+    </script>
+}

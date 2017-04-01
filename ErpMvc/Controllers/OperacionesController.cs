@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using CompraVentaCore.Models;
 using ContabilidadBL;
+using ContabilidadCore.Models;
 using ErpMvc.Models;
 using ErpMvc.ViewModels;
 
@@ -16,11 +17,25 @@ namespace ErpMvc.Controllers
     {
         private DbContext _db;
         private PeriodoContableService _periodoContableService;
+        private CuentasServices _cuentasServices;
 
         public OperacionesController(DbContext context)
         {
             _db = context;
             _periodoContableService = new PeriodoContableService(context);
+            _cuentasServices = new CuentasServices(context);
+        }
+
+        public ActionResult Index()
+        {
+            
+                if (_periodoContableService.NoHayDiaAbierto())
+                {
+                    _periodoContableService.EmpezarDiaContable(DateTime.Now);
+                }
+                ViewBag.DiaContable = _periodoContableService.GetDiaContableActual();
+                return View();
+            
         }
 
         public PartialViewResult ResumenDeOperaciones(int id)
@@ -42,7 +57,7 @@ namespace ErpMvc.Controllers
             var compras = _db.Set<Compra>().Where(g => g.DiaContableId == id).ToList();
             foreach (var venta in ventas)
             {
-                var fecha = new DateTime(venta.DiaContable.Fecha.Year, venta.DiaContable.Fecha.Month, venta.DiaContable.Fecha.Day, venta.Hora.Hours, venta.Hora.Minutes, venta.Hora.Seconds);
+                var fecha = venta.Fecha;
 
                 operaciones.Add(new ResumenDeOperaciones()
                 {
@@ -67,6 +82,23 @@ namespace ErpMvc.Controllers
                 });
             }
             return PartialView("_ResumenDeOperacionesPartial", operaciones);
+        }
+
+        public PartialViewResult ResumenDeOperacionesContables(int id)
+        {
+            //var diaContable = _periodoContableService.BuscarDiaContable(id);
+            var operaciones = new List<ResumenDeOperaciones>();
+            var movimientos =
+                _cuentasServices.GetMovimientosDeCuenta("Caja").Where(m => m.Asiento.DiaContableId == id);
+            operaciones.AddRange(movimientos.Select(m => new ResumenDeOperaciones()
+            {
+                Fecha = m.Asiento.Fecha,
+                Importe = m.TipoDeOperacion == TipoDeOperacion.Debito? m.Importe: -m.Importe,
+                Tipo = m.TipoDeOperacion.ToString(),
+                Detalle = m.Asiento.Detalle,
+                Usuario = m.Asiento.Usuario.UserName
+            }));
+            return PartialView("_ResumenDeOperacionesConteblesPartial", operaciones);
         }
     }
 }

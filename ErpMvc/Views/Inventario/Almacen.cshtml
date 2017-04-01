@@ -1,0 +1,85 @@
+﻿@using ErpMvc.Models
+@using ErpMvc.ViewModels
+@model IEnumerable<ProductoConcretoViewModel>
+
+@{
+    ViewBag.Title = "Inventario Almacen";
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+@if (TempData["exito"] != null)
+{
+    <div class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Éxito!</strong> @TempData["exito"]
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>ERROR!</strong> @TempData["error"]
+    </div>
+}
+
+
+<div class="row">
+    <div class="col-md-4 col-sm-4 text-right">
+        Almacen
+    </div>
+    <div class="col-md-8 col-sm-8">
+        @Html.DropDownList("AlmacenId", null, String.Empty, new { @class = "form-control" })
+    </div>
+</div>
+
+<div id="inventario-list">
+
+</div>
+
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha"><i class="glyphicon glyphicon-glass icono_derecha"></i>&nbsp;Inventario</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
+            <p>Seleccione el almacen del cual quiere ver la relacion de productos.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
+            <p>Puede verificar el inventario en centros de costo.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" href="@Url.Action("CentroDeCosto","Inventario")">En Centros de Costo</a>
+            <br/>
+            <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" href="@Url.Action("CentroDeCosto","Inventario")">Trasladar a Centros de Costo</a>
+            <br />
+            <img class="imagen_derecho img-thumbnail" src="@Url.Content("~/Content/images/productos.jpg")" />
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+
+            $(document).on('change', '#AlmacenId', function () {
+                var id = $("#AlmacenId option:selected").val();
+                $("#inventario-list").load('@Url.Action("ProductosEnAlmacen")' + '/' + id);
+            });
+        });
+    </script>
+}

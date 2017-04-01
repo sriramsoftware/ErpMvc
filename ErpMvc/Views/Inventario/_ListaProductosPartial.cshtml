@@ -1,0 +1,38 @@
+﻿@using ErpMvc.Models
+@using ErpMvc.ViewModels
+@model IEnumerable<ProductoConcretoViewModel>
+
+<table class="table dynamic">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Grupo</th>
+            <th>Invetariable</th>
+            <th>Cantidad</th>
+            <th>Costo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <h4 class="title_insight">@String.Format("{0} ({1} {2})", item.Producto.Producto.Nombre, item.Producto.Cantidad, item.Producto.UnidadDeMedida.Siglas)</h4>
+                </td>
+                <td>@item.Producto.Producto.Grupo.Descripcion</td>
+                <td>@Html.DisplayFor(m => item.Producto.Producto.EsInventariable)</td>
+                <td>
+                    @if (item.Producto.Cantidad <= 1)
+                    {
+                        @String.Format("{0} {1}", item.Existencias.Sum(e => e.Cantidad), item.Producto.UnidadDeMedida.Siglas)
+                    }
+                    else
+                    {
+                        @String.Format("{0} {1}, en {2} envaces", item.Existencias.Sum(e => e.Cantidad), item.Producto.UnidadDeMedida.Siglas, Math.Round(item.Existencias.Sum(e => e.Cantidad) / item.Producto.Cantidad, 2))
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Producto.PrecioUnitario)</td>
+            </tr>
+        }
+    </tbody>
+</table>

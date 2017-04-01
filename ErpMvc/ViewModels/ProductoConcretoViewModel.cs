@@ -10,8 +10,14 @@ namespace ErpMvc.ViewModels
     {
         public ProductoConcreto Producto { get; set; }
 
-        public ExistenciaCentroDeCosto Existencia { get; set; }
+        public ICollection<ExistenciaViewModel> Existencias { get; set; }
 
-        public ICollection<MovimientoDeProducto> Movimientos { get; set; } 
+        public ICollection<MovimientoDeProducto> Movimientos { get; set; }
+
+        public ProductoConcretoViewModel()
+        {
+            Movimientos = new List<MovimientoDeProducto>();
+            Existencias = new List<ExistenciaViewModel>();
+        }
     }
 }
