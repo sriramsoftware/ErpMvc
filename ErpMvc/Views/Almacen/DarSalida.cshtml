@@ -1,0 +1,148 @@
+﻿@model AlmacenCore.Models.ValeSalidaDeAlmacen
+
+@{
+    ViewBag.Title = "Dar salida de almacen";
+}
+
+<h1 class="message-body">@ViewBag.Title.</h1>
+
+@using (Html.BeginForm("DarSalida", "Almacen", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    <div id="salidaController" ng-controller="salidaController">
+        <div class="col-md-12">
+            <div class="form-group">
+                @{
+                    Html.RenderAction("DiaContable", "PeriodoContable");
+                }
+            </div>
+            <input type="hidden" name="AlmacenId" value="@ViewBag.AlmacenId" />
+            <div class="form-group">
+                @Html.LabelFor(m => m.CentroDeCostoId, "Centro de costo", new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    <select id="CentroDeCostoId" name="CentroDeCostoId" class="form-control" ng-model="centroDeCosto" ng-options="e.Nombre for e in centrosDeCosto track by e.Id" chosen="">
+                        
+                    </select>
+                    @Html.ValidationMessageFor(m => m.CentroDeCostoId)
+                </div>
+            </div>
+            <div class="form-group">
+                @{
+                    Html.RenderPartial("_DetallePartial", ViewData);
+                }
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-4 col-md-8">
+                    @Html.ActionLink("Atrás", "Almacen", "Inventario", null, new { @class = "btn btn-default" })
+                    <input id="comprar-btn" type="submit" class="btn btn-success" value="Dar salida" />
+                </div>
+            </div>
+        </div>
+    </div>
+                    }
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function() {
+            $(".select").chosen();
+
+            $('.nuevo').tooltip();
+
+            $('#comprar-btn').click(function() {
+                $('#form-detalle-compra').remove();
+            });
+        });
+
+        erp.controller('salidaController', [
+            '$scope', '$http', function($scope, $http) {
+                $scope.loading = true;
+                $scope.addMode = false;
+                $scope.tieneError = false;
+                $scope.error = "";
+                $scope.select_changed = 0;
+                $scope.centrosDeCosto = {};
+
+                $scope.productos = [];
+                $scope.urlProductos = '@Url.Action("ExistenciasAlmacen", "Almacen", new {Id = ViewBag.AlmacenId})';
+                $scope.fetchProductos = function() {
+                    $http.get($scope.urlProductos).then(function(result) {
+                        $scope.productos = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+                $scope.fetchProductos();
+
+                $scope.centrosDeCosto = [];
+                $scope.urlCentrosDeCosto = '@Url.Action("ListaCentrosDeCosto", "CentrosDeCostos")';
+                $scope.fetchCentrosDeCosto = function() {
+                    $http.get($scope.urlCentrosDeCosto).then(function(result) {
+                        $scope.centrosDeCosto = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+                $scope.fetchCentrosDeCosto();
+
+                $scope.detalles = [];
+                $scope.newDetalle = {};
+
+                $scope.agregarDetalle = function() {
+                    $scope.show = false;
+                    var detalleNuevo = {};
+                    var valido = true;
+                    if ($scope.newDetalle.Cantidad == null || $scope.newDetalle.ProductoId === "") {
+                        $scope.error = "Debe insertar los datos del producto.";
+                        $scope.tieneError = true;
+                        valido = false;
+                    }
+                    if (valido && $scope.newDetalle.Producto.Cantidad < $scope.newDetalle.Cantidad) {
+                        $scope.error = "No existe la cantidad que quiere dar salida, solo hay " + $scope.newDetalle.Producto.Cantidad;
+                        $scope.tieneError = true;
+                        valido = false;
+                    }
+
+                    if (valido && $scope.detalles.find(function(a) {
+                        if ($scope.newDetalle.Producto.Id === a.ProductoId) {
+                            return true;
+                        }
+                        return false;
+                    })) {
+                        $scope.error = "Ya agrego este producto al vale.";
+                        $scope.tieneError = true;
+                        valido = false;
+                    }
+                    if (valido) {
+                        detalleNuevo.ProductoId = $scope.newDetalle.Producto.Id;
+                        detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
+                        detalleNuevo.NombreProducto = $scope.newDetalle.Producto.Nombre;
+                        detalleNuevo.Unidad = $scope.newDetalle.Producto.Unidad;
+                        $scope.detalles.push(detalleNuevo);
+                        $("#save-aprob-btn").removeClass('disabled');
+                        $scope.newDetalle = {};
+                        $scope.fetchProductos();
+                        $scope.tieneError = false;
+                    }
+
+                };
+
+                $scope.closeAlert = function() {
+                    $scope.tieneError = false;
+                };
+
+                //Used to edit a record
+                $scope.borrarDetalle = function(index) {
+                    $scope.loading = true;
+                    var detalle = this.detalle;
+                    $scope.detalles.splice(index, 1);
+                    detalle.editMode = false;
+                    $scope.loading = false;
+                };
+                }
+        ]);
+
+    </script>
+
+}

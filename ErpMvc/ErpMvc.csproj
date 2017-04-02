@@ -52,8 +52,8 @@
       <HintPath>..\packages\ComercialCore.1.4.0\lib\net45\ComercialCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaBL, Version=1.20.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaBL.1.20.2\lib\net45\CompraVentaBL.dll</HintPath>
+    <Reference Include="CompraVentaBL, Version=1.20.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaBL.1.20.4\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CompraVentaCore, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -320,6 +320,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="Controllers\AgregadosController.cs" />
+    <Compile Include="Controllers\AlmacenController.cs" />
     <Compile Include="Controllers\CentrosDeCostosController.cs" />
     <Compile Include="Controllers\ClasificacionesDeProductosController.cs" />
     <Compile Include="Controllers\ComprasController.cs" />
@@ -380,6 +381,7 @@
     <Compile Include="ViewModels\DenominacionViewModel.cs" />
     <Compile Include="ViewModels\DesgloceEfectivoViewModel.cs" />
     <Compile Include="ViewModels\ExistenciaViewModel.cs" />
+    <Compile Include="ViewModels\MovimientoProductosViewModel.cs" />
     <Compile Include="ViewModels\ParametrosViewModel.cs" />
     <Compile Include="ViewModels\ProductoConcretoViewModel.cs" />
     <Compile Include="ViewModels\ProductoViewModel.cs" />
@@ -435,6 +437,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -1346,6 +1349,7 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\toastr.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1398,6 +1402,8 @@
     <Content Include="Views\Agregados\Agregar.cshtml" />
     <Content Include="Views\Agregados\Editar.cshtml" />
     <Content Include="Views\Agregados\Index.cshtml" />
+    <Content Include="Views\Almacen\_DetallePartial.cshtml" />
+    <Content Include="Views\Almacen\DarSalida.cshtml" />
     <None Include="Views\GruposDeProductos\Agregar.cshtml" />
     <Content Include="Views\GruposDeProductos\Listado.cshtml" />
     <Content Include="Views\PeriodoContable\_DiaContablePartial.cshtml" />
@@ -1426,6 +1432,8 @@
     <Content Include="Views\Inventario\_ListaProductosPartial.cshtml" />
     <Content Include="Views\Inventario\Almacen.cshtml" />
     <Content Include="Views\Inventario\CentroDeCosto.cshtml" />
+    <Content Include="Views\Inventario\_DetalleMovimientoPartial.cshtml" />
+    <Content Include="Views\Inventario\TrasladarAlmacenCentroCosto.cshtml" />
     <None Include="Views\Productos\Agregar.cshtml" />
     <Content Include="Views\Productos\Listado.cshtml" />
     <Content Include="Views\UnidadesDeMedidas\Listado.cshtml" />

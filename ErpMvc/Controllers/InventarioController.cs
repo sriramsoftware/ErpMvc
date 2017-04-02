@@ -21,7 +21,8 @@ namespace ErpMvc.Controllers
 
         public ActionResult Almacen()
         {
-            ViewBag.AlmacenId = new SelectList(_db.Set<Almacen>(), "Id", "Descripcion");
+            ViewBag.AlmacenId = _db.Set<Almacen>().FirstOrDefault().Id;
+            //ViewBag.AlmacenId = new SelectList(_db.Set<Almacen>(), "Id", "Descripcion");
             return View();
         }
 
@@ -49,7 +50,7 @@ namespace ErpMvc.Controllers
         // GET: Inventario
         public PartialViewResult ProductosEnCentroDeCosto(int id)
         {
-            var existencias = _db.Set<ExistenciaCentroDeCosto>().Include(e => e.Producto).Where(e => e.ProductoId == id).Select(p => new ProductoConcretoViewModel()
+            var existencias = _db.Set<ExistenciaCentroDeCosto>().Include(e => e.Producto).Where(e => e.CentroDeCostoId == id).Select(p => new ProductoConcretoViewModel()
             {
                 Producto = p.Producto,
                 Existencias = new List<ExistenciaViewModel>()

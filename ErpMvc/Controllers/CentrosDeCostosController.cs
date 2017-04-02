@@ -20,6 +20,10 @@ namespace ErpMvc.Controllers
             _centroDeCostoService = new CentroDeCostoService(context);
         }
 
+        public JsonResult ListaCentrosDeCosto()
+        {
+            return Json(_centroDeCostoService.CentrosDeCosto().Select(c => new {Id = c.Id, Nombre = c.Nombre}), JsonRequestBehavior.AllowGet);
+        }
 
         // GET: CentrosDeCostos
         public ActionResult Index()

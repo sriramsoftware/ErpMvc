@@ -159,6 +159,12 @@ namespace ErpMvc.Controllers
             return Json(productos, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult ListaProductosConcretos()
+        {
+            var productos = _db.Set<ProductoConcreto>().Where(p => p.Producto.Activo).Select(c => new { c.Id, c.Producto.Nombre, ProductoId = c.Producto.Id, Unidad = c.UnidadDeMedida.Siglas });
+            return Json(productos, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult ListaUnidadesDeMedida(int id)
         {
             var unidades = _service.UnidadesDeMismoTipoALaDeProducto(id).Select(c => new { c.Id, c.Siglas });
@@ -270,6 +276,77 @@ namespace ErpMvc.Controllers
             }
             return View(compra);
         }
+
+
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        public ActionResult MoverDeAlmacenACentroDeCosto()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        public ActionResult MoverDeAlmacenACentroDeCosto(MovimientoProductosViewModel movimiento)
+        {
+            var usuario = User.Identity.GetUserId();
+            if (ModelState.IsValid)
+            {
+                if (!movimiento.Productos.Any())
+                {
+                    TempData["error"] = "No se puede efectuar un movimiento sin productos";
+                    return View();
+                }
+                foreach (var prod in movimiento.Productos)
+                {
+                    //_centroCostoService.TrasladarProductoDeCentroDeCosto();
+                }
+
+                if (_centroCostoService.GuardarCambios())
+                {
+                    TempData["exito"] = "Movimiento registrado correctamente";
+                    return RedirectToAction("Listado", "Productos");
+                }
+                TempData["error"] = "No se pudo registrar el movimiento";
+                return RedirectToAction("Listado", "Productos");
+            }
+            return View(movimiento);
+        }
+
+
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        public ActionResult MoverEntreCentrosDeCosto()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        public ActionResult MoverEntreCentrosDeCosto(MovimientoProductosViewModel movimiento)
+        {
+            var usuario = User.Identity.GetUserId();
+            if (ModelState.IsValid)
+            {
+                if (!movimiento.Productos.Any())
+                {
+                    TempData["error"] = "No se puede efectuar un movimiento sin productos";
+                    return View();
+                }
+                foreach (var prod in movimiento.Productos)
+                {
+                    _centroCostoService.TrasladarProductoDeCentroDeCosto(movimiento.OrigenId,movimiento.DestinoId,prod.ProductoId,prod.Cantidad, prod.UnidadDeMedidaId,usuario);
+                }
+
+                if (_centroCostoService.GuardarCambios())
+                {
+                    TempData["exito"] = "Movimiento registrado correctamente";
+                    return RedirectToAction("Listado", "Productos");
+                }
+                TempData["error"] = "No se pudo registrar el movimiento";
+                return RedirectToAction("Listado", "Productos");
+            }
+            return View(movimiento);
+        }
+
 
         public JsonResult SePuedeDarSalida(int productoId, decimal cantidad, int unidadId)
         {

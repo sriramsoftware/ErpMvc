@@ -8,33 +8,20 @@
 
 <h2>@ViewBag.Title</h2>
 <hr />
-@if (TempData["exito"] != null)
-{
-    <div class="alert alert-dismissable alert-success">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>Éxito!</strong> @TempData["exito"]
-    </div>
-}
-@if (TempData["error"] != null)
-{
-    <div class="alert alert-dismissable alert-danger">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>ERROR!</strong> @TempData["error"]
-    </div>
-}
 
-
-<div class="row">
+@*<div class="row">
     <div class="col-md-4 col-sm-4 text-right">
         Almacen
     </div>
     <div class="col-md-8 col-sm-8">
-        @Html.DropDownList("AlmacenId", null, String.Empty, new { @class = "form-control" })
+        @Html.DropDownList("AlmacenId", null, String.Empty, new { @class = "form-control select" })
     </div>
-</div>
+</div>*@
 
 <div id="inventario-list">
-
+    @{
+        Html.RenderAction("ProductosEnAlmacen", new {Id = ViewBag.AlmacenId});
+    }
 </div>
 
 
@@ -59,7 +46,7 @@
         <div class="col-md-12 col-sm-12 col-xs-12 text-center">
             <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" href="@Url.Action("CentroDeCosto","Inventario")">En Centros de Costo</a>
             <br/>
-            <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" href="@Url.Action("CentroDeCosto","Inventario")">Trasladar a Centros de Costo</a>
+            <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" href="@Url.Action("DarSalida","Almacen")">Trasladar a Centros de Costo</a>
             <br />
             <img class="imagen_derecho img-thumbnail" src="@Url.Content("~/Content/images/productos.jpg")" />
         </div>
@@ -76,10 +63,10 @@
         $(document).ready(function () {
             $('btn').tooltip();
 
-            $(document).on('change', '#AlmacenId', function () {
+            @*$(document).on('change', '#AlmacenId', function () {
                 var id = $("#AlmacenId option:selected").val();
                 $("#inventario-list").load('@Url.Action("ProductosEnAlmacen")' + '/' + id);
-            });
+            });*@
         });
     </script>
 }
