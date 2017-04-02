@@ -12,6 +12,7 @@
     <link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
     <link href="~/Content/icomoon.css" rel="stylesheet" />
     <link href="~/Content/mbs-qdtf.css" rel="stylesheet" />
+    <link href="~/Content/toastr.min.css" rel="stylesheet" />
     @*<link href="~/Content/font-awesome.min.css" rel="stylesheet" />*@
     <link href="~/Content/Site.css" rel="stylesheet" />
 
@@ -106,7 +107,7 @@
                     @RenderBody()
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 seccion-derecha">
                 @RenderSection("SeccionDerecha", required: false)
             </div>
         </div>
@@ -136,7 +137,7 @@
     <script src="~/Scripts/chosen.jquery.min.js"></script>
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/angular.min.js"></script>
-
+    <script src="~/Scripts/toastr.min.js"></script>
     <script>
 
         var erp = angular.module("erp", []);
@@ -181,5 +182,38 @@
         });
     </script>
     @RenderSection("scripts", required: false)
+    @if (TempData["notice"] != null || TempData["error"] != null || TempData["exito"] != null)
+    {
+        <script>
+
+            @if (TempData["notice"] != null)
+            {
+                @:var messageInfo = "@TempData["notice"]";
+                                                                                                                                                                        }
+            @if (TempData["error"] != null)
+           {
+               @:var messageError = "@TempData["error"]";
+
+           }
+            @if (TempData["exito"] != null)
+           {
+               @:var messageSuccess = "@TempData["exito"]";
+                                                                                                                                                                       }
+
+            var showMessage = function () {
+                toastr.options = { "positionClass": "toast-bottom-right" };
+                if (typeof messageError != 'undefined')
+                    window.setTimeout(function () { toastr.error(messageError); }, 1000);
+                if (typeof messageInfo != 'undefined')
+                    window.setTimeout(function () { toastr.info(messageInfo); }, 1000);
+
+                if (typeof messageSuccess != 'undefined')
+                    window.setTimeout(function () {
+                        toastr.success(messageSuccess);
+                        toastr.showDuration = 500;
+                    }, 1000);
+                //window.hideDuration(function () { toastr.success(messageSuccess) }, 3000);
+            }()
+        </script>}
 </body>
 </html>

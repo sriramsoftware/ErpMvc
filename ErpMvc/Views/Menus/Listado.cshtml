@@ -5,21 +5,6 @@
     ViewBag.Title = "Menus";
 }
 
-@if (TempData["exito"] != null)
-{
-    <div class="alert alert-dismissable alert-success">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>Éxito!</strong> @TempData["exito"]
-    </div>
-}
-@if (TempData["error"] != null)
-{
-    <div class="alert alert-dismissable alert-danger">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>ERROR!</strong> @TempData["error"]
-    </div>
-}
-
 <table class="table dynamic">
     <thead>
         <tr>
@@ -33,7 +18,7 @@
         {
             <tr>
                 <td class="col-md-3">
-                    <img src="@Url.Content("~/Content/uploads/productos/" + item.Id + ".jpg")" onerror="this.remove();" class="img-thumbnail img-menu"/>
+                    <img src="@Url.Content("~/Content/uploads/productos/" + item.Id + ".jpg")" onerror="this.remove();" class="img-thumbnail img-menu" />
                 </td>
                 <td class="col-md-5">
                     <h4 class="title_insight">
@@ -41,7 +26,7 @@
                         {
                             <i class="glyphicon glyphicon-warning-sign"></i>
                         }
-                        @if (item.Costo*item.IndiceEsperado > item.PrecioDeVenta)
+                        @if (item.Costo * item.IndiceEsperado > item.PrecioDeVenta)
                         {
                             <i class="glyphicon glyphicon-exclamation-sign"></i>
                         }
@@ -49,33 +34,42 @@
                     </h4><br />
                     <p>
                         Precio de Venta: @String.Format("{0:C}", item.PrecioDeVenta)<br />
-                        Precio Total de Materias Primas: @String.Format("{0:C}", item.Costo)<br/>
+                        Precio Total de Materias Primas: @String.Format("{0:C}", item.Costo)<br />
                         Precio con Índice: @String.Format("{0:C}", item.Costo * item.IndiceEsperado)
                     </p>
                 </td>
-                <td class="col-md-4">
-                    <a class="btn btn-primary btn-sm edit-menu col-md-12 edit_grupo" value="@item.Id">
-                        <i class="icon-edit "></i>&nbsp;Editar Datos Generales
-                    </a>
-                    <a href="@Url.Action("FichaDeCosto",new {Id = item.Id})" class="btn btn-primary btn-sm col-md-12">
-                        <i class="glyphicon glyphicon-folder-open"></i>&nbsp;Modificar Ficha de Costo
-                    </a>
-                    <a href="@Url.Action("Agregados", new {Id = item.Id})" class="btn btn-primary btn-sm col-md-12" style="margin-top: 5px;">
-                        <i class="glyphicon glyphicon-glass"></i>&nbsp;Agregados
-                    </a>
-                    <form action="AgregarImagen" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="id" value="@item.Id"/>
-                        <input class="select-image hidden" type="file" name="file" accept="image/*"/>
-                        <a class="btn btn-primary btn-sm col-md-12 edit-image"
-                           style="margin-top: 5px;"><i class="icon-picture"></i>&nbsp;Editar Imagen</a>
-                    </form>
-                    <br/>
+                <td class="col-md-4 form-horizontal botones">
+                    <div class="form-group">
+                        <a class="btn btn-primary btn-sm col-md-12" value="@item.Id">
+                            <i class="glyphicon glyphicon-edit"></i>&nbsp;Editar Datos Generales
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <a href="@Url.Action("FichaDeCosto", new {Id = item.Id})" class="btn btn-primary btn-sm col-md-12">
+                            <i class="glyphicon glyphicon-folder-open"></i>&nbsp;Modificar Ficha de Costo
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <a href="@Url.Action("Agregados", new {Id = item.Id})" class="btn btn-primary  btn-sm col-md-12">
+                            <i class="glyphicon glyphicon-glass"></i>&nbsp;Agregados
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <form action="AgregarImagen" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input class="select-image hidden" type="file" name="file" accept="image/*" />
+                            <a class="btn btn-primary btn-sm  col-md-12 edit-image"><i class="icon-picture"></i>&nbsp;Editar Imagen</a>
+                        </form>
+                    </div>
                     @if (User.IsInRole(RolesMontin.Administrador))
                     {
-                        <a href="@Url.Action("Eliminar",new {Id = item.Id})" class="btn btn-primary btn-sm col-md-12">
-                            <i class="glyphicon glyphicon-trash"></i>&nbsp;Eliminar
-                        </a>
+                        <div class="form-group">
+                            <a href="@Url.Action("Eliminar",new {Id = item.Id})" class="btn btn-primary btn-sm  col-md-12">
+                                <i class="glyphicon glyphicon-trash"></i>&nbsp;Eliminar
+                            </a>
+                        </div>
                     }
+
                 </td>
             </tr>
         }
@@ -100,7 +94,7 @@
         <div class="col-md-12 col-sm-12 col-xs-12 text-center">
             <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" data-toggle="modal" data-target="#modal">Agregar Nuevo Menú</a>
 
-            <br/>
+            <br />
             <p>
                 <i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Menús bajo Precio de Costo
             </p>
@@ -109,17 +103,17 @@
                 <i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Menús bajo Precio con Índice
             </p>
             @*<a href="fichasdecosto" target="blank"
-               class="btn btn-default col-md-12 col-sm-12 col-xs-12">
-                <i class="glyphicon glyphicon-file"></i>&nbsp;Ver Fichas de Costo
-            </a>
-            <br/>
-            <a id="vermenunorentables" class="btn btn-default col-md-12 col-sm-12 col-xs-12">
-                <i class="icon-warning-sign"></i>&nbsp;Menús bajo Precio de Costo
-            </a>
-            <br/>
-            <a id="vermenunbajoprecioconindice" class="btn btn-default col-md-12 col-sm-12 col-xs-12">
-                <i class="icon-exclamation-sign"></i>&nbsp;Menús bajo Precio con Índice
-            </a>*@
+                   class="btn btn-default col-md-12 col-sm-12 col-xs-12">
+                    <i class="glyphicon glyphicon-file"></i>&nbsp;Ver Fichas de Costo
+                </a>
+                <br/>
+                <a id="vermenunorentables" class="btn btn-default col-md-12 col-sm-12 col-xs-12">
+                    <i class="icon-warning-sign"></i>&nbsp;Menús bajo Precio de Costo
+                </a>
+                <br/>
+                <a id="vermenunbajoprecioconindice" class="btn btn-default col-md-12 col-sm-12 col-xs-12">
+                    <i class="icon-exclamation-sign"></i>&nbsp;Menús bajo Precio con Índice
+                </a>*@
             <img class="imagen_derecho img-thumbnail" src="@Url.Content("~/Content/images/menus.jpg")" />
         </div>
     </div>

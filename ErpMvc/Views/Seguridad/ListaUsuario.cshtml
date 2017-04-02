@@ -7,23 +7,7 @@
 @Html.ActionLink("Agregar Usuario", "CrearUsuario", "Seguridad", null, new { @class = "btn btn-info" })
 
 <div>
-    @if (TempData["exito"] != null)
-    {
-        <div class="alert alert-dismissable alert-success">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <strong>Advertencia!</strong> @TempData["exito"].
-        </div>
-    }
-    @if (TempData["advertencia"] != null)
-    {
-        <div class="alert alert-dismissable alert-danger">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <strong>Advertencia!</strong> @TempData["advertencia"].
-        </div>
-
-
-    }
-
+    
     <table class="table dynamic">
         <thead>
             <tr>

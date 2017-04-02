@@ -4,24 +4,7 @@
 @{
     ViewBag.Title = "Ventas";
 }
-<div class="row">
 
-    @if (TempData["exito"] != null)
-    {
-        <div class="alert alert-dismissable alert-success">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <strong>Éxito!</strong> @TempData["exito"]
-        </div>
-    }
-    @if (TempData["error"] != null)
-    {
-        <div class="alert alert-dismissable alert-danger">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <strong>ERROR!</strong> @TempData["error"]
-        </div>
-    }
-
-</div>
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <form class="form-horizontal" role="form" accept-charset="utf-8">

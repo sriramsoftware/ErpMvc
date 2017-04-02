@@ -6,20 +6,7 @@
 
 <h2>@ViewBag.Title</h2>
 <hr />
-@if (TempData["exito"] != null)
-{
-    <div class="alert alert-dismissable alert-success">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>Éxito!</strong> @TempData["exito"]
-    </div>
-}
-@if (TempData["error"] != null)
-{
-    <div class="alert alert-dismissable alert-danger">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>ERROR!</strong> @TempData["error"]
-    </div>
-}
+
 <p>
     <a class="btn btn-success" href="@Url.Action("Agregar","UnidadesDeMedidas")"> <i class="glyphicon glyphicon-plus"></i> Nueva</a>
 </p>

@@ -639,3 +639,12 @@ img{
 	margin-top: 10px !important;
 	margin-bottom: 10px !important;
 }
+
+.seccion-derecha br{
+	margin-top: 10px !important;
+	margin-bottom: 10px !important;
+}
+
+.botones .form-group {
+    margin-bottom: 8px !important;
+}
