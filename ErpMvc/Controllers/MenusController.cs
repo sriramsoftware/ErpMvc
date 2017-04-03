@@ -15,11 +15,13 @@ namespace ErpMvc.Controllers
     [Authorize]
     public class MenusController : Controller
     {
+        private DbContext _db;
         private ElaboracionService _elaboracionService;
 
-        public MenusController(ElaboracionService service)
+        public MenusController(DbContext context)
         {
-            _elaboracionService = service;
+            _db = context;
+            _elaboracionService = new ElaboracionService(context);
         }
         // GET: Menus
         public ActionResult Listado()
@@ -30,7 +32,8 @@ namespace ErpMvc.Controllers
         public JsonResult Menu(int id)
         {
             var elaboracion = _elaboracionService.Elaboraciones().Find(id);
-            var e = new Elaboracion()
+            var porCiento = _db.Set<PorcientoMenu>().Find(elaboracion.Id);
+            var e = new 
             {
                 Id = elaboracion.Id,
                 Costo = elaboracion.Costo,
@@ -39,7 +42,8 @@ namespace ErpMvc.Controllers
                 CostoPlanificado = elaboracion.CostoPlanificado,
                 IndiceEsperado = elaboracion.IndiceEsperado,
                 Presentacion = elaboracion.Presentacion,
-                Preparacion = elaboracion.Preparacion
+                Preparacion = elaboracion.Preparacion,
+                PorCiento = porCiento.SeCalcula
             };
             return Json(e, JsonRequestBehavior.AllowGet);
         }
@@ -59,7 +63,7 @@ namespace ErpMvc.Controllers
 
         [HttpPost]
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        public ActionResult AgregarMenu(Elaboracion elaboracion)
+        public ActionResult AgregarMenu(Elaboracion elaboracion, bool? porCiento)
         {
             ModelState.Remove("Id");
             ModelState.Remove("PrecioDeVenta");
@@ -68,6 +72,8 @@ namespace ErpMvc.Controllers
             if (ModelState.IsValid)
             {
                 _elaboracionService.AgregarElaboracion(elaboracion);
+                _db.Set<PorcientoMenu>().Add(new PorcientoMenu() {ElaboracioId = elaboracion.Id,SeCalcula = porCiento.HasValue?porCiento.Value:false});
+                _db.SaveChanges();
                 return RedirectToAction("Listado");
             }
             return View(elaboracion);
@@ -98,12 +104,23 @@ namespace ErpMvc.Controllers
 
         [HttpPost]
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        public ActionResult Editar(Elaboracion elaboracion)
+        public ActionResult Editar(Elaboracion elaboracion,bool? porCiento)
         {
             if (ModelState.IsValid)
             {
                 elaboracion.Activo = true;
                 _elaboracionService.ModificarElaboracion(elaboracion);
+                if (_db.Set<PorcientoMenu>().Any())
+                {
+                    var porCientoMenu = _db.Set<PorcientoMenu>().SingleOrDefault(p => p.ElaboracioId == elaboracion.Id);
+                    porCientoMenu.SeCalcula = porCiento.HasValue ? porCiento.Value : false;
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    _db.Set<PorcientoMenu>().Add(new PorcientoMenu() {ElaboracioId = elaboracion.Id, SeCalcula = porCiento.HasValue ? porCiento.Value : false });
+                    _db.SaveChanges();
+                }
             }
             return RedirectToAction("Listado");
         }

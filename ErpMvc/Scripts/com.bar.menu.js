@@ -141,6 +141,7 @@ $(document).ready(function(){
 					$("#IndiceEsperado").val(data.IndiceEsperado);
 					$("#Preparacion").val(data.Preparacion);
 					$("#Presentacion").val(data.Presentacion);
+					//$("#porCiento").val(data.PorCiento);
 					$("#menu-form").attr("action","/Menus/Editar/");
 					$("#button-submit").text("Modificar");
 					$("#modal-title").text("Modificar Menu: "+data.Nombre);

@@ -356,6 +356,8 @@
     <Compile Include="Models\ConceptoDeGasto.cs" />
     <Compile Include="Models\ErpContext.cs" />
     <Compile Include="Models\OtrosGastos.cs" />
+    <Compile Include="Models\PorcientoMenu.cs" />
+    <Compile Include="Models\Propina.cs" />
     <Compile Include="Models\RolesMontin.cs" />
     <Compile Include="Models\TarjetaDeAsistencia.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

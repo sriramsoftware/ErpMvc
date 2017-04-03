@@ -46,6 +46,11 @@ namespace ErpMvc.Models
                             .HasRequired(a => a.Producto)
                             .WithMany().WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<PorcientoMenu>()
+                .ToTable("rst_porciento_menu")
+                .HasKey(p => p.ElaboracioId)
+                .HasRequired(p => p.Elaboracion)
+                .WithOptional();
            
             base.OnModelCreating(modelBuilder);
         }
@@ -90,5 +95,8 @@ namespace ErpMvc.Models
         public DbSet<Nivel> Niveles { get; set; }
 
         public DbSet<Entidad> Entidades { get; set; }
+
+        public DbSet<Propina> Propinas { get; set; }
+        public DbSet<PorcientoMenu> PorcientosMenus { get; set; }
     }
 }

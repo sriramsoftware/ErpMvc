@@ -40,7 +40,7 @@
                 </td>
                 <td class="col-md-4 form-horizontal botones">
                     <div class="form-group">
-                        <a class="btn btn-primary btn-sm col-md-12" value="@item.Id">
+                        <a class="btn btn-primary btn-sm col-md-12 edit-menu" value="@item.Id">
                             <i class="glyphicon glyphicon-edit"></i>&nbsp;Editar Datos Generales
                         </a>
                     </div>
@@ -140,6 +140,15 @@
     <script>
         $(document).ready(function () {
             $('btn').tooltip();
+
+            $(document).on("change", "#porCiento", function () {
+                //var check = $("#porCiento");
+                //if (check === true) {
+                //    $("#porCiento").val(true);
+                //} else {
+                //    $("#porCiento").val(false);
+                //}
+            });
         });
     </script>
 }
