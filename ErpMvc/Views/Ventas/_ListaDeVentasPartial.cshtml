@@ -48,7 +48,7 @@
             </label>
         </div>
         <div class="col-md-8 col-sm-8 col-xs-12">
-            <h4 class="title_insight">@venta.DiaContable.Fecha.ToShortDateString() @venta.Hora.ToString(@"hh\:mm")</h4>
+            <h4 class="title_insight">@venta.Fecha.ToShortDateString() @venta.Fecha.ToShortTimeString()</h4>
             <br />
             Posición en el Local:&nbsp; @venta.PuntoDeVenta.Nombre
             <br />
