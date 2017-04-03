@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using AlmacenCore.Models;
 using CompraVentaBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
@@ -13,16 +14,30 @@ namespace ErpMvc.Controllers
     [Authorize(Roles = RolesMontin.Administrador)]
     public class CentrosDeCostosController : Controller
     {
+        private DbContext _db;
         private CentroDeCostoService _centroDeCostoService;
 
         public CentrosDeCostosController(DbContext context)
         {
+            _db = context;
             _centroDeCostoService = new CentroDeCostoService(context);
         }
 
         public JsonResult ListaCentrosDeCosto()
         {
             return Json(_centroDeCostoService.CentrosDeCosto().Select(c => new {Id = c.Id, Nombre = c.Nombre}), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult Existencias(int id)
+        {
+            return Json(_db.Set<ExistenciaCentroDeCosto>().Where(e => e.CentroDeCostoId == id).Select(e => new
+            {
+                Id = e.ProductoId,
+                Nombre = e.Producto.Producto.Nombre,
+                Cantidad = e.Cantidad,
+                UnidadId = e.Producto.UnidadDeMedidaId,
+                Unidad = e.Producto.UnidadDeMedida.Siglas
+            }), JsonRequestBehavior.AllowGet);
         }
 
         // GET: CentrosDeCostos

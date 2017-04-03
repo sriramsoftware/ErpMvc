@@ -1,0 +1,165 @@
+﻿@model ErpMvc.ViewModels.MovimientoProductosViewModel
+
+@{
+    ViewBag.Title = "Mover entre centros de costo";
+}
+
+<h1 class="message-body">@ViewBag.Title.</h1>
+
+@using (Html.BeginForm("MoverEntreCentrosDeCosto", "Inventario", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    <div class="col-md-12" id="trasladoController" ng-controller="trasladoController">
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.OrigenId, "Desde", new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.DropDownList("OrigenId", null, new { @class = "form-control", @ng_model = "origenId", @chosen = "", @ng_change = "cambiarOrigen()" })
+                @Html.ValidationMessageFor(m => m.OrigenId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.DestinoId, "A", new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                <select class="form-control" name="DestinoId" chosen ng-model="destinoId" ng-options="centro.Nombre for centro in centrosDestino track by centro.Id"></select>
+                @Html.ValidationMessageFor(m => m.DestinoId)
+            </div>
+        </div>
+        <div class="form-group">
+            @{
+                Html.RenderPartial("_DetalleMovimientoPartial", ViewData);
+            }
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                @Html.ActionLink("Atrás", "CentroDeCosto", "Inventario", null, new { @class = "btn btn-default" })
+                <input id="comprar-btn" type="submit" class="btn btn-success" value="Mover" />
+            </div>
+        </div>
+    </div>
+                }
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $(".select").chosen();
+
+            $('.nuevo').tooltip();
+
+            $('#comprar-btn').click(function () {
+                $('#form-detalle-compra').remove();
+            });
+        });
+
+        erp.controller('trasladoController', [
+            '$scope', '$http', function ($scope, $http) {
+                $scope.loading = true;
+                $scope.addMode = false;
+                $scope.tieneError = false;
+                $scope.error = "";
+                $scope.select_changed = 0;
+                $scope.origenId = 0;
+                $scope.destinoId = 0;
+                $scope.centrosDestino = [];
+
+                $scope.centros = [];
+                $scope.fetchCentros = function () {
+                    $http.get('@Url.Action("ListaCentrosDeCosto", "CentrosDeCostos")').then(function (result) {
+                        $scope.centros = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+                $scope.fetchCentros();
+
+                $scope.productos = [];
+                $scope.fetchProductos = function (id) {
+                    $http.get('@Url.Action("Existencias", "CentrosDeCostos")' + '/' + id).then(function (result) {
+                        $scope.productos = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+
+                $scope.unidades = [];
+                $scope.urlUnidades = '@Url.Action("ListaUnidadesDeMedida", "Productos")';
+                $scope.fetchUnidades = function (id) {
+                    $http.get($scope.urlUnidades + "/" + id).then(function (result) {
+                        $scope.unidades = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+
+                $scope.cambiarOrigen = function () {
+                    $scope.fetchProductos($scope.origenId);
+                    $scope.fetchCentros();
+                    $scope.centrosDestino = $scope.centros;
+                    var index = $scope.centrosDestino.findIndex(function (a) {
+                        if ($scope.origenId == a.Id) {
+                            return true;
+                        }
+                        return false;
+                    });
+                    $scope.centrosDestino.splice(index, 1);
+                }
+
+                $scope.detalles = [];
+                $scope.newDetalle = {};
+
+                $scope.agregarDetalle = function () {
+                    $scope.show = false;
+                    var detalleNuevo = {};
+                    var valido = true;
+                    if ($scope.newDetalle.Cantidad == null || $scope.newDetalle.ProductoId === "") {
+                        $scope.error = "Debe insertar los datos del producto.";
+                        $scope.tieneError = true;
+                        valido = false;
+                    }
+
+                    if (valido && $scope.detalles.find(function (a) {
+                        if ($scope.newDetalle.ProductoId === a.ProductoId) {
+                            return true;
+                    }
+                        return false;
+                    })) {
+                        $scope.error = "Ya agrego este producto.";
+                        $scope.tieneError = true;
+                        valido = false;
+                    }
+                    if (valido && $scope.newDetalle.Producto.Cantidad < $scope.newDetalle.Cantidad) {
+                        $scope.error = "No hay la cantidad de producto para dar salida.";
+                        $scope.tieneError = true;
+                        valido = false;
+                    }
+                    if (valido) {
+                        detalleNuevo.Producto = $scope.newDetalle.Producto;
+                        detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
+                        $scope.detalles.push(detalleNuevo);
+                        $("#save-aprob-btn").removeClass('disabled');
+                        $scope.newDetalle = {};
+                        $("#Aprobacion_Fecha").val("");
+                        $scope.fetchProductos();
+                        $scope.tieneError = false;
+                    }
+                };
+
+                $scope.closeAlert = function () {
+                    $scope.tieneError = false;
+                };
+
+                $scope.borrarCarga = function (index) {
+                    $scope.loading = true;
+                    var detalle = this.detalle;
+                    $scope.detalles.splice(index, 1);
+                    detalle.editMode = false;
+                    $scope.loading = false;
+                    $scope.fetchProductos();
+                };
+            }
+        ]);
+
+    </script>
+
+}

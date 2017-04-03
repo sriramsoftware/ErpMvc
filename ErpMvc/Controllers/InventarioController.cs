@@ -5,8 +5,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AlmacenCore.Models;
+using CompraVentaBL;
 using ContabilidadCore.Models;
 using ErpMvc.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace ErpMvc.Controllers
 {
@@ -37,8 +39,8 @@ namespace ErpMvc.Controllers
                     new ExistenciaViewModel() {Lugar = p.Almacen.Descripcion, Cantidad = p.ExistenciaEnAlmacen}
                 }
             }).ToList();
-            
-            return PartialView("_ListaProductosPartial",existencias);
+
+            return PartialView("_ListaProductosPartial", existencias);
         }
 
         public ActionResult CentroDeCosto()
@@ -58,8 +60,43 @@ namespace ErpMvc.Controllers
                     new ExistenciaViewModel() {Lugar = p.CentroDeCosto.Nombre, Cantidad = p.Cantidad}
                 }
             }).ToList();
-            
-            return PartialView("_ListaProductosPartial",existencias);
+
+            return PartialView("_ListaProductosPartial", existencias);
+        }
+
+        public ActionResult MoverEntreCentrosDeCosto()
+        {
+            ViewBag.OrigenId = new SelectList(_db.Set<CentroDeCosto>(), "Id","Nombre");
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult MoverEntreCentrosDeCosto(MovimientoProductosViewModel movimiento)
+        {
+            if (ModelState.IsValid)
+            {
+                var centroCostoService = new CentroDeCostoService(_db);
+                var usurioId = User.Identity.GetUserId();
+                foreach (var producto in movimiento.Productos)
+                {
+                    if (!centroCostoService.TrasladarProductoDeCentroDeCosto(movimiento.OrigenId,
+                        movimiento.DestinoId, producto.ProductoId, producto.Cantidad, producto.UnidadDeMedidaId, usurioId))
+                    {
+                        TempData["error"] = "No se pudo realizar el movimiento";
+                        return RedirectToAction("CentroDeCosto");
+                    }
+                }
+                if (centroCostoService.GuardarCambios())
+                {
+                    TempData["exito"] = "Movimiento realizado correctmente";
+                }
+                else
+                {
+                    TempData["error"] = "No se pudo realizar el movimiento";
+                }
+                return RedirectToAction("CentroDeCosto");
+            }
+            return View();
         }
     }
 }

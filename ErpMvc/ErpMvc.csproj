@@ -1433,7 +1433,7 @@
     <Content Include="Views\Inventario\Almacen.cshtml" />
     <Content Include="Views\Inventario\CentroDeCosto.cshtml" />
     <Content Include="Views\Inventario\_DetalleMovimientoPartial.cshtml" />
-    <Content Include="Views\Inventario\TrasladarAlmacenCentroCosto.cshtml" />
+    <Content Include="Views\Inventario\MoverEntreCentrosDeCosto.cshtml" />
     <None Include="Views\Productos\Agregar.cshtml" />
     <Content Include="Views\Productos\Listado.cshtml" />
     <Content Include="Views\UnidadesDeMedidas\Listado.cshtml" />

@@ -8,52 +8,42 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Unidad</th>
-                <th></th>
+                <th class="col-md-6">Producto</th>
+                <th class="col-md-2">Cantidad</th>
+                <th class="col-md-1"></th>
             </tr>
         </thead>
         <tbody>
             <tr id="form-detalle-compra">
                 <td>
-                    <select id="ProductoId" name="ProductoId" class="form-control" chosen data-ng-model="newDetalle.ProductoId" data-ng-options="producto.Nombre for producto in productos track by producto.Id"></select>
+                    <select id="ProductoId" name="ProductoId" class="form-control" chosen ng-model="newDetalle.Producto" ng-options="producto.Nombre for producto in productos track by producto.Id"></select>
                     @Html.ValidationMessageFor(model => model.ProductoId)
 
                 </td>
                 <td>
-                    @Html.TextBoxFor(model => model.Cantidad, new {@class = "form-control", @style = "max-width: 100px !important", @data_ng_model = "newDetalle.Cantidad"})
+                    <div class="input-group">
+                        @Html.TextBoxFor(model => model.Cantidad, new { @class = "form-control", @data_ng_model = "newDetalle.Cantidad" })
+                        <span class="input-group-addon">{{newDetalle.Producto.Unidad}}</span>
+                    </div>
                     @Html.ValidationMessageFor(model => model.Cantidad)
-                </td>
-                <td>
-                    <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" chosen data-ng-model="newDetalle.UnidadId" data-ng-options="unidad.Nombre for unidad in unidades track by unidad.Id"></select>
-                    @Html.ValidationMessageFor(model => model.UnidadDeMedidaId)
                 </td>
                 <td>
                     <a id="add_aprob" data-ng-click="agregarDetalle()" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
                 </td>
             </tr>
-            <tr data-ng-repeat="detalle in detallesCompra">
+            <tr data-ng-repeat="detalle in detalles">
                 <td>
-                    <strong data-ng-hide="detalle.editMode">{{ detalle.NombreProducto }}</strong>
-                    <input name="Productos[{{ $index }}].ProductoId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ProductoId" class="form-control" />
+                    <strong data-ng-hide="detalle.editMode">{{ detalle.Producto.Nombre }}</strong>
+                    <input name="Productos[{{ $index }}].ProductoId" ng-show="detalle.editMode" type="text" ng-model="detalle.Producto.Id" class="form-control" />
                 </td>
                 <td>
-                    <p data-ng-hide="carga.editMode">{{ detalle.Cantidad }}</p>
-                    <input name="Productos[{{ $index }}].Cantidad" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.Cantidad" class="form-control"/>
-                </td>
-                <td>
-                    <p data-ng-hide="carga.editMode">{{ detalle.NombreUnidad }}</p>
-                    <input name="Productos[{{ $index }}].UnidadDeMedidaId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.UnidadId" class="form-control" />
+                    <p data-ng-hide="carga.editMode">{{ detalle.Cantidad }} {{detalle.Producto.Unidad}}</p>
+                    <input name="Productos[{{ $index }}].Cantidad" ng-show="detalle.editMode" type="text" ng-model="detalle.Cantidad" class="form-control"/>
+                    <input name="Productos[{{ $index }}].UnidadDeMedidaId" ng-show="detalle.editMode" type="text" ng-model="detalle.Producto.UnidadId" class="form-control" />
                 </td>
                 <td>
                     <p data-ng-hide="carga.editMode">
-                        @*<a class="btn btn-info" data-ng-click="toggleEdit(aprobacion)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-edit" aria-hidden="true"></span></a> |*@
                         <a class="btn btn-danger" data-ng-click="borrarCarga($index)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
-                    </p>
-                    <p data-ng-show="carga.editMode">
-                        <a class="btn btn-success" data-ng-click="save(carga)" href="javascript:;">Guardar</a> |
-                        <a class="btn btn-danger" data-ng-click="toggleEdit(carga)" href="javascript:;">Cancelar</a>
                     </p>
                 </td>
             </tr>
