@@ -51,7 +51,7 @@ namespace ErpMvc.Controllers
         public JsonResult AgregadosData(int id)
         {
             var elaboracion = _elaboracionService.Elaboraciones().Find(id);
-            var agregados = elaboracion.Agregados.Select(a => new {Id = a.Id, Nombre = a.Producto.Nombre, Costo = a.Costo}).ToList();
+            var agregados = elaboracion.Agregados.Select(a => new {Id = a.Id, Nombre = a.Producto.Nombre, Costo = a.Costo, Precio = a.Precio, AgregadoId = a.Id}).ToList();
             return Json(agregados, JsonRequestBehavior.AllowGet);
         }
 
@@ -184,7 +184,7 @@ namespace ErpMvc.Controllers
             var productos = new List<dynamic>();
             foreach (var prod in elaboracion.Agregados)
             {
-                productos.Add(new { Producto = prod.Producto.Nombre, ProductoId = prod.ProductoId, Unidad = prod.UnidadDeMedida.Siglas, Cantidad = prod.Cantidad });
+                productos.Add(new { Producto = prod.Producto.Nombre, ProductoId = prod.ProductoId, Unidad = prod.UnidadDeMedida.Siglas, Cantidad = prod.Cantidad , Precio = prod.Precio});
             }
 
             return Json(productos, JsonRequestBehavior.AllowGet);

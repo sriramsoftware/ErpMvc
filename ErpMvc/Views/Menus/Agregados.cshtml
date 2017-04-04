@@ -129,12 +129,6 @@
                         $scope.tieneError = true;
                         valido = false;
                     }
-                    //var form = $("#form-detalle-compra");
-                    //if (valido && !form.valid()) {
-                    //    $scope.error = "Datos incorrectos en el producto.";
-                    //    $scope.tieneError = true;
-                    //    valido = false;
-                    //}
                     if (valido && $scope.productosEnMenu.find(function (a) { if ($scope.newDetalle.ProductoId.Id === a.ProductoId) { return true; } return false; })) {
                         $scope.error = "Ya tiene este producto agregado.";
                         $scope.tieneError = true;
@@ -145,6 +139,7 @@
                         $scope.fetchProductos();
                         detalleNuevo.UnidadId = $scope.newDetalle.UnidadId.Id;
                         detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
+                        detalleNuevo.Precio = $scope.newDetalle.Precio;
                         detalleNuevo.MenuId = @Model.Id;
                         $scope.newDetalle.Cantidad = 0;
                         

@@ -142,12 +142,11 @@
             $('btn').tooltip();
 
             $(document).on("change", "#porCiento", function () {
-                //var check = $("#porCiento");
-                //if (check === true) {
-                //    $("#porCiento").val(true);
-                //} else {
-                //    $("#porCiento").val(false);
-                //}
+                if ($("#porCiento:checked").length > 0) {
+                    $("#porCiento").val(true);
+                } else {
+                    $("#porCiento").val(false);
+                }
             });
         });
     </script>

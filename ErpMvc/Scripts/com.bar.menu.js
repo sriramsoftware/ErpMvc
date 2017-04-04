@@ -141,7 +141,10 @@ $(document).ready(function(){
 					$("#IndiceEsperado").val(data.IndiceEsperado);
 					$("#Preparacion").val(data.Preparacion);
 					$("#Presentacion").val(data.Presentacion);
-					//$("#porCiento").val(data.PorCiento);
+                    $("#porCiento").val(data.PorCiento);
+					if (data.PorCiento) {
+					    $("#porCiento").prop('checked', 'checked');
+				    } 
 					$("#menu-form").attr("action","/Menus/Editar/");
 					$("#button-submit").text("Modificar");
 					$("#modal-title").text("Modificar Menu: "+data.Nombre);
