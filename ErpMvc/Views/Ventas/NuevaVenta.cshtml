@@ -7,7 +7,7 @@
 
 <h1 class="message-body">@ViewBag.Title.</h1>
 
-@using (Html.BeginForm("NuevaVenta", "Ventas"))
+@using (Html.BeginForm("NuevaVenta", "Ventas", FormMethod.Post, new { @id = "venta-form" }))
 {
     <div class="row padding0px">
         @if (User.IsInRole(RolesMontin.Administrador))
@@ -63,24 +63,24 @@
                             <div class="container">
                                 <table>
                                     <thead>
-                                    <tr>
-                                        <th class="col-md-6"></th>
-                                        <th class="col-md-6"></th>
-                                    </tr>
+                                        <tr>
+                                            <th class="col-md-6"></th>
+                                            <th class="col-md-6"></th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <tr ng-repeat="a in agregados">
-                                        <td class="col-md-6">{{a.Nombre}}</td>
-                                        <td class="col-md-6">
-                                            <a class="btn btn-primary btn-sm rest-menu" ng-disabled="menosADisabled" ng-click="disminuirAgregado(a)">
-                                                <i class="glyphicon glyphicon-minus-sign"></i>
-                                            </a>
-                                            <label class="cantidad-menu">{{ cantidadAgregado(a) }}</label>
-                                            <a class="btn btn-primary btn-sm add-menu" ng-disabled="masADisabled" ng-click="aumentarAgregado(a)">
-                                                <i class="glyphicon glyphicon-plus-sign"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                        <tr ng-repeat="a in agregados">
+                                            <td class="col-md-6">{{a.Nombre}}</td>
+                                            <td class="col-md-6">
+                                                <a class="btn btn-primary btn-sm rest-menu" ng-disabled="menosADisabled" ng-click="disminuirAgregado(a)">
+                                                    <i class="glyphicon glyphicon-minus-sign"></i>
+                                                </a>
+                                                <label class="cantidad-menu">{{ cantidadAgregado(a) }}</label>
+                                                <a class="btn btn-primary btn-sm add-menu" ng-disabled="masADisabled" ng-click="aumentarAgregado(a)">
+                                                    <i class="glyphicon glyphicon-plus-sign"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -150,6 +150,7 @@
                 $scope.precioDeVentaDeMenu = 0;
                 $scope.importeTotal = 0.00;
                 $scope.detalleActual = {};
+                $scope.ocupado = false;
 
                 $scope.menus = [];
                 $scope.urlMenus = '@Url.Action("Menus","Menus")';
@@ -160,23 +161,16 @@
                         $scope.select_changed++;
                     });
                 }
-                @*$scope.test = { Nombre : "Valor de prueba"};
-                $scope.pruebaAccion = function() {
-                    $http.post("@Url.Action("PruebaPost")",$scope.test);
-                }*@
 
                 $scope.agregados = [];
-
-                $scope.urlAgregados = '@Url.Action("AgregadosData","Menus")';
-
                 $scope.fetchAgregados = function (id) {
-                    $http.get($scope.urlAgregados + "/" + id).then(function (result) {
+                    $http.get('@Url.Action("AgregadosData","Menus")' + "/" + id).then(function (result) {
                         $scope.agregados = result.data;
                     });
                 }
 
                 $scope.cantidadAgregado = function (agregado) {
-                    var ag = $scope.detalleActual.Agregados.find(function(a) {
+                    var ag = $scope.detalleActual.Agregados.find(function (a) {
                         if (agregado.Id === a.Id) {
                             return a;
                         }
@@ -198,26 +192,18 @@
                         }
                         return null;
                     });
-                    if (ag == null) {
-                        $scope.menosDisabled = true;
-                    } else {
-                        if (ag.Cantidad > 1) {
+                    if (ag != null) {
+                        if (ag.Cantidad > 0) {
                             var precio = ag.Precio * $scope.detalleActual.Cantidad;
                             ag.Cantidad--;
                             $scope.importeTotal -= precio;
                             $scope.detalleActual.ImporteTotal -= precio;
-                            $scope.masADisabled = false;
-                        } else {
-                            $scope.menosADisabled = true;
-                            ag.Cantidad = 0;
-                            var precio = ag.Precio * $scope.detalleActual.Cantidad;
-                            $scope.importeTotal -= precio;
-                            $scope.detalleActual.ImporteTotal -= precio;
+                        } if (ag.Cantidad <= 0) {
+                            var index = $scope.detalleActual.Agregados.indexOf(agregado);
+                            $scope.detalleActual.Agregados.splice(index, 1);
                         }
                     }
                 }
-
-                $scope.masADisabled = false;
 
                 $scope.aumentarAgregado = function (agregado) {
                     var ag = $scope.detalleActual.Agregados.find(function (a) {
@@ -231,6 +217,7 @@
                         var precio = agregado.Precio * $scope.detalleActual.Cantidad;
                         $scope.importeTotal += precio;
                         $scope.detalleActual.ImporteTotal += precio;
+                        ag = agregado;
                         $scope.detalleActual.Agregados.push(agregado);
                     } else {
                         var precio = ag.Precio * $scope.detalleActual.Cantidad;
@@ -238,6 +225,23 @@
                         $scope.detalleActual.ImporteTotal += precio;
                         ag.Cantidad++;
                     }
+                    var url = "@Url.Action("SePuedeVender","Ventas")";
+                    var data = {
+                        PuntoDeVentaId: $("#PuntoDeVentaId").val(),
+                        Detalles: $scope.detallesVenta
+                    }
+                    $http.post(url, data).then(function (result) {
+                        if (result.data) {
+                            $scope.tieneError = false;
+                        } else {
+                            $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";
+                            var precio = ag.Precio * $scope.detalleActual.Cantidad;
+                            $scope.importeTotal -= precio;
+                            $scope.detalleActual.ImporteTotal -= precio;
+                            ag.Cantidad--;
+                            $scope.tieneError = true;
+                        }
+                    });
                 }
 
                 $scope.fetchMenus();
@@ -260,28 +264,32 @@
 
                 $scope.agregarDetalle = function () {
                     $scope.show = false;
+                    $scope.ocupado = true;
                     var detalleNuevo = {};
                     var valido = true;
                     if ($scope.newDetalle.Cantidad == null || $scope.newDetalle.ElaboracionId === "") {
                         $scope.error = "Debe insertar los datos del menu.";
                         $scope.tieneError = true;
                         valido = false;
+                        $scope.ocupado = false;
                     }
-                    //if (valido && $scope.detallesVenta.find(function (a) { if ($scope.newDetalle.ElaboracionId === a.ElaboracionId) { return true; } return false; })) {
-                    //    $scope.error = "Ya tiene agregado este menu.";
-                    //    $scope.tieneError = true;
-                    //    valido = false;
-                    //}
-                    var url = "@Url.Action("SePuedeVender","Ventas")" + "?menuId=" + $scope.newDetalle.ElaboracionId.Id + "&cantidad=" + $scope.newDetalle.Cantidad;
-                    $http.get(url).then(function (result) {
+                    if (valido) {
+                        detalleNuevo.ElaboracionId = $scope.newDetalle.ElaboracionId.Id;
+                        detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
+                        detalleNuevo.ImporteTotal = ($scope.newDetalle.ElaboracionId.Precio * $scope.newDetalle.Cantidad);
+                        var menuNombre = $("#ElaboracionId option:selected").html();
+                        detalleNuevo.NombreMenu = menuNombre;
+                    }
+                    var url = "@Url.Action("SePuedeVender","Ventas")";
+                    var data = {
+                        PuntoDeVentaId: $("#PuntoDeVentaId").val(),
+                        Detalles: $scope.detallesVenta,
+                        NuevoDetalle: detalleNuevo
+                    }
+                    $http.post(url, data).then(function (result) {
                         valido = result.data;
                         if (valido) {
-                            detalleNuevo.ElaboracionId = $scope.newDetalle.ElaboracionId.Id;
-                            detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
                             $scope.importeTotal += ($scope.newDetalle.ElaboracionId.Precio * $scope.newDetalle.Cantidad);
-                            detalleNuevo.ImporteTotal = ($scope.newDetalle.ElaboracionId.Precio * $scope.newDetalle.Cantidad);
-                            var menuNombre = $("#ElaboracionId option:selected").html();
-                            detalleNuevo.NombreMenu = menuNombre;
                             $scope.detallesVenta.push(detalleNuevo);
                             $("#save-aprob-btn").removeClass('disabled');
                             $scope.newDetalle = {};
@@ -291,11 +299,9 @@
                             $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";
                             $scope.tieneError = true;
                         }
-
+                        $scope.ocupado = false;
                     });
                 };
-
-                $scope.menosDisabled = false;
 
                 $scope.disminuirCantidad = function (detalle) {
                     if (detalle.Cantidad > 1) {
@@ -303,30 +309,31 @@
                         detalle.Cantidad--;
                         $scope.importeTotal -= precio;
                         detalle.ImporteTotal -= precio;
-                        $scope.masDisabled = false;
-                    } else {
-                        $scope.menosDisabled = true;
-                    }
+                    } 
                 }
 
-                $scope.masDisabled = false;
-
                 $scope.aumentarCantidad = function (detalle) {
-                    var url = "@Url.Action("SePuedeVender","Ventas")" + "?menuId=" + detalle.ElaboracionId + "&cantidad=" + detalle.Cantidad;
-                    $http.get(url).then(function (result) {
-                        valido = result.data;
-                        if (valido) {
-                            var precio = detalle.ImporteTotal / detalle.Cantidad;
-                            $scope.importeTotal += precio;
-                            detalle.ImporteTotal += precio;
-                            detalle.Cantidad++;
-
-                            $scope.menosDisabled = false;
+                    var precio = detalle.ImporteTotal / detalle.Cantidad;
+                    $scope.importeTotal += precio;
+                    detalle.ImporteTotal += precio;
+                    detalle.Cantidad++;
+                    var url = "@Url.Action("SePuedeVender","Ventas")";
+                    var data = {
+                        PuntoDeVentaId: $("#PuntoDeVentaId").val(),
+                        Detalles: $scope.detallesVenta
+                    }
+                    $http.post(url, data).then(function (result) {
+                        if (result.data) {
+                            $scope.tieneError = false;
                         } else {
                             $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";
+                            var precio = detalle.ImporteTotal / detalle.Cantidad;
+                            $scope.importeTotal -= precio;
+                            detalle.ImporteTotal -= precio;
+                            detalle.Cantidad--;
                             $scope.tieneError = true;
-                            $scope.masDisabled = true;
                         }
+
                     });
                 }
 

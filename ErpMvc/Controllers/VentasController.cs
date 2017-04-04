@@ -10,6 +10,7 @@ using CompraVentaCore.Models;
 using ContabilidadBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
+using ErpMvc.ViewModels;
 using HumanResourcesCore.Models;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
@@ -160,9 +161,29 @@ namespace ErpMvc.Controllers
             return RedirectToAction("Index");
         }
 
-        public JsonResult SePuedeVender(int menuId, int cantidad)
+        public JsonResult SePuedeVender(int menuId, int cantidad,int centroCostoId)
         {
-            var result = _ventasService.SePuedeVender(menuId, cantidad);
+            var result = _ventasService.SePuedeVender(menuId, cantidad,centroCostoId);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult SePuedeVender(VerificarVentaViewModel venta)
+        {
+            var nuevaVenta = new Venta()
+            {
+                PuntoDeVentaId = venta.PuntoDeVentaId
+            };
+            foreach (var detalle in venta.Detalles)
+            {
+                nuevaVenta.Elaboraciones.Add(detalle);
+            }
+            if (venta.NuevoDetalle != null)
+            {
+                nuevaVenta.Elaboraciones.Add(venta.NuevoDetalle);
+            }
+            
+            var result = _ventasService.SePuedeVender(nuevaVenta);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

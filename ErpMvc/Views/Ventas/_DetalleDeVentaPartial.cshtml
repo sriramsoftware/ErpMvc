@@ -31,7 +31,7 @@
             </td>
             <td class="col-md-2"></td>
             <td class="col-md-1">
-                <a id="add_aprob" data-ng-click="agregarDetalle()" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
+                <a id="add_aprob" ng-click="agregarDetalle()" ng-disabled="ocupado" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
             </td>
         </tr>
         <tr ng-repeat="detalle in detallesVenta">
@@ -44,14 +44,14 @@
                 <input name="Elaboraciones[{{ $index }}].ElaboracionId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ElaboracionId" class="form-control"/>
             </td>
             <td>
-                <a class="btn btn-primary btn-sm rest-menu" data-ng-disabled="menosDisabled" data-ng-click="disminuirCantidad(detalle)">
+                <a class="btn btn-primary btn-sm rest-menu" ng-click="disminuirCantidad(detalle)">
                     <i class="glyphicon glyphicon-minus-sign"></i>
                 </a>
                 <label class="cantidad-menu">{{ detalle.Cantidad }}</label>
-                <a class="btn btn-primary btn-sm add-menu"  data-ng-disabled="masDisabled" data-ng-click="aumentarCantidad(detalle)">
+                <a class="btn btn-primary btn-sm add-menu"  ng-click="aumentarCantidad(detalle)">
                     <i class="glyphicon glyphicon-plus-sign"></i>
                 </a>
-                <input name="Elaboraciones[{{ $index }}].Cantidad" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.Cantidad" class="form-control" />
+                <input name="Elaboraciones[{{ $index }}].Cantidad" ng-show="detalle.editMode" type="text" ng-model="detalle.Cantidad" class="form-control" />
             </td>
             <td>
                 <p data-ng-hide="carga.editMode">{{ detalle.ImporteTotal | currency }}</p>
