@@ -3,7 +3,7 @@
 
 
 <div class="alert alert-danger" data-ng-show="tieneError">
-    <button type="button" class="close" aria-hidden="true" data-ng-click="closeAlert()">&times;</button>
+    <button type="button" class="close" aria-hidden="true" ng-click="closeAlert()">&times;</button>
     <p>{{ error }}</p>
 </div>
 
@@ -26,7 +26,7 @@
 
             </td>
             <td class="col-md-2">
-                @Html.TextBoxFor(model => model.Cantidad, new { @class = "form-control", @style = "max-width: 100px !important", @data_ng_model = "newDetalle.Cantidad" })
+                @Html.TextBoxFor(model => model.Cantidad, new { @class = "form-control", @style = "max-width: 100px !important", @ng_model = "newDetalle.Cantidad" })
                 @Html.ValidationMessageFor(model => model.Cantidad)
             </td>
             <td class="col-md-2"></td>
@@ -34,38 +34,49 @@
                 <a id="add_aprob" ng-click="agregarDetalle()" ng-disabled="ocupado" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
             </td>
         </tr>
-        <tr ng-repeat="detalle in detallesVenta">
-            <td>
-                <a class="btn btn-sm btn-default" data-ng-click="mostrarAgregados(detalle)"><i class="glyphicon glyphicon-bell"></i></a>
-                <strong data-ng-hide="detalle.editMode">{{ detalle.NombreMenu }}</strong><span ng-if="detalle.Agregados.length > 0"> con :</span>
-                <span ng-repeat-start="agregado in detalle.Agregados">{{agregado.Nombre}} ({{agregado.Cantidad}})</span><span ng-if="$index < detalle.Agregados.length -1">,</span>
-                <input name="Elaboraciones[{{ $parent.$index }}].Agregados[{{$index}}].AgregadoId" type="hidden" value="{{agregado.Id}}" />
-                <input ng-repeat-end name="Elaboraciones[{{ $parent.$index }}].Agregados[{{$index}}].Cantidad" type="hidden"  value="{{agregado.Cantidad}}" />
-                <input name="Elaboraciones[{{ $index }}].ElaboracionId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ElaboracionId" class="form-control"/>
+    <tr ng-repeat="detalle in detallesVenta">
+        <td>
+            <a class="btn btn-sm btn-default" data-ng-click="mostrarAgregados(detalle)"><i class="glyphicon glyphicon-bell"></i></a>
+            <strong data-ng-hide="detalle.editMode">{{ detalle.NombreMenu }}</strong><span ng-if="detalle.Agregados.length > 0"> con :</span>
+            <span ng-repeat-start="agregado in detalle.Agregados">{{agregado.Nombre}} ({{agregado.Cantidad}})</span><span ng-if="$index < detalle.Agregados.length -1">,</span>
+            <input name="Elaboraciones[{{ $parent.$index }}].Agregados[{{$index}}].AgregadoId" type="hidden" value="{{agregado.Id}}"/>
+            <input ng-repeat-end name="Elaboraciones[{{ $parent.$index }}].Agregados[{{$index}}].Cantidad" type="hidden" value="{{agregado.Cantidad}}"/>
+            <input name="Elaboraciones[{{ $index }}].ElaboracionId" ng-show="detalle.editMode" type="text" ng-model="detalle.ElaboracionId" class="form-control"/>
+        </td>
+        <td>
+            <a class="btn btn-primary btn-sm rest-menu" ng-click="disminuirCantidad(detalle)">
+                <i class="glyphicon glyphicon-minus-sign"></i>
+            </a>
+            <label class="cantidad-menu">{{ detalle.Cantidad }}</label>
+            <a class="btn btn-primary btn-sm add-menu" ng-click="aumentarCantidad(detalle)">
+                <i class="glyphicon glyphicon-plus-sign"></i>
+            </a>
+            <input name="Elaboraciones[{{ $index }}].Cantidad" ng-show="detalle.editMode" type="text" ng-model="detalle.Cantidad" class="form-control"/>
+        </td>
+        <td>
+            <p data-ng-hide="carga.editMode">{{ detalle.ImporteTotal | currency }}</p>
+            <input name="Elaboraciones[{{ $index }}].ImporteTotal" ng-show="detalle.editMode" type="text" ng-model="detalle.ImporteTotal" class="form-control"/>
+        </td>
+        <td>
+            <p data-ng-hide="carga.editMode">
+                <a class="btn btn-danger" ng-click="borrarDetalle($index)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+            </p>
+            <p data-ng-show="carga.editMode">
+                <a class="btn btn-success" data-ng-click="save(carga)" href="javascript:;">Guardar</a> |
+                <a class="btn btn-danger" data-ng-click="toggleEdit(carga)" href="javascript:;">Cancelar</a>
+            </p>
+        </td>
+    </tr>
+        <tr>
+            <td class="col-md-7">
+                
             </td>
-            <td>
-                <a class="btn btn-primary btn-sm rest-menu" ng-click="disminuirCantidad(detalle)">
-                    <i class="glyphicon glyphicon-minus-sign"></i>
-                </a>
-                <label class="cantidad-menu">{{ detalle.Cantidad }}</label>
-                <a class="btn btn-primary btn-sm add-menu"  ng-click="aumentarCantidad(detalle)">
-                    <i class="glyphicon glyphicon-plus-sign"></i>
-                </a>
-                <input name="Elaboraciones[{{ $index }}].Cantidad" ng-show="detalle.editMode" type="text" ng-model="detalle.Cantidad" class="form-control" />
+            <td class="col-md-2">
+                <strong>Total</strong>
             </td>
-            <td>
-                <p data-ng-hide="carga.editMode">{{ detalle.ImporteTotal | currency }}</p>
-                <input name="Elaboraciones[{{ $index }}].ImporteTotal" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ImporteTotal" class="form-control" />
-            </td>
-            <td>
-                <p data-ng-hide="carga.editMode">
-                    @*<a class="btn btn-info" data-ng-click="toggleEdit(aprobacion)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-edit" aria-hidden="true"></span></a> |*@
-                    <a class="btn btn-danger" data-ng-click="borrarDetalle($index)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
-                </p>
-                <p data-ng-show="carga.editMode">
-                    <a class="btn btn-success" data-ng-click="save(carga)" href="javascript:;">Guardar</a> |
-                    <a class="btn btn-danger" data-ng-click="toggleEdit(carga)" href="javascript:;">Cancelar</a>
-                </p>
+            <td class="col-md-2">{{importeTotal|currency}}<input type="hidden" name="Importe" value="{{importeTotal}}"/></td>
+            <td class="col-md-1">
+                
             </td>
         </tr>
     </tbody>
