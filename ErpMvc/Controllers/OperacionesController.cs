@@ -94,10 +94,11 @@ namespace ErpMvc.Controllers
             {
                 Fecha = m.Asiento.Fecha,
                 Importe = m.TipoDeOperacion == TipoDeOperacion.Debito? m.Importe: -m.Importe,
-                Tipo = m.TipoDeOperacion.ToString(),
+                Tipo = m.Asiento.Detalle.Substring(0, m.Asiento.Detalle.IndexOf(" ")),
                 Detalle = m.Asiento.Detalle,
                 Usuario = m.Asiento.Usuario.UserName
             }));
+            ViewBag.ImporteAnterior = 0;
             return PartialView("_ResumenDeOperacionesConteblesPartial", operaciones);
         }
     }

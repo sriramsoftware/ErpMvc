@@ -1,11 +1,12 @@
-﻿@model IEnumerable<ErpMvc.ViewModels.ResumenDeOperaciones>
+﻿@using View = System.Web.UI.WebControls.View
+@model IEnumerable<ErpMvc.ViewModels.ResumenDeOperaciones>
 
 
     <h1 class="message-body " style="margin-bottom: 0px;">
-        Efectivo Inicial:
+        Efectivo Inicial: @String.Format("{0:C}",ViewBag.ImporteAnterior)
     </h1>
     <h1 class="message-body " style="margin-top: 0px;">
-        Efectivo Final:
+        Efectivo Final: @String.Format("{0:C}", ViewBag.ImporteAnterior + Model.Sum(m => m.Importe))
     </h1>
     <div class="text-center">
         <a href="" target="blank" class="btn btn-primary">Ver Resumen del Día</a>
@@ -45,10 +46,5 @@
                 </td>
             </tr>
         }
-        <tr>
-            <td><strong>Total</strong></td>
-            <td><strong> @string.Format("{0:C}", Model.Sum(m => m.Importe)) </strong></td>
-            <td></td>
-        </tr>
     </tbody>
 </table>
