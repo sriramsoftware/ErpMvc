@@ -485,8 +485,9 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\chosen.jquery.min.js" />
-    <Content Include="Scripts\com.bar.menu.js" />
+    <Content Include="Scripts\erp\menu.js" />
     <Content Include="Scripts\datatables.min.js" />
+    <Content Include="Scripts\erp\ventasController.js" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-touch.min.js.map" />
