@@ -19,7 +19,7 @@
         @Html.HiddenFor(m => m.Vendedor.UsuarioId)
 
         <div class="form-group">
-            @Html.LabelFor(m => m.Vendedor.Ci, "Cedula", new { @class = "col-md-4 control-label" })
+            @Html.LabelFor(m => m.Vendedor.Ci, "CI", new { @class = "col-md-4 control-label" })
             <div class="col-md-8">
                 @Html.TextBoxFor(m => m.Vendedor.Ci, new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.Vendedor.Ci)

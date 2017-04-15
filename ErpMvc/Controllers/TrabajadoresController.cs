@@ -9,6 +9,7 @@ using CompraVentaCore.Models;
 using ErpMvc.Models;
 using ErpMvc.ViewModels;
 using HumanResourcesCore.Models;
+using IdentidadCore.Models;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
