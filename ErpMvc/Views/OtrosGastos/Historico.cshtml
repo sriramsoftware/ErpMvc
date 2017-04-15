@@ -2,7 +2,7 @@
 @model IEnumerable<ErpMvc.Models.OtrosGastos>
 
 @{
-    ViewBag.Title = "Otros Gastos";
+    ViewBag.Title = "Historico de Gastos";
 }
 
 <table class="table dynamic">
@@ -11,7 +11,6 @@
             <th>Dia contable</th>
             <th>Concepto</th>
             <th>Importe</th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,16 +25,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Importe)
-                </td>
-                <td class="col-md-2 text-right">
-                    @if (User.IsInRole(RolesMontin.UsuarioAvanzado) || User.IsInRole(RolesMontin.Administrador))
-                    {
-                        <a class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="@Url.Action("Editar", new {Id = item.Id})"><i class="glyphicon glyphicon-edit"></i></a>
-                    }
-                    @if (User.IsInRole(RolesMontin.Administrador))
-                    {
-                        <a class="btn btn-danger btn-sm eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar" href="@Url.Action("Eliminar", new {Id = item.Id})"><i class="glyphicon glyphicon-trash"></i></a>
-                    }
                 </td>
             </tr>
         }
@@ -57,22 +46,12 @@
     </div>
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-            <a href="@Url.Action("Historico")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Ver historico</a>
+            <a href="@Url.Action("Index")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Ver de hoy</a>
         </div>
     </div>
     <br />
 
 }
-
-<!-- MODAL AGREGAR MENU -->
-<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-        </div>
-    </div>
-</div>
-<!-- TERMINA MODAL AGREGAR MENU -->
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
