@@ -3,31 +3,36 @@
 
 <table class="table table-hover table-striped">
     <thead>
-    <tr class="primary">
-        <th>Menu</th>
-        <th>Cantidad</th>
-        <th>Importe</th>
-    </tr>
+        <tr class="primary">
+            <th>Menu</th>
+            <th>Cantidad</th>
+            <th>Importe</th>
+        </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
-    {
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => item.Elaboracion.Nombre)
+                    @if (item.Agregados.Any())
+                    {
+                        var agreg = "con " + String.Join(",", item.Agregados.Select(a => a.Agregado.Producto.Nombre + " (" + a.Cantidad + ")"));
+                        @: @agreg
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.Cantidad)
+                </td>
+                <td>
+                    @String.Format("{0:C}", item.ImporteTotal)
+                </td>
+            </tr>
+        }
         <tr>
-            <td>
-                @Html.DisplayFor(m => item.Elaboracion.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(m => item.Cantidad)
-            </td>
-            <td>
-               @String.Format("{0:C}", item.ImporteTotal)
-            </td>
+            <td></td>
+            <td>Total: </td>
+            <td>@String.Format("{0:C}", Model.Sum(v => v.ImporteTotal))</td>
         </tr>
-    }
-    <tr>
-        <td></td>
-        <td>Total: </td>
-        <td>@String.Format("{0:C}", Model.Sum(v => v.ImporteTotal))</td>
-    </tr>
     </tbody>
 </table>

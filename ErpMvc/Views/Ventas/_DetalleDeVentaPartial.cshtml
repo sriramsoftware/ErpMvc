@@ -2,7 +2,7 @@
 
 
 
-<div class="alert alert-danger" data-ng-show="tieneError">
+<div class="alert alert-danger" ng-show="tieneError" ng-cloak>
     <button type="button" class="close" aria-hidden="true" ng-click="closeAlert()">&times;</button>
     <p>{{ error }}</p>
 </div>
@@ -21,7 +21,7 @@
     <tbody>
         <tr id="form-detalle-compra">
             <td class="col-md-7">
-                <select id="ElaboracionId" name="ElaboracionId" class="form-control" chosen ng-model="newDetalle.ElaboracionId" ng-options="menu.Nombre for menu in menus track by menu.Id"></select>
+                <select id="ElaboracionId" name="ElaboracionId" class="form-control" chosen ng-model="newDetalle.Elaboracion" ng-options="menu.Nombre for menu in menus track by menu.Id"></select>
                 @Html.ValidationMessageFor(model => model.ElaboracionId)
 
             </td>
@@ -34,14 +34,15 @@
                 <a id="add_aprob" ng-click="agregarDetalle()" ng-disabled="ocupado" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
             </td>
         </tr>
-    <tr ng-repeat="detalle in detallesVenta">
+    <tr ng-repeat="detalle in detallesVenta" ng-cloak>
         <td>
-            <a class="btn btn-sm btn-default" data-ng-click="mostrarAgregados(detalle)"><i class="glyphicon glyphicon-bell"></i></a>
-            <strong data-ng-hide="detalle.editMode">{{ detalle.NombreMenu }}</strong><span ng-if="detalle.Agregados.length > 0"> con :</span>
+            <a class="btn btn-sm btn-default" ng-click="mostrarAgregados(detalle)"><i class="glyphicon glyphicon-bell"></i></a>
+            <strong data-ng-hide="detalle.editMode">{{ detalle.Elaboracion.Nombre }}</strong><span ng-if="detalle.Agregados.length > 0"> con :</span>
             <span ng-repeat-start="agregado in detalle.Agregados">{{agregado.Nombre}} ({{agregado.Cantidad}})</span><span ng-if="$index < detalle.Agregados.length -1">,</span>
             <input name="Elaboraciones[{{ $parent.$index }}].Agregados[{{$index}}].AgregadoId" type="hidden" value="{{agregado.Id}}"/>
             <input ng-repeat-end name="Elaboraciones[{{ $parent.$index }}].Agregados[{{$index}}].Cantidad" type="hidden" value="{{agregado.Cantidad}}"/>
-            <input name="Elaboraciones[{{ $index }}].ElaboracionId" ng-show="detalle.editMode" type="text" ng-model="detalle.ElaboracionId" class="form-control"/>
+            <input name="Elaboraciones[{{ $index }}].ElaboracionId" ng-show="detalle.editMode" type="text" ng-model="detalle.Elaboracion.Id" class="form-control"/>
+            <input name="Elaboraciones[{{ $index }}].VentaId" ng-show="detalle.editMode" type="text" ng-model="detalle.VentaId" class="form-control"/>
         </td>
         <td>
             <a class="btn btn-primary btn-sm rest-menu" ng-click="disminuirCantidad(detalle)">
@@ -67,7 +68,7 @@
             </p>
         </td>
     </tr>
-        <tr>
+        <tr ng-cloak>
             <td class="col-md-7">
                 
             </td>

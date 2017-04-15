@@ -22,11 +22,11 @@
         </form>
     </div>
 </div>
-
+@* TODO: Agregar botones de cambio de estado y que tengan observaciones *@
 
 <div id="ventas-div">
     @{
-        Html.RenderAction("ListaDeVentasPartial", new {Id = ViewBag.DiaContable.Id});
+        Html.RenderAction("ListaDeVentasPartial", new { Id = ViewBag.DiaContable.Id });
     }
 </div>
 
@@ -132,6 +132,53 @@
     </div>
 </div>
 
+
+<div id="modalPropina" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true" ng-controller="propinaController">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("Propina", "Ventas", FormMethod.Post, new { @id = "cobrarPropina" }))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Pagar Vale</h4>
+                </div>
+                <div id="modal-body" class="modal-body">
+                    <input type="hidden" name="ventaId" value="{{idVenta}}" />
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            Entrada en CUC
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            <input class="form-control efectivo" type="text" id="entradaCuc" name="entradaCuc" data-ng-model="efectivoCuc" data-ng-change="efectivoTotalUpdate()" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            Entrada en CUP
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            <input class="form-control efectivo" type="text" id="entradaCup" name="entradaCup" data-ng-model="efectivoCup" data-ng-change="efectivoTotalUpdate()" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            Importe Total
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            <label class="form-control" disabled="disabled">{{efectivoTotal | currency}}</label>
+                            <input type="hidden" name="propina" value="{{efectivoTotal}}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="pagarValeButton" type="submit" class="btn btn-primary" ng-disabled="propinaDisabled" ng-click="cobrarPropina()">Cobrar Propina</button>
+                    <a class="btn btn-default" data-dismiss="modal">Cerrar</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
 <div id="modalEliminarVenta" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -140,11 +187,48 @@
                 <h4 class="modal-title">Eliminar Venta</h4>
             </div>
             <div id="modal-body" class="modal-body">
-                ¿Desea realmente eliminar los datos de esta venta?
+                <p>¿Desea realmente eliminar la comanda <span id="numero-comanda"></span>?</p>
             </div>
             <div class="modal-footer">
-                <a id="button-eliminar-venta" class="btn btn-primary">Eliminar Venta</a>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                @using (Html.BeginForm("Eliminar", "Ventas"))
+                {
+                    @Html.AntiForgeryToken()
+                    <input id="id-venta" type="hidden" name="Id" value="0" />
+                    <div class="col-md-3 col-md-offset-6">
+                        <input id="button-eliminar-venta" type="submit" value="Eliminar Venta" class="btn btn-primary" />
+                    </div>
+                }
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-default col-md-12" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modalImprimirVenta" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Imprimir Venta</h4>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <p>
+                    Imprimir el comprobante de la comanda la pasara a estado <strong>impresa</strong>.<br />
+                    Ya <strong>no podra</strong> editar la comanda <strong>ni cancelarla</strong>.<br />
+                    ¿Esta seguro de imprimir la <strong id="numero-comanda-imprimir"></strong>?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <div class="col-md-3 col-md-offset-6">
+                    @*<a class="btn btn-primary" id="imprimir-btn" href="@Url.Action("ImprimirReporte","Ventas")">Imprimir</a>*@
+                    <a class="btn btn-primary" id="imprimir-btn" href="javascript:;">Imprimir</a>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-default col-md-12" data-dismiss="modal">Cerrar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -155,6 +239,15 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/datatables.min.js"></script>
     <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script language='VBScript'>
+        Sub Print()
+        OLECMDID_PRINT = 6
+        OLECMDEXECOPT_DONTPROMPTUSER = 2
+        OLECMDEXECOPT_PROMPTUSER = 1
+        call WB.ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER,1)
+        End Sub
+        document.write "<object ID='WB' WIDTH=0 HEIGHT=0 CLASSID='CLSID:8856F961-340A-11D0-A96B-00C04FD705A2'></object>"
+    </script>
     <script>
         $(document).ready(function () {
             $('btn').tooltip();
@@ -174,13 +267,34 @@
                 });
             });
 
-            $(document).on('click', "#pagar-vale-btn", function () {
+            $(document).on('click', "#imprimir-btn", function () {
+                window.print();
+
+            });
+
+            $(document).on('click', ".print-vale-btn", function () {
+                var id = $(this).attr("data-id");
+                //$("#imprimir-btn").attr('href', '@Url.Action("ImprimirReporte","Ventas")' + '/' + id);
+                $("#numero-comanda-imprimir").html("comanda " + id);
+                $("#modalImprimirVenta").modal('show');
+            });
+
+            $(document).on('click', ".pagar-vale-btn", function () {
                 angular.element('#modalPagarVale').scope().fetchImporte($(this).attr("data-id"));
                 angular.element('#modalPagarVale').scope().$apply();
                 $("#modalPagarVale").modal('show');
             });
 
-            $(document).on('click', "#eliminar-venta-btn", function () {
+            $(document).on('click', ".propina-btn", function () {
+                angular.element('#modalPropina').scope().setVentaId($(this).attr("data-id"));
+                angular.element('#modalPropina').scope().$apply();
+                $("#modalPropina").modal('show');
+            });
+
+            $(document).on('click', ".eliminar-venta-btn", function () {
+                var id = $(this).attr('data-id');
+                $("#id-venta").val(id);
+                $("#numero-comanda").html(id);
                 $("#modalEliminarVenta").modal('show');
             });
         });
@@ -220,6 +334,34 @@
                         $scope.cobrarDisabled = false;
                     } else {
                         $scope.cobrarDisabled = true;
+                    }
+                };
+            }
+        ]);
+
+        erp.controller('propinaController', [
+            '$scope', '$http', function ($scope, $http) {
+                $scope.efectivoCup = 0.0;
+                $scope.efectivoCuc = 0.0;
+                $scope.efectivoTotal = 0.0;
+                $scope.aCobrar = 0.0;
+                $scope.propinaDisabled = true;
+                $scope.idVenta = 0;
+
+                $scope.setVentaId = function (id) {
+                    $scope.idVenta = id;
+                };
+
+                $scope.cobrarPropina = function () {
+                    $("#cobrarPropina").submit();
+                };
+
+                $scope.efectivoTotalUpdate = function () {
+                    $scope.efectivoTotal = ($scope.efectivoCuc * 1) + ($scope.efectivoCup / 24);
+                    if ($scope.efectivoTotal > 0) {
+                        $scope.propinaDisabled = false;
+                    } else {
+                        $scope.propinaDisabled = true;
                     }
                 };
             }

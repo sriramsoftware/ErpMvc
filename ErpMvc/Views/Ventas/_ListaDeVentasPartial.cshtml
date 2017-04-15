@@ -1,10 +1,11 @@
 ﻿@using CompraVentaCore.Models
+@using ErpMvc.Models
 @model IEnumerable<CompraVentaCore.Models.Venta>
 
 @if (Model.Any(c => c.EstadoDeVenta == EstadoDeVenta.Pendiente || c.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia))
 {
     <div class="alert alert-warning text-center">
-        Por favor, recuerde que tiene @Model.Count(c => c.EstadoDeVenta == EstadoDeVenta.Pendiente || c.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia) comandas
+        Por favor, recuerde que tiene @Model.Count(c => c.EstadoDeVenta == EstadoDeVenta.Pendiente || c.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia|| c.EstadoDeVenta == EstadoDeVenta.Facturada) comandas
         en espera de pago del cliente.
     </div>
 }
@@ -16,9 +17,9 @@
 
     <div class="row text-center">
         @{
-            var puntosDeVenta = Model.GroupBy(v => v.PuntoDeVenta).Select(v => new { PuntoDeVenta = v.Key.Nombre, Importe = v.Sum(ve => ve.Importe) });
+            var centrosDeCosto = Model.GroupBy(v => v.PuntoDeVenta.CentroDeCosto).Select(v => new { PuntoDeVenta = v.Key.Nombre, Importe = v.Sum(ve => ve.Importe) });
         }
-        @foreach (var pto in puntosDeVenta)
+        @foreach (var pto in centrosDeCosto)
         {
             <div class="col-md-3 col-sm-3 col-xs-12">
                 <h4 class="title_insight ">@pto.PuntoDeVenta:<br /> @String.Format("{0:C}", pto.Importe)</h4>
@@ -48,8 +49,10 @@
             </label>
         </div>
         <div class="col-md-8 col-sm-8 col-xs-12">
-            <h4 class="title_insight">@venta.Fecha.ToShortDateString() @venta.Fecha.ToShortTimeString()</h4>
-            <br />
+            <h4 class="title_insight">Comanda # @venta.Id</h4>
+            <br/>
+            @venta.Fecha.ToShortDateString() @venta.Fecha.ToShortTimeString()
+            <br/>
             Posición en el Local:&nbsp; @venta.PuntoDeVenta.Nombre
             <br />
             Dependiente: @venta.Vendedor.NombreCompleto
@@ -78,14 +81,21 @@
         <div class="col-md-4 col-sm-4 col-xs-12 botones">
             @Ajax.ActionLink("Ver Menus Consumidos", "MenusEnVentaPartial", "Ventas", new { Id = venta.Id }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, HttpMethod = "Get", UpdateTargetId = "modal-detalle", OnComplete = "mostrarModal" }, new { @class = "btn btn-primary btn-sm col-md-12" })
             <br />
-            <a id="print-vale-btn" class="btn btn-primary btn-sm col-md-12" data-id="@venta.Id">
+            <a class="btn btn-primary btn-sm col-md-12 print-vale-btn" href="javascript:;" data-id="@venta.Id">
                 <i class="glyphicon glyphicon-print"></i>&nbsp;Imprimir Reporte
             </a>
-            @if (venta.EstadoDeVenta == EstadoDeVenta.NoCobrada || venta.EstadoDeVenta == EstadoDeVenta.Pendiente || venta.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia)
+            @if (venta.EstadoDeVenta == EstadoDeVenta.NoCobrada || venta.EstadoDeVenta == EstadoDeVenta.Pendiente || venta.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia|| venta.EstadoDeVenta == EstadoDeVenta.Facturada)
                 {
                 <br />
-                <a id="pagar-vale-btn" class="btn btn-primary btn-sm col-md-12" data-id="@venta.Id">
+                <a class="btn btn-primary btn-sm col-md-12 pagar-vale-btn" data-id="@venta.Id">
                     <i class="glyphicon glyphicon-usd"></i>&nbsp;Pagar Vale
+                </a>
+            }
+            @if (venta.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo && !(ViewBag.Propinas as ICollection<Propina>).Any(p => p.VentaId == venta.Id))
+                {
+                <br />
+                <a class="btn btn-primary btn-sm col-md-12 propina-btn" data-id="@venta.Id">
+                    <i class="glyphicon glyphicon-usd"></i>&nbsp;Propina
                 </a>
             }
             @if (venta.EstadoDeVenta == EstadoDeVenta.Pendiente)
@@ -95,7 +105,7 @@
                     <i class="glyphicon glyphicon-edit"></i>&nbsp;Editar Comanda
                 </a>
                     <br />
-                    <a id="eliminar-venta-btn" class="btn btn-primary btn-sm col-md-12" data-id="@venta.Id">
+                    <a class="btn btn-primary btn-sm col-md-12 eliminar-venta-btn" data-id="@venta.Id">
                         <i class="glyphicon glyphicon-trash"></i>&nbsp;Eliminar esta venta
                     </a>
             }

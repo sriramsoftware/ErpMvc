@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using AlmacenCore.Models;
 using CompraVentaBL;
 using CompraVentaCore.Models;
 using ContabilidadBL;
@@ -20,22 +21,17 @@ namespace ErpMvc.Controllers
     [Authorize]
     public class VentasController : Controller
     {
+        private DbContext _db;
         private VentasService _ventasService;
         private PeriodoContableService _periodoContableService;
 
         public VentasController(DbContext context)
         {
+            _db = context;
             _ventasService = new VentasService(context);
             _periodoContableService = new PeriodoContableService(context);
         }
-
-        //public ActionResult PruebaPost(string test)
-        //{
-        //    TempData["exito"] = test;
-        //    return RedirectToAction("Index");
-        //}
-
-
+        
         // GET: Ventas
         public ActionResult Index(int id = 0)
         {
@@ -53,6 +49,7 @@ namespace ErpMvc.Controllers
 
         public PartialViewResult ListaDeVentasPartial(int id)
         {
+            ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContableId == id).ToList();
             return PartialView("_ListaDeVentasPartial", _ventasService.Ventas().Where(v => v.DiaContableId == id).ToList());
         }
 
@@ -120,50 +117,126 @@ namespace ErpMvc.Controllers
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Editar(int id)
         {
-            //var centro = _centroDeCostoService.CentrosDeCosto().Find(id);
-            return View();
+            var venta = _ventasService.Ventas().Find(id);
+            ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre", venta.PuntoDeVentaId);
+            ViewBag.VendedorId = new SelectList(_ventasService.Vendedores(), "Id", "NombreCompleto", venta.VendedorId);
+            return View(venta);
         }
 
         [HttpPost]
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        public ActionResult Editar(CentroDeCosto centroDeCosto)
+        public ActionResult Editar(Venta venta)
         {
-            //if (_centroDeCostoService.ModificarCentroDeCosto(centroDeCosto))
-            //{
-            //    TempData["exito"] = "Centro de costo modificado correctamente";
-            //    return RedirectToAction("Index");
-            //}
-            return View(centroDeCosto);
-        }
-
-        [Authorize(Roles = RolesMontin.Administrador)]
-        public ActionResult Eliminar(int id)
-        {
-            return PartialView("_EliminarTrabajadorPartial");
+            if (ModelState.IsValid)
+            {
+                var result = _ventasService.Editar(venta, User.Identity.GetUserId());
+                if (result)
+                {
+                    result = _ventasService.GuardarCambios();
+                    if (!result)
+                    {
+                        TempData["error"] = "No se pudo editar la venta, error al guardar los cambios";
+                    }
+                }
+                else
+                {
+                    TempData["error"] = "No se pudo editar la venta, es posible que se cambiara el centro de costo y este no tenga los productos de la venta";
+                }
+                if (result)
+                {
+                    TempData["exito"] = "Venta editada correctamente";
+                }
+                return RedirectToAction("Index");
+            }
+            ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre", venta.PuntoDeVentaId);
+            ViewBag.VendedorId = new SelectList(_ventasService.Vendedores(), "Id", "NombreCompleto", venta.VendedorId);
+            return View(venta);
         }
 
         [Authorize(Roles = RolesMontin.Administrador)]
         [HttpPost]
+        [ActionName("Eliminar")]
         public ActionResult EliminarConfirmado(int id)
         {
-            //var trabajador = _vendedorService.Vendedores().Find(id);
-            //if (trabajador == null)
-            //{
-            //    return new HttpNotFoundResult();
-            //}
-            //trabajador.Estado = EstadoTrabajador.Baja;
-            //if (trabajador.Usuario != null)
-            //{
-            //    trabajador.Usuario.Activo = false;
-            //}
-            //_vendedorService.ModificarVendedor(trabajador);
-            //TempData["exito"] = "Trabajador eliminado correctamente";
+            if (id == 0)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (_ventasService.EliminarVenta(id, User.Identity.GetUserId()))
+            {
+                if (_ventasService.GuardarCambios())
+                {
+                    TempData["exito"] = "Comanda eliminada correctamente";
+                }
+                else
+                {
+                    TempData["error"] = "La comanda no se puede eliminar";
+                }
+            }
+            else
+            {
+                TempData["error"] = "La comanda no se puede eliminar";
+            }
             return RedirectToAction("Index");
         }
 
-        public JsonResult SePuedeVender(int menuId, int cantidad,int centroCostoId)
+        public JsonResult SePuedeVender(int ventaId, int menuId, int cantidad)
         {
-            var result = _ventasService.SePuedeVender(menuId, cantidad,centroCostoId);
+            var venta = _ventasService.Ventas().Find(ventaId);
+            var result = _ventasService.SePuedeVender(menuId, cantidad, venta.PuntoDeVenta.CentroDeCostoId);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult DisminuirMenu(int id)
+        {
+            var result = _ventasService.DisminuirMenuEnVenta(id, User.Identity.GetUserId());
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult DisminuirAgregado(int detalleId, int agregadoId)
+        {
+            var result = _ventasService.DisminuirAgregadoEnVenta(detalleId,agregadoId, User.Identity.GetUserId());
+            if (result)
+            {
+                result = _ventasService.GuardarCambios();
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AumentarAgregado(int detalleId, int agregadoId)
+        {
+            var result = _ventasService.AumentarAgregadoEnVenta(detalleId,agregadoId, User.Identity.GetUserId());
+            if (result)
+            {
+                result = _ventasService.GuardarCambios();
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AumentarMenu(int id)
+        {
+            var result = _ventasService.AumentarMenuEnVenta(id, User.Identity.GetUserId());
+            if (result)
+            {
+                result = _ventasService.GuardarCambios();
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult AgregarMenuAVenta(DetalleDeVenta detalle)
+        {
+            var result = _ventasService.AgregarDetalleAVenta(detalle, User.Identity.GetUserId());
+            if (result)
+            {
+                result = _ventasService.GuardarCambios();
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult EliminarDetalle(int id)
+        {
+            var result = _ventasService.EliminarDetalleAVenta(id, User.Identity.GetUserId());
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -182,7 +255,7 @@ namespace ErpMvc.Controllers
             {
                 nuevaVenta.Elaboraciones.Add(venta.NuevoDetalle);
             }
-            
+
             var result = _ventasService.SePuedeVender(nuevaVenta);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -197,9 +270,6 @@ namespace ErpMvc.Controllers
         [Authorize]
         public ActionResult PagarVale(int? id)
         {
-            //var lqv = Request.Form["id"];
-            //int? id = int.Parse(lqv);
-            
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -209,7 +279,7 @@ namespace ErpMvc.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-            var result =_ventasService.PagarVentaEnEfectivo(venta.Id, User.Identity.GetUserId());
+            var result = _ventasService.PagarVentaEnEfectivo(venta.Id, User.Identity.GetUserId());
             if (result)
             {
                 TempData["exito"] = "Se pago el vale correctamente";
@@ -219,6 +289,52 @@ namespace ErpMvc.Controllers
                 TempData["errro"] = "Error al pagar";
             }
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult Propina(int ventaId, decimal propina)
+        {
+            var venta = _db.Set<Venta>().Find(ventaId);
+            if (venta.EstadoDeVenta != EstadoDeVenta.PagadaEnEfectivo)
+            {
+                TempData["error"] = "No se puede cobrar propina, la venta no esta en estado pagada";
+                return RedirectToAction("Index");
+            }    
+            _db.Set<Propina>().Add(new Propina()
+            {
+                VentaId = ventaId,
+                Importe = propina
+            });
+            var result = true;
+            try
+            {
+                _db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                result = false;
+            }
+            if (result)
+            {
+                TempData["exito"] = "Se cobro la propina correctamente";
+            }
+            else
+            {
+                TempData["error"] = "Error al cobrar propina";
+            }
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult ImprimirReporte(int id)
+        {
+            var venta = _db.Set<Venta>().Find(id);
+            if (venta.EstadoDeVenta == EstadoDeVenta.Pendiente)
+            {
+                venta.EstadoDeVenta = EstadoDeVenta.Facturada;
+                _db.SaveChanges();
+            }
+            return RedirectToAction("ValeDeVenta", "Reportes", new {Id = id});
         }
 
     }
