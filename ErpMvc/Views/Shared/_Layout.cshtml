@@ -1,6 +1,6 @@
 ﻿@using ErpMvc.Models
 <!DOCTYPE html>
-<html lang="es-Mx" data-ng-app="erp">
+<html lang="es-Mx" ng-app="erp">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,7 @@
     <link href="~/Content/icomoon.css" rel="stylesheet" />
     <link href="~/Content/mbs-qdtf.css" rel="stylesheet" />
     <link href="~/Content/toastr.min.css" rel="stylesheet" />
-    @*<link href="~/Content/font-awesome.min.css" rel="stylesheet" />*@
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
     <link href="~/Content/Site.css" rel="stylesheet" />
 
     @RenderSection("styles", false)
@@ -70,7 +70,7 @@
                                 <li class="divider"></li>
                                 <li><a href="@Url.Action("Index", "CentrosDeCostos")">Centros de costo</a></li>
                                 <li><a href="@Url.Action("Index", "PuntoDeVenta")">Puntos de Ventas</a></li>
-                                
+
                             </ul>
                         </li>
                     }
@@ -123,7 +123,7 @@
                     <p id="dia-contable" style="color: #808080"></p>
                 </div>
                 <div class="col-md-3">
-                    <a href="@Url.Action("Index", "ControlDeAsistencia")">Control de asistencia</a>
+                    @*<a href="@Url.Action("Index", "ControlDeAsistencia")">Control de asistencia</a>*@
                 </div>
             </div>
         </div>
@@ -175,9 +175,9 @@
                 changeYear: true
             });
 
-            $.get("@Url.Action("DiaContableData","PeriodoContable")", function(data) {
-                    $("#dia-contable").html(data);
-                }
+            $.get("@Url.Action("DiaContableData","PeriodoContable")", function (data) {
+                $("#dia-contable").html(data);
+            }
                 );
         });
     </script>
@@ -189,7 +189,7 @@
             @if (TempData["notice"] != null)
             {
                 @:var messageInfo = "@TempData["notice"]";
-                                                                                                                                                                        }
+                                                                                                                                                                                    }
             @if (TempData["error"] != null)
            {
                @:var messageError = "@TempData["error"]";
@@ -198,7 +198,7 @@
             @if (TempData["exito"] != null)
            {
                @:var messageSuccess = "@TempData["exito"]";
-                                                                                                                                                                       }
+                                                                                                                                                                                   }
 
             var showMessage = function () {
                 toastr.options = { "positionClass": "toast-bottom-right" };
