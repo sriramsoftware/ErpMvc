@@ -40,24 +40,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AlmacenCore, Version=1.3.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AlmacenCore.1.3.2\lib\net45\AlmacenCore.dll</HintPath>
+    <Reference Include="AlmacenCore, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AlmacenCore.1.3.3\lib\net45\AlmacenCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CajaCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CajaCore.1.0.0\lib\net45\CajaCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ComercialCore, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ComercialCore.1.4.0\lib\net45\ComercialCore.dll</HintPath>
+    <Reference Include="ComercialCore, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ComercialCore.1.5.0\lib\net45\ComercialCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaBL, Version=1.20.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaBL.1.20.6\lib\net45\CompraVentaBL.dll</HintPath>
+    <Reference Include="CompraVentaBL, Version=1.22.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaBL.1.22.0\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaCore, Version=1.9.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaCore.1.9.1\lib\net45\CompraVentaCore.dll</HintPath>
+    <Reference Include="CompraVentaCore, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaCore.1.10.0\lib\net45\CompraVentaCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ContabilidadBL, Version=1.4.4.0, Culture=neutral, processorArchitecture=MSIL">
@@ -173,8 +173,12 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HumanResourcesCore, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HumanResourcesCore.2.0.0\lib\net45\HumanResourcesCore.dll</HintPath>
+    <Reference Include="HumanResourcesCore, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HumanResourcesCore.1.2.0\lib\net45\HumanResourcesCore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IdentidadCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IdentidadCore.1.0.0\lib\net45\IdentidadCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -367,6 +371,12 @@
     <Compile Include="Reportes\Asistencia.Designer.cs">
       <DependentUpon>Asistencia.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reportes\ValeDeVenta.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\ValeDeVenta.Designer.cs">
+      <DependentUpon>ValeDeVenta.cs</DependentUpon>
+    </Compile>
     <Compile Include="Reportes\Operaciones.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -392,6 +402,10 @@
     <Compile Include="ViewModels\VerificarVentaViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\erpdb.mdf" />
+    <Content Include="App_Data\erpdb_log.ldf">
+      <DependentUpon>erpdb.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -407,6 +421,7 @@
     <Content Include="Content\jquery.dataTables.min.css" />
     <Content Include="Content\mbs-qdtf.css" />
     <Content Include="Content\images\logo.jpg" />
+    <Content Include="Content\morris.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -1350,6 +1365,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\mbs-qdtf.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\morris-data.js" />
+    <Content Include="Scripts\morris.min.js" />
+    <Content Include="Scripts\raphael-min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
@@ -1439,6 +1457,7 @@
     <Content Include="Views\Inventario\CentroDeCosto.cshtml" />
     <Content Include="Views\Inventario\_DetalleMovimientoPartial.cshtml" />
     <Content Include="Views\Inventario\MoverEntreCentrosDeCosto.cshtml" />
+    <Content Include="Views\OtrosGastos\Historico.cshtml" />
     <None Include="Views\Productos\Agregar.cshtml" />
     <Content Include="Views\Productos\Listado.cshtml" />
     <Content Include="Views\UnidadesDeMedidas\Listado.cshtml" />
@@ -1467,9 +1486,9 @@
     <Content Include="Views\Productos\_DetalleSalidaPartial.cshtml" />
     <Content Include="Views\Productos\TramitarSalida.cshtml" />
     <Content Include="Views\Seguridad\ResetearContraseña.cshtml" />
+    <Content Include="Views\Ventas\Editar.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Content\uploads\productos\" />
     <Folder Include="Utiles\" />
   </ItemGroup>
@@ -1487,6 +1506,9 @@
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Reportes\Asistencia.resx">
       <DependentUpon>Asistencia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\ValeDeVenta.resx">
+      <DependentUpon>ValeDeVenta.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\Operaciones.resx">
       <DependentUpon>Operaciones.cs</DependentUpon>

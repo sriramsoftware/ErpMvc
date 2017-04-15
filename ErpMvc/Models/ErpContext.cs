@@ -6,7 +6,10 @@ using ComercialCore.Models;
 using CompraVentaCore.Models;
 using ContabilidadCore.DbConfigurations;
 using ContabilidadCore.Models;
+using HumanResourcesCore.DbConfigurations;
 using HumanResourcesCore.Models;
+using IdentidadCore.DbConfigurations;
+using IdentidadCore.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using SeguridadCore.Models;
 
@@ -28,8 +31,7 @@ namespace ErpMvc.Models
             modelBuilder.Entity<ValeSalidaDeAlmacen>().HasRequired(v => v.Almacen).WithMany(a => a.ValesDeSalida).WillCascadeOnDelete(false);
             modelBuilder.Entity<Venta>().HasRequired(v => v.Vendedor).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<TarjetaDeAsistencia>().HasKey(v => v.VendedorId).HasRequired(v => v.Vendedor).WithOptional().WillCascadeOnDelete(false);
-            modelBuilder.Entity<Trabajador>().HasOptional(t => t.Caracteristicas).WithRequired();
-
+            
             //modulo contabilidad
             modelBuilder.Configurations.Add(new AsientoConfig());
             modelBuilder.Configurations.Add(new CuentaConfig());
@@ -37,6 +39,13 @@ namespace ErpMvc.Models
             modelBuilder.Configurations.Add(new MovimientoConfig());
             modelBuilder.Configurations.Add(new NivelConfig());
             modelBuilder.Configurations.Add(new ConfiguracionCuentaModuloConfig());
+
+            //modulo identidad
+            modelBuilder.Configurations.Add(new PersonaConfig());
+            modelBuilder.Configurations.Add(new CaracteristicaPersonaConfig());
+
+            //modulo recursos humanos
+            modelBuilder.Configurations.Add(new TrabajadorConfig());
 
             modelBuilder.Entity<Agregado>()
                 .ToTable("cv_agregados")
@@ -51,7 +60,13 @@ namespace ErpMvc.Models
                 .HasKey(p => p.ElaboracioId)
                 .HasRequired(p => p.Elaboracion)
                 .WithOptional();
-           
+
+            modelBuilder.Entity<Propina>()
+                .ToTable("rst_propina")
+                .HasKey(p => p.VentaId)
+                .HasRequired(p => p.Venta)
+                .WithOptional();
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -98,5 +113,10 @@ namespace ErpMvc.Models
 
         public DbSet<Propina> Propinas { get; set; }
         public DbSet<PorcientoMenu> PorcientosMenus { get; set; }
+
+        public DbSet<Persona> Personas { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<PersonaCliente> PersonasClientes { get; set; }
+        public DbSet<EntidadCliente> EntidadesClientes { get; set; }
     }
 }

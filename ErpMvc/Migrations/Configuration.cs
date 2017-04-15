@@ -15,6 +15,7 @@ namespace ErpMvc.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
             ContextKey = "PruebaSeguridadMvc.Models.ErpContext";
         }
 
@@ -58,7 +59,9 @@ namespace ErpMvc.Migrations
                 new TipoDeMovimiento() { Descripcion = TipoDeMovimientoConstantes.Merma, Factor = -1, Id = 3 },
                 new TipoDeMovimiento() { Descripcion = TipoDeMovimientoConstantes.SalidaAProduccion, Factor = -1, Id = 4 },
                 new TipoDeMovimiento() { Descripcion = TipoDeMovimientoConstantes.SalidaTrasladoInterno, Factor = -1, Id = 5 },
-                new TipoDeMovimiento() { Descripcion = TipoDeMovimientoConstantes.VentaIndependiente, Factor = -1, Id = 6 }
+                new TipoDeMovimiento() { Descripcion = TipoDeMovimientoConstantes.VentaIndependiente, Factor = -1, Id = 6 },
+                new TipoDeMovimiento() { Descripcion = TipoDeMovimientoConstantes.EntradaPorErrorDeSalida, Factor = 1, Id = 7 },
+                new TipoDeMovimiento() { Descripcion = TipoDeMovimientoConstantes.SalidaPorErrorDeEntrada, Factor = -1, Id = 8 }
                 );
 
             context.Monedas.AddOrUpdate(m => m.Id,

@@ -640,11 +640,20 @@ img{
 	margin-bottom: 10px !important;
 }
 
-.seccion-derecha br{
-	margin-top: 10px !important;
-	margin-bottom: 10px !important;
+.botones a{
+	margin-top: 3px !important;
+	margin-bottom: 3px !important;
+}
+
+.seccion-derecha a{
+	margin-top: 5px !important;
+	margin-bottom: 5px !important;
 }
 
 .botones .form-group {
     margin-bottom: 8px !important;
+}
+
+.ng-cloak {
+    display: none !important;
 }
