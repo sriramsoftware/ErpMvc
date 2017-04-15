@@ -41,6 +41,18 @@ namespace ErpMvc.Controllers
             return View("Plantilla");
         }
 
+
+        public ActionResult ValeDeVenta(int id)
+        {
+            var report = new ValeDeVenta(id);
+            string random = System.IO.Path.GetRandomFileName().Replace(".", string.Empty);
+            
+            reports.Add(random, report);
+            ViewData["ReporteId"] = random;
+            return View("Plantilla");
+        }
+
+
         public ActionResult Operaciones()
         {
             return View("OperacionesEnPeriodo");
