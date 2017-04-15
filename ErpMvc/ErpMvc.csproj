@@ -390,6 +390,7 @@
       <DependentUpon>Inventario.cs</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\AsientoContableViewModel.cs" />
     <Compile Include="ViewModels\DenominacionViewModel.cs" />
     <Compile Include="ViewModels\DesgloceEfectivoViewModel.cs" />
     <Compile Include="ViewModels\ExistenciaViewModel.cs" />
@@ -1458,6 +1459,7 @@
     <Content Include="Views\Inventario\_DetalleMovimientoPartial.cshtml" />
     <Content Include="Views\Inventario\MoverEntreCentrosDeCosto.cshtml" />
     <Content Include="Views\OtrosGastos\Historico.cshtml" />
+    <Content Include="Views\Operaciones\AgregarOperacion.cshtml" />
     <None Include="Views\Productos\Agregar.cshtml" />
     <Content Include="Views\Productos\Listado.cshtml" />
     <Content Include="Views\UnidadesDeMedidas\Listado.cshtml" />

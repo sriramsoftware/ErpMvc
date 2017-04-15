@@ -9,6 +9,7 @@ using ContabilidadBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
 using ErpMvc.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace ErpMvc.Controllers
 {
@@ -18,12 +19,14 @@ namespace ErpMvc.Controllers
         private DbContext _db;
         private PeriodoContableService _periodoContableService;
         private CuentasServices _cuentasServices;
+        private SubmayorService _submayorService;
 
         public OperacionesController(DbContext context)
         {
             _db = context;
             _periodoContableService = new PeriodoContableService(context);
             _cuentasServices = new CuentasServices(context);
+            _submayorService = new SubmayorService(context);
         }
 
         public ActionResult Index()
@@ -86,20 +89,60 @@ namespace ErpMvc.Controllers
 
         public PartialViewResult ResumenDeOperacionesContables(int id)
         {
-            //var diaContable = _periodoContableService.BuscarDiaContable(id);
+            var operaciones = ResumenDeOperaciones(id, "Caja");
+            ViewBag.ImporteAnterior = 0;
+            return PartialView("_ResumenDeOperacionesConteblesPartial", operaciones);
+        }
+
+        public ActionResult AgregarOperacion()
+        {
+            ViewBag.CuentaCreditoId = new SelectList(_db.Set<Cuenta>().ToList(),"Id","Nombre");
+            ViewBag.CuentaDebitoId = new SelectList(_db.Set<Cuenta>().ToList(),"Id","Nombre");
+            return View();
+        }
+
+        public JsonResult Cuentas()
+        {
+            var cuentas = _db.Set<Cuenta>().ToList().Select(c => new {Id = c.Id, Nombre = c.Nombre});
+            return Json(cuentas, JsonRequestBehavior.AllowGet);
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult AgregarOperacion(AsientoContableViewModel asiento)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_submayorService.AgregarOperacion(asiento.CuentaCreditoId,asiento.CuentaDebitoId,asiento.Importe,DateTime.Now,"Ajuste: " + asiento.Observaciones, User.Identity.GetUserId()))
+                {
+                    TempData["exito"] = "Operacion realizada correctamente";
+                }
+                else
+                {
+                    TempData["error"] = "Error al realizar la operacion contable";
+                }
+                return RedirectToAction("Index");
+            }
+            ViewBag.CuentaCreditoId = new SelectList(_db.Set<Cuenta>().ToList(), "Id", "Nombre",asiento.CuentaCreditoId);
+            ViewBag.CuentaDebitoId = new SelectList(_db.Set<Cuenta>().ToList(), "Id", "Nombre",asiento.CuentaDebitoId);
+            return View(asiento);
+        }
+
+
+        private List<ResumenDeOperaciones> ResumenDeOperaciones(int diaContableId, string nombreCuenta)
+        {
             var operaciones = new List<ResumenDeOperaciones>();
             var movimientos =
-                _cuentasServices.GetMovimientosDeCuenta("Caja").Where(m => m.Asiento.DiaContableId == id);
+                _cuentasServices.GetMovimientosDeCuenta(nombreCuenta).Where(m => m.Asiento.DiaContableId == diaContableId);
             operaciones.AddRange(movimientos.Select(m => new ResumenDeOperaciones()
             {
                 Fecha = m.Asiento.Fecha,
-                Importe = m.TipoDeOperacion == TipoDeOperacion.Debito? m.Importe: -m.Importe,
+                Importe = m.TipoDeOperacion == TipoDeOperacion.Debito ? m.Importe : -m.Importe,
                 Tipo = m.Asiento.Detalle.Substring(0, m.Asiento.Detalle.IndexOf(" ")),
                 Detalle = m.Asiento.Detalle,
                 Usuario = m.Asiento.Usuario.UserName
             }));
-            ViewBag.ImporteAnterior = 0;
-            return PartialView("_ResumenDeOperacionesConteblesPartial", operaciones);
-        }
+            return operaciones;
+        } 
     }
 }

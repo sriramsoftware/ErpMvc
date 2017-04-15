@@ -1,0 +1,92 @@
+﻿@model ErpMvc.ViewModels.AsientoContableViewModel
+
+@{
+    ViewBag.Title = "Nueva operacion contable";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("AgregarOperacion", "Operaciones", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    <div class="col-md-8 col-md-offset-2" ng-controller="cuentasController">
+        <div class="form-group">
+            @{
+                Html.RenderAction("DiaContable", "PeriodoContable");
+            }
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.CuentaCreditoId, "Crédito", new {@class = "col-md-4 control-label"})
+            <div class="col-md-8">
+                @Html.DropDownList("CuentaCreditoId", null, new {@class = "form-control",@chosen="", @ng_model = "origenId", @ng_change = "cambiarOrigen()" })
+                @Html.ValidationMessageFor(m => m.CuentaCreditoId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.CuentaDebitoId, "Débito", new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                <select class="form-control" name="CuentaDebitoId" chosen ng-model="destinoId" ng-options="cuenta.Nombre for cuenta in cuentasDestino track by cuenta.Id"></select>
+                @Html.ValidationMessageFor(m => m.CuentaDebitoId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Importe, new {@class = "col-md-4 control-label"})
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Importe, new {@class = "form-control"})
+                @Html.ValidationMessageFor(m => m.Importe)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Observaciones, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextAreaFor(m => m.Observaciones, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Observaciones)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                @Html.ActionLink("Atrás", "Index", null, new {@class = "btn btn-default"})
+                <input type="submit" class="btn btn-success" value="Crear"/>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        erp.controller('cuentasController', [
+            '$scope', '$http', function ($scope, $http) {
+                $scope.loading = true;
+                $scope.select_changed = 0;
+                $scope.origenId = 0;
+                $scope.destinoId = 0;
+                $scope.cuentasDestino = [];
+
+                $scope.cuentas = [];
+                $scope.fetchCuentas = function () {
+                    $http.get('@Url.Action("Cuentas", "Operaciones")').then(function (result) {
+                        $scope.cuentas = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+                $scope.fetchCuentas();
+
+                $scope.cambiarOrigen = function () {
+                    $scope.fetchCuentas();
+                    $scope.cuentasDestino = $scope.cuentas;
+                    var index = $scope.cuentasDestino.findIndex(function (a) {
+                        if ($scope.origenId == a.Id) {
+                            return true;
+                        }
+                        return false;
+                    });
+                    $scope.cuentasDestino.splice(index, 1);
+                }
+            }
+        ]);
+
+    </script>
+}
