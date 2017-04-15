@@ -2,10 +2,98 @@
     ViewBag.Title = "Página Principal";
 }
 
-<div id="div-historial">
-    @{
-        Html.RenderAction("ResumenDeOperaciones", "Operaciones", new { Id = ViewBag.DiaContable.Id });
-    }
+@section styles
+{
+    <!-- Morris Charts CSS -->
+    <link href="/Content/morris.css" rel="stylesheet">
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-bar-chart-o fa-fw"></i> Resumen de ultimos 6 meses
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div id="morris-area-chart"></div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-shopping-cart fa-3x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.ComprasDiarias - @String.Format("{0:C}", ViewBag.ImporteComprasDiarias)</div>
+                            <div>Compras!</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Action("TramitarCompra", "Compras")">
+                    <div class="panel-footer">
+                        <span class="pull-left">Ver detalles</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="glyphicon glyphicon-usd fa-3x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.VentasDiarias - @String.Format("{0:C}", ViewBag.ImporteVentasDiarias)</div>
+                            <div>Ventas!</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Action("Index","Ventas")">
+                    <div class="panel-footer">
+                        <span class="pull-left">Ver detalles</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="text-right">
+                            <div class="huge">26</div>
+                            <div>New Comments!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-bar-chart-o fa-fw"></i> 10 Menus mas vendidos
+            </div>
+            <div class="panel-body">
+                <div id="morris-donut-chart"></div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
 </div>
 @section SeccionDerecha
 {
@@ -27,18 +115,18 @@
             <a id="cierreDia" class="col-md-12 col-sm-12 col-xs-12 btn btn-default">Cierre del Día</a>
         </div>
     </div>
-    <div class="row">
+    @*<div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
             <p>
                 Registre la asistencia aqui<i class="glyphicon glyphicon-arrow-down"></i>
             </p>
         </div>
-    </div>
-    <div class="row">
+    </div>*@
+    @*<div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 text-center">
             <a class="col-md-12 col-sm-12 col-xs-12 btn btn-default" href="@Url.Action("Index","ControlDeAsistencia")">Registrar asistencia</a>
         </div>
-    </div>
+    </div>*@
 }
 
 <!-- MODAL AGREGAR MENU -->
@@ -64,12 +152,36 @@
 
 @section scripts
 {
-<script src="~/Scripts/datatables.min.js"></script>
-<script src="~/Scripts/mbs-qdtf.js"></script>
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="/Scripts/raphael-min.js"></script>
+    <script src="/Scripts/morris.min.js"></script>
+    @*<script src="/Scripts/morris-data.js"></script>*@
     <script>
         $(document).ready(function() {
             $("#cierreDia").click(function() {
                 $("#modal").modal();
+            });
+
+            Morris.Area({
+                element: 'morris-area-chart',
+                data: @Html.Raw(Json.Encode(ViewBag.Finanzas))
+                    ,
+                xkey: 'period',
+                ykeys: ['gastos', 'ingresos'],
+                labels: ['Gastos', 'Ingresos'],
+                pointSize: 2,
+                hideHover: 'auto',
+                resize: true
+            });
+
+            Morris.Donut({
+                element: 'morris-donut-chart',
+                data: @Html.Raw(Json.Encode(ViewBag.MasVendidos))
+                    ,
+                resize: true
             });
         });
 
