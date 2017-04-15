@@ -35,7 +35,21 @@
                     <p>
                         Precio de Venta: @String.Format("{0:C}", item.PrecioDeVenta)<br />
                         Precio Total de Materias Primas: @String.Format("{0:C}", item.Costo)<br />
-                        Precio con Índice: @String.Format("{0:C}", item.Costo * item.IndiceEsperado)
+                        Precio con Índice: @String.Format("{0:C}", item.Costo * item.IndiceEsperado)<br />
+                        @if (true)
+                        {
+                            @: Se calcula porciento
+                        }
+                        else
+                        {
+                            @: NO se calcula porciento
+                        }
+                        @if (item.Agregados.Any())
+                        {
+                            <br />
+                            @:Se le puede agregar : @String.Join(",", item.Agregados.Select(a => a.Producto.Nombre))
+                        }
+                        
                     </p>
                 </td>
                 <td class="col-md-4 form-horizontal botones">
@@ -136,10 +150,13 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/datatables.min.js"></script>
     <script src="~/Scripts/mbs-qdtf.js"></script>
-    <script src="~/Scripts/com.bar.menu.js"></script>
+    <script src="~/Scripts/erp/menu.js"></script>
     <script>
         $(document).ready(function () {
             $('btn').tooltip();
+
+            $("#CostoPlanificado").val(0.4);
+            $("#IndiceEsperado").val(2.4);
 
             $(document).on("change", "#porCiento", function () {
                 if ($("#porCiento:checked").length > 0) {

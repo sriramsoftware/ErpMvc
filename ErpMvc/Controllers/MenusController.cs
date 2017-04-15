@@ -26,7 +26,7 @@ namespace ErpMvc.Controllers
         // GET: Menus
         public ActionResult Listado()
         {
-            return View(_elaboracionService.Elaboraciones().Where(e => e.Activo));
+            return View(_elaboracionService.Elaboraciones().Include(e => e.Agregados).Where(e => e.Activo).ToList());
         }
 
         public JsonResult Menu(int id)
