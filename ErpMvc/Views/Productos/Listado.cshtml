@@ -53,7 +53,7 @@
                             <span> @ex.Lugar : @ex.Cantidad @item.Producto.UnidadDeMedida.Siglas</span>
                         }
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 botones">
                         @if (User.IsInRole(RolesMontin.UsuarioAvanzado) || User.IsInRole(RolesMontin.Administrador))
                         {
                             <a href="@Url.Action("Editar", new {Id = item.Producto.Id})" class="edit_grupo btn btn-primary btn-sm col-md-12 productoupd" data-toggle="tooltip" data-placement="top" title="Editar">
