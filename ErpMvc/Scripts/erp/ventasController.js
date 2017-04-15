@@ -42,7 +42,6 @@
                 };
 
                 $scope.menosADisabled = false;
-
                 $scope.disminuirAgregado = function (agregado) {
                     var ag = $scope.detalleActual.Agregados.find(function (a) {
                         if (agregado.Id === a.Id) {
@@ -52,12 +51,27 @@
                     });
                     if (ag != null) {
                         if (ag.Cantidad > 0) {
-                            var precio = ag.Precio * $scope.detalleActual.Cantidad;
-                            ag.Cantidad--;
-                            $scope.importeTotal -= precio;
-                            $scope.detalleActual.ImporteTotal -= precio;
-                        } if (ag.Cantidad <= 0) {
-                            var index = $scope.detalleActual.Agregados.indexOf(agregado);
+                            if ($scope.detalleActual.Id != undefined) {
+                                $http.get('/Ventas/DisminuirAgregado?detalleId=' + $scope.detalleActual.Id + '&agregadoId=' + ag.Id).then(function (result) {
+                                    if (result.data) {
+                                        var precio = ag.Precio * $scope.detalleActual.Cantidad;
+                                        ag.Cantidad--;
+                                        $scope.importeTotal -= precio;
+                                        $scope.detalleActual.ImporteTotal -= precio;
+                                        $scope.tieneError = false;
+                                    } else {
+                                        $scope.error = "Error al disminuir la cantidad del menu.";
+                                        $scope.tieneError = true;
+                                    }
+                                });
+                            } else {
+                                var precio = ag.Precio * $scope.detalleActual.Cantidad;
+                                ag.Cantidad--;
+                                $scope.importeTotal -= precio;
+                                $scope.detalleActual.ImporteTotal -= precio;
+                            }
+                        } if (ag.Cantidad == 0) {
+                            var index = $scope.detalleActual.Agregados.indexOf(ag);
                             $scope.detalleActual.Agregados.splice(index, 1);
                         }
                     }
@@ -83,24 +97,38 @@
                         $scope.detalleActual.ImporteTotal += precio;
                         ag.Cantidad++;
                     }
-                    //var url = "@Url.Action("SePuedeVender","VentasController")";
-                    var url = "/Ventas/SePuedeVender";
-                    var data = {
-                        PuntoDeVentaId: $("#PuntoDeVentaId").val(),
-                        Detalles: $scope.detallesVenta
-                    }
-                    $http.post(url, data).then(function (result) {
-                        if (result.data) {
-                            $scope.tieneError = false;
-                        } else {
-                            $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";
-                            var precio = ag.Precio * $scope.detalleActual.Cantidad;
-                            $scope.importeTotal -= precio;
-                            $scope.detalleActual.ImporteTotal -= precio;
-                            ag.Cantidad--;
-                            $scope.tieneError = true;
+                    if ($scope.detalleActual.Id != undefined) {
+                        $http.get('/Ventas/AumentarAgregado?detalleId=' + $scope.detalleActual.Id + '&agregadoId=' + ag.Id).then(function (result) {
+                            if (result.data) {
+                                $scope.tieneError = false;
+                            } else {
+                                $scope.error = "Error al aumentar la cantidad del menu.";
+                                var precio = ag.Precio * $scope.detalleActual.Cantidad;
+                                $scope.importeTotal -= precio;
+                                $scope.detalleActual.ImporteTotal -= precio;
+                                ag.Cantidad--;
+                                $scope.tieneError = true;
+                            }
+                        });
+                    } else {
+                        var url = "/Ventas/SePuedeVender";
+                        var data = {
+                            PuntoDeVentaId: $("#PuntoDeVentaId").val(),
+                            Detalles: $scope.detallesVenta
                         }
-                    });
+                        $http.post(url, data).then(function (result) {
+                            if (result.data) {
+                                $scope.tieneError = false;
+                            } else {
+                                $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";
+                                var precio = ag.Precio * $scope.detalleActual.Cantidad;
+                                $scope.importeTotal -= precio;
+                                $scope.detalleActual.ImporteTotal -= precio;
+                                ag.Cantidad--;
+                                $scope.tieneError = true;
+                            }
+                        });
+                    }
                 }
 
                 $scope.fetchMenus();
@@ -113,10 +141,12 @@
                 };
 
                 $scope.mostrarAgregados = function (detalle) {
-                    $scope.fetchAgregados(detalle.ElaboracionId);
+                    $scope.fetchAgregados(detalle.Elaboracion.Id);
                     $scope.detalleActual = detalle;
                     if ($scope.detalleActual.Agregados == null) {
                         $scope.detalleActual.Agregados = [];
+                    } else {
+                        
                     }
                     $("#modal-agregados").modal('show');
                 }
@@ -133,71 +163,111 @@
                         $scope.ocupado = false;
                     }
                     if (valido) {
-                        detalleNuevo.ElaboracionId = $scope.newDetalle.ElaboracionId.Id;
+                        detalleNuevo.ElaboracionId = $scope.newDetalle.Elaboracion.Id;
+                        detalleNuevo.Elaboracion = $scope.newDetalle.Elaboracion;
                         detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
-                        detalleNuevo.ImporteTotal = ($scope.newDetalle.ElaboracionId.Precio * $scope.newDetalle.Cantidad);
-                        var menuNombre = $("#ElaboracionId option:selected").html();
-                        detalleNuevo.NombreMenu = menuNombre;
+                        detalleNuevo.ImporteTotal = ($scope.newDetalle.Elaboracion.Precio * $scope.newDetalle.Cantidad);
                     }
-                    //var url = "@Url.Action("SePuedeVender","VentasController")";
-                    var url = "/Ventas/SePuedeVender/";
-                    var data = {
-                        PuntoDeVentaId: $("#PuntoDeVentaId").val(),
-                        Detalles: $scope.detallesVenta,
-                        NuevoDetalle: detalleNuevo
-                    }
-                    $http.post(url, data).then(function (result) {
-                        valido = result.data;
-                        if (valido) {
-                            $scope.importeTotal += ($scope.newDetalle.ElaboracionId.Precio * $scope.newDetalle.Cantidad);
-                            $scope.detallesVenta.push(detalleNuevo);
-                            $("#save-aprob-btn").removeClass('disabled');
-                            $scope.newDetalle = {};
-                            $("#Aprobacion_Fecha").val("");
-                            $scope.tieneError = false;
-                            $scope.fetchMenus();
-                        } else {
-                            $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";
-                            $scope.tieneError = true;
+                    if ($("#Id").val() == undefined) {
+                        var url = "/Ventas/SePuedeVender/";
+                        var data = {
+                            PuntoDeVentaId: $("#PuntoDeVentaId").val(),
+                            Detalles: $scope.detallesVenta,
+                            NuevoDetalle: detalleNuevo
                         }
-                        $scope.ocupado = false;
-                    });
+                        $http.post(url, data).then(function (result) {
+                            valido = result.data;
+                            if (valido) {
+                                $scope.importeTotal += ($scope.newDetalle.Elaboracion.Precio * $scope.newDetalle.Cantidad);
+                                $scope.detallesVenta.push(detalleNuevo);
+                                $("#save-aprob-btn").removeClass('disabled');
+                                $scope.newDetalle = {};
+                                $scope.tieneError = false;
+                                $scope.fetchMenus();
+                            } else {
+                                $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";
+                                $scope.tieneError = true;
+                            }
+                            $scope.ocupado = false;
+                        });
+                    } else {
+                        var url = "/Ventas/AgregarMenuAVenta/";
+                        detalleNuevo.VentaId = $("#Id").val();
+                        $http.post(url, detalleNuevo).then(function (result) {
+                            valido = result.data;
+                            if (valido) {
+                                $scope.importeTotal += ($scope.newDetalle.Elaboracion.Precio * $scope.newDetalle.Cantidad);
+                                $scope.detallesVenta.push(detalleNuevo);
+                                $("#save-aprob-btn").removeClass('disabled');
+                                $scope.newDetalle = {};
+                                $scope.tieneError = false;
+                                $scope.fetchMenus();
+                            } else {
+                                $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";
+                                $scope.tieneError = true;
+                            }
+                            $scope.ocupado = false;
+                        });
+                    }
                 };
 
                 $scope.disminuirCantidad = function (detalle) {
                     if (detalle.Cantidad > 1) {
-                        var precio = detalle.ImporteTotal / detalle.Cantidad;
-                        detalle.Cantidad--;
-                        $scope.importeTotal -= precio;
-                        detalle.ImporteTotal -= precio;
-                        $scope.tieneError = false;
+                        if (detalle.Id != undefined) {
+                            $http.get('/Ventas/DisminuirMenu/' + detalle.Id).then(function (result) {
+                                if (result.data) {
+                                    $scope.tieneError = false;
+                                } else {
+                                    $scope.error = "Error al disminuir la cantidad del menu.";
+                                    $scope.tieneError = true;
+                                }
+                            });
+                        }
+                        if (!$scope.tieneError) {
+                            var precio = detalle.ImporteTotal / detalle.Cantidad;
+                            detalle.Cantidad--;
+                            $scope.importeTotal -= precio;
+                            detalle.ImporteTotal -= precio;
+                            $scope.tieneError = false;
+                        }
                     } 
                 }
 
                 $scope.aumentarCantidad = function (detalle) {
                     var precio = detalle.ImporteTotal / detalle.Cantidad;
-                    $scope.importeTotal += precio;
-                    detalle.ImporteTotal += precio;
-                    detalle.Cantidad++;
-                    //var url = "@Url.Action("SePuedeVender","VentasController")";
-                    var url = "/Ventas/SePuedeVender/";
-                    var data = {
-                        PuntoDeVentaId: $("#PuntoDeVentaId").val(),
-                        Detalles: $scope.detallesVenta
-                    }
-                    $http.post(url, data).then(function (result) {
-                        if (result.data) {
-                            $scope.tieneError = false;
-                        } else {
-                            $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";
-                            var precio = detalle.ImporteTotal / detalle.Cantidad;
-                            $scope.importeTotal -= precio;
-                            detalle.ImporteTotal -= precio;
-                            detalle.Cantidad--;
-                            $scope.tieneError = true;
+                    if (detalle.Id == undefined) {
+                        $scope.importeTotal += precio;
+                        detalle.ImporteTotal += precio;
+                        detalle.Cantidad++;
+                        var url = "/Ventas/SePuedeVender/";
+                        var data = {
+                            PuntoDeVentaId: $("#PuntoDeVentaId").val(),
+                            Detalles: $scope.detallesVenta
                         }
-
-                    });
+                        $http.post(url, data).then(function(result) {
+                            if (result.data) {
+                                $scope.tieneError = false;
+                            } else {
+                                $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";                                
+                                $scope.importeTotal -= precio;
+                                detalle.ImporteTotal -= precio;
+                                detalle.Cantidad--;
+                                $scope.tieneError = true;
+                            }
+                        });
+                    } else {
+                        $http.get('/Ventas/AumentarMenu/' + detalle.Id).then(function (result) {
+                            if (result.data) {
+                                $scope.importeTotal += precio;
+                                detalle.ImporteTotal += precio;
+                                detalle.Cantidad++;
+                                $scope.tieneError = false;
+                            } else {
+                                $scope.error = "Error al aumentar la cantidad del menu.";
+                                $scope.tieneError = true;
+                            }
+                        });
+                    }
                 }
 
                 $scope.closeAlert = function () {
@@ -208,10 +278,22 @@
                 $scope.borrarDetalle = function (index) {
                     $scope.loading = true;
                     var detalle = this.detalle;
-                    $scope.importeTotal -= (detalle.ImporteTotal);
-                    $scope.detallesVenta.splice(index, 1);
-                    detalle.editMode = false;
-                    $scope.loading = false;
+                    var valido = true;
+                    if (detalle.Id != undefined) {
+                        $http.get('/Ventas/EliminarDetalle/' + detalle.Id).then(function (result) {
+                            if (result.data) {
+                                $scope.tieneError = false;
+                            } else {
+                                $scope.error = "Error, o se pudo eliminar el menu.";
+                                valido = false;
+                                $scope.tieneError = true;
+                            }
+                        });
+                    }
+                    if (valido) {
+                        $scope.importeTotal -= (detalle.ImporteTotal);
+                        $scope.detallesVenta.splice(index, 1);
+                    }
                 };
             }
 ]);
