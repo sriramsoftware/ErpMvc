@@ -20,11 +20,15 @@ namespace ErpMvc.Controllers
     public class PeriodoContableController : Controller
     {
         private PeriodoContableService _service;
+        private CuentasServices _cuentasServices;
+        private SubmayorService _submayorService;
         private DbContext _db;
 
         public PeriodoContableController(DbContext context)
         {
             _service = new PeriodoContableService(context);
+            _cuentasServices = new CuentasServices(context);
+            _submayorService = new SubmayorService(context);
             _db = context;
         }
         // GET: PeriodoContable
@@ -44,12 +48,43 @@ namespace ErpMvc.Controllers
         {
             //var diaAnterior = _db.Set<DiaContable>().OrderBy(d => d.Fecha).Skip(1).FirstOrDefault();
             var dia = _service.GetDiaContableActual();
+            var porcientos = _db.Set<PorcientoMenu>().ToList();
+            var efectivoAnterior = _db.Set<Caja>().SingleOrDefault().Efectivo.Any()
+                ? _db.Set<Caja>().SingleOrDefault().Efectivo.Sum(e => e.Cantidad * e.Denominacion.Valor)
+                : 0;
+            var totalVentas = 0m;
+            var ventasSinPorciento = 0m;
+            if (_db.Set<Venta>().Any(v => v.DiaContableId == dia.Id && (v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)))
+            {
+                var ventas = _db.Set<Venta>()
+                    .Where(
+                        v =>
+                            v.DiaContableId == dia.Id &&
+                            (v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo ||
+                             v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)).ToList();
+                totalVentas = ventas.Sum(v => v.Importe);
+                ventasSinPorciento = ventas.Sum(v => v.Elaboraciones.Where(e => porcientos.Any(p => p.ElaboracioId == e.ElaboracionId && !p.SeCalcula)).Sum(s => s.ImporteTotal));
+            }
+
+            var compras = _db.Set<Compra>().Any(v => v.DiaContableId == dia.Id)
+                ? _db.Set<Compra>()
+                    .Where(v => v.DiaContableId == dia.Id)
+                    .Sum(c => c.Productos.Any() ? c.Productos.Sum(p => p.ImporteTotal) : 0.0m)
+                : 0;
+            var gastos = _db.Set<OtrosGastos>().Any(v => v.DiaContableId == dia.Id)
+                ? _db.Set<OtrosGastos>().Where(v => v.DiaContableId == dia.Id).Sum(c => c.Importe)
+                : 0;
+            var propinas = _db.Set<Propina>().Any(v => v.Venta.DiaContableId == dia.Id)
+                ? _db.Set<Propina>().Where(v => v.Venta.DiaContableId == dia.Id).Sum(c => c.Importe)
+                : 0;
             var resumen = new
             {
-                EfectivoAnterior = _db.Set<Caja>().SingleOrDefault().Efectivo.Sum(e => e.Cantidad * e.Denominacion.Valor),
-                Ventas = _db.Set<Venta>().Where(v => v.DiaContableId == dia.Id).Sum(v => v.Importe),
-                Depositos = 0,
-                Extracciones = 0,
+                EfectivoAnterior = efectivoAnterior,
+                Ventas = totalVentas,
+                VentasSinPorciento = ventasSinPorciento,
+                Compras = compras,
+                Gastos = gastos,
+                Propinas = propinas
             };
             return Json(resumen, JsonRequestBehavior.AllowGet);
         }
@@ -73,7 +108,7 @@ namespace ErpMvc.Controllers
                 Cup = d.Any(e => e.Moneda.Sigla == "CUP"),
                 Cuc = d.Any(e => e.Moneda.Sigla == "CUC")
             });
-            
+
             var denominaciones = new DesgloceEfectivoViewModel()
             {
                 Billetes = billetes.ToList(),

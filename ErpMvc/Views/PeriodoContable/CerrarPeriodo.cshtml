@@ -2,17 +2,20 @@
     ViewBag.Title = "Cerrar Periodo";
 }
 
-<h2>@ViewBag.Title</h2>
+<div class="row" ng-controller="cierreController">
+    @Html.Partial("_ResumenDeEfectivoPartial")
 
-<div class="row" data-ng-controller="cierreController">
-    @{
-        Html.RenderAction("ResumenDeEfectivo");
-    }
-
-    @{
-        Html.RenderAction("DesgloseEfectivo");
-    }
+    @Html.Partial("_DesgloseEfectivoPartial")
 </div>
+
+@section SeccionDerecha
+{
+    <div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+        <p class="parrafo_derecha">Cerrar periodo</p>
+    </div>
+</div>
+}
 
 @section scripts
 {
@@ -31,9 +34,12 @@
                     $http.get($scope.urlResumen).then(function (result) {
                         $scope.efectivo_inicial = result.data.EfectivoAnterior;
                         $scope.ventas = result.data.Ventas;
-                        $scope.depositos = result.data.Depositos;
-                        $scope.extracciones = result.data.Extracciones;
-                        $scope.efectivo_antes_cierre = $scope.efectivo_inicial + $scope.ventas - $scope.extracciones + $scope.depositos;
+                        $scope.ventas_sin_porciento = result.data.VentasSinPorciento;
+                        $scope.ventas_con_porciento = $scope.ventas - $scope.ventas_sin_porciento;
+                        $scope.compras = result.data.Compras;
+                        $scope.gastos = result.data.Gastos;
+                        $scope.propinas = result.data.Propinas;
+                        $scope.efectivo_antes_cierre = $scope.efectivo_inicial + $scope.ventas - $scope.compras + $scope.gastos;
                         $scope.efectivo_a_dejar_en_caja = 0;
                         $scope.efectivo_a_extraer = $scope.efectivo_antes_cierre - $scope.efectivo_a_dejar_en_caja;
                     });
