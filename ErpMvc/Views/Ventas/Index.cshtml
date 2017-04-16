@@ -239,15 +239,7 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/datatables.min.js"></script>
     <script src="~/Scripts/mbs-qdtf.js"></script>
-    <script language='VBScript'>
-        Sub Print()
-        OLECMDID_PRINT = 6
-        OLECMDEXECOPT_DONTPROMPTUSER = 2
-        OLECMDEXECOPT_PROMPTUSER = 1
-        call WB.ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER,1)
-        End Sub
-        document.write "<object ID='WB' WIDTH=0 HEIGHT=0 CLASSID='CLSID:8856F961-340A-11D0-A96B-00C04FD705A2'></object>"
-    </script>
+    
     <script>
         $(document).ready(function () {
             $('btn').tooltip();
@@ -268,13 +260,25 @@
             });
 
             $(document).on('click', "#imprimir-btn", function () {
-                window.print();
-
+                //window.print();
+                //$("#imprimir-btn").attr('href', '@Url.Action("ImprimirReporte","Ventas")' + '/' + id);
+                var w = window.open();
+                var div = $("<div></div>");
+                var div2 = $("<div></div>");
+                var id = $(this).attr("data-id");
+                $(div).append("<p>Comanda # " + id + "</p>");
+                $(div).append(div2);
+                $(div2).load('@Url.Action("MenusEnVentaPartial","Ventas")' + '/' + id, function() {
+                    w.document.write($(div).html());
+                    w.print();
+                    w.close();
+                });
+                
             });
 
             $(document).on('click', ".print-vale-btn", function () {
                 var id = $(this).attr("data-id");
-                //$("#imprimir-btn").attr('href', '@Url.Action("ImprimirReporte","Ventas")' + '/' + id);
+                $("#imprimir-btn").attr("data-id",id);
                 $("#numero-comanda-imprimir").html("comanda " + id);
                 $("#modalImprimirVenta").modal('show');
             });
