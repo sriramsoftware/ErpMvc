@@ -419,10 +419,12 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utiles\LicenciaAttribute.cs" />
     <Compile Include="ViewModels\AsientoContableViewModel.cs" />
+    <Compile Include="ViewModels\ConsumoViewModel.cs" />
     <Compile Include="ViewModels\DenominacionViewModel.cs" />
     <Compile Include="ViewModels\DesgloceEfectivoViewModel.cs" />
     <Compile Include="ViewModels\DetalleMovimientoProductoViewModel.cs" />
     <Compile Include="ViewModels\ExistenciaViewModel.cs" />
+    <Compile Include="ViewModels\MenusPorProductoViewModel.cs" />
     <Compile Include="ViewModels\MovimientoProductosViewModel.cs" />
     <Compile Include="ViewModels\ExtraccionDeCajaViewModel.cs" />
     <Compile Include="ViewModels\OperacionCajaViewModel.cs" />
@@ -1544,6 +1546,9 @@
     <Content Include="Views\Reportes\Inventario.cshtml" />
     <Content Include="Views\Ventas\Pendientes.cshtml" />
     <Content Include="Views\SalvaRestaura\Index.cshtml" />
+    <Content Include="Views\Reportes\Consumo.cshtml" />
+    <Content Include="Views\Ventas\_ConsumoPartial.cshtml" />
+    <Content Include="Views\Reportes\VentasDeProducto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />

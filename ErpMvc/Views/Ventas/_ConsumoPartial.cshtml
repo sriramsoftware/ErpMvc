@@ -1,0 +1,28 @@
+﻿@model IEnumerable<ErpMvc.ViewModels.ConsumoViewModel>
+
+
+<table class="table" id="tabla">
+    <thead>
+        <tr class="primary">
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => item.Producto)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.Cantidad)
+                </td>
+                <td>
+                    <a class="btn btn-info" href="@Url.Action("VentasPorProducto","Reportes", new {id = item.ProductoId, fecha = item.Fecha})">Menus</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

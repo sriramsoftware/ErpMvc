@@ -279,11 +279,11 @@
     <script src="~/Scripts/mbs-qdtf.js"></script>
     
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('btn').tooltip();
 
             function ImprimirVenta(id) {
-                var w = window.open();
+                @*var w = window.open();
                 var div = $("<div></div>");
                 var div2 = $("<div></div>");
                 $(div).append("<p>Comanda # " + id + "</p>");
@@ -293,7 +293,9 @@
                     w.print();
                     w.close();
                     $("#modalImprimirVenta").modal('hide');
-                });
+                });*@
+                var w = window.open("/Reportes/ValeDeVenta/" + id);
+                $("#modalImprimirVenta").modal('hide');
             }
 
             $(document).on('click', "#imprimir-btn", function () {

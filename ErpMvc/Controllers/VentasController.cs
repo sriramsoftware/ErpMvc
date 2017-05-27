@@ -73,6 +73,21 @@ namespace ErpMvc.Controllers
             return PartialView("_ListaDeVentasSoloVerPartial", ventas);
         }
 
+        public PartialViewResult ConsumoPorFechaPartial(DateTime fecha)
+        {
+            var fIni = fecha.Date;
+            var fFin = fecha.Date.AddHours(23);
+
+            var consumo = _db.Set<MovimientoDeProducto>().Where(m => m.Fecha >= fIni && m.Fecha <= fFin  && m.Tipo.Descripcion == TipoDeMovimientoConstantes.SalidaAProduccion).GroupBy(m => m.Producto).Select(m => new ConsumoViewModel()
+            {
+                ProductoId = m.Key.Id,
+                Producto = m.Key.Producto.Nombre,
+                Cantidad = m.Sum(p => p.Cantidad) + " " + m.Key.UnidadDeMedida.Siglas,
+                Fecha = fecha
+            });
+            return PartialView("_ConsumoPartial", consumo);
+        }
+
         public ActionResult NuevaVenta()
         {
             ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre");

@@ -216,7 +216,7 @@ namespace ErpMvc.Controllers
         {
             ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion");
             ViewBag.UnidadDeMedidaId = new SelectList(_service.ListaDeUnidadesDeMedida(), "Id", "Nombre");
-            return PartialView("_AgregarProductoPartial");
+            return PartialView("_AgregarProductoPartial",new ProductoViewModel() {EsInventariable = true});
         }
 
         [HttpPost]
@@ -388,7 +388,6 @@ namespace ErpMvc.Controllers
             }
             return View(movimiento);
         }
-
 
         public JsonResult SePuedeDarSalida(int productoId, decimal cantidad, int unidadId)
         {

@@ -1,0 +1,91 @@
+﻿@using CompraVentaCore.Models
+@model IEnumerable<ErpMvc.ViewModels.MenusPorProductoViewModel>
+
+@{
+    ViewBag.Title = "Ventas por producto";
+}
+
+<h3>Ventas que usan @ViewBag.Producto</h3>
+
+<table class="table" id="tabla">
+    <thead>
+        <tr class="primary">
+            <th>Menu</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => item.Menu)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.CantidadVendida)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha">Menus vendidos por producto</p>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+            cargarDatatable();
+        });
+
+        function cargarDatatable() {
+            $("#tabla").DataTable({
+                "lengthMenu": [[20, 25, 30, 50, 100, -1], [20, 25, 30, 50, 100, "Todos"]],
+                "language": {
+                    "paginate": {
+                        "first": "Primera",
+                        "previous": "Anterior",
+                        "next": "Siguiente",
+                        "last": "&Uacute;ltima"
+                    },
+                    "info": "Mostrando resultados del _START_ al _END_ de un total de _TOTAL_",
+                    "lengthMenu": "Mostrando _MENU_ resultados",
+                    "search": "Buscar: ",
+                    "infoEmpty": "Mostrando 0 resultados",
+                    "infoFiltered": "(filtrado de un total de _MAX_ resultados)",
+                    "sZeroRecords": "No se encontraron resultados con este criterio"
+                },
+                "pagingType": "full_numbers",
+                "columnDefs": [
+                    { "orderable": false, "targets": colums - 1 }
+                ],
+                "order": [[0, "desc"]],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    }
+                ]
+            });
+        }
+
+        function mostrarModal() {
+            $("#modal").modal('show');
+        }
+
+        
+    </script>
+}

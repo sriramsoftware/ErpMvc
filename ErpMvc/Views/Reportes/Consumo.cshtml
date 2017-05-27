@@ -1,0 +1,130 @@
+﻿@using CompraVentaCore.Models
+@model IEnumerable<CompraVentaCore.Models.Venta>
+
+@{
+    ViewBag.Title = "Consumo de productos";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <form class="form-horizontal" role="form" accept-charset="utf-8">
+            <div class="form-group">
+                <label class="col-md-6 col-sm-6  col-xs-12 control-label">Buscar consumo del Día</label>
+                <div class="col-md-6 col-sm-6 col-xs-12 " style="padding: 0px;">
+                    <div class="input-group input-append date col-md-6 col-sm-6" data-date="" data-date-format="dd-mm-yyyy" id="datepicker" data-date="">
+                        <input class="input-small form-control  datepicker" type="text" id="date" name="date" value='@DateTime.Now.ToShortDateString()'>
+                        <span class="input-group-addon add-on">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="ventas-div">
+    @{
+        Html.RenderAction("ConsumoPorFechaPartial", "Ventas", new { Fecha = DateTime.Now });
+    }
+</div>
+
+
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha"><i class="glyphicon glyphicon-usd icono_derecha"></i>&nbsp;Consumo</p>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+            cargarDatatable();
+            $('#date').change(function () {
+                console.log("cambio de fecha");
+                var fecha = $("#date").val();
+                $.ajax({
+                    url: "@Url.Action("ConsumoPorFechaPartial", "Ventas")",
+                    type: "POST",
+                    data: { fecha: fecha },
+                    dataType: "html",
+                    success: function (data) {
+                        $("#ventas-div").html(data);
+                        cargarDatatable();
+                    },
+                    error: function (data) { }
+                });
+            });
+
+            $(document).on('click', "#imprimir-btn", function () {
+                var w = window.open();
+                var div = $("<div></div>");
+                var div2 = $("<div></div>");
+                var id = $(this).attr("data-id");
+                $(div).append("<p>Comanda # " + id + "</p>");
+                $(div).append(div2);
+                $(div2).load('@Url.Action("MenusEnVentaPartial","Ventas")' + '/' + id, function() {
+                    w.document.write($(div).html());
+                    w.print();
+                    w.close();
+                });
+
+            });
+            
+            $(document).on('click', ".print-vale-btn", function () {
+                var id = $(this).attr("data-id");
+                $("#imprimir-btn").attr("data-id",id);
+                $("#numero-comanda-imprimir").html("comanda " + id);
+                $("#modalImprimirVenta").modal('show');
+            });
+        });
+
+        function cargarDatatable() {
+            $("#tabla").DataTable({
+                "lengthMenu": [[20, 25, 30, 50, 100, -1], [20, 25, 30, 50, 100, "Todos"]],
+                "language": {
+                    "paginate": {
+                        "first": "Primera",
+                        "previous": "Anterior",
+                        "next": "Siguiente",
+                        "last": "&Uacute;ltima"
+                    },
+                    "info": "Mostrando resultados del _START_ al _END_ de un total de _TOTAL_",
+                    "lengthMenu": "Mostrando _MENU_ resultados",
+                    "search": "Buscar: ",
+                    "infoEmpty": "Mostrando 0 resultados",
+                    "infoFiltered": "(filtrado de un total de _MAX_ resultados)",
+                    "sZeroRecords": "No se encontraron resultados con este criterio"
+                },
+                "pagingType": "full_numbers",
+                "columnDefs": [
+                    { "orderable": false, "targets": colums - 1 }
+                ],
+                "order": [[0, "desc"]],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    }
+                ]
+            });
+        }
+
+        function mostrarModal() {
+            $("#modal").modal('show');
+        }
+
+        
+    </script>
+}

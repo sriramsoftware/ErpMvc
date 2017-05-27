@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Linq;
 using System.Data.Entity;
+using AlmacenCore.Models;
 using CompraVentaCore.Models;
 using ContabilidadBL;
 using ContabilidadCore.Models;
@@ -82,6 +83,25 @@ namespace ErpMvc.Controllers
         public ActionResult Ventas()
         {
             return View();
+        }
+
+        public ActionResult Consumo()
+        {
+            return View();
+        }
+
+        public ActionResult VentasPorProducto(int id, DateTime fecha)
+        {
+            var fIni = fecha.Date;
+            var fFin = fecha.Date.AddHours(23);
+            ViewBag.Producto = _db.Set<ProductoConcreto>().SingleOrDefault(p => p.Id == id).Producto.Nombre;
+
+            var menus = _db.Set<DetalleDeVenta>().Where(m => m.Venta.Fecha >= fIni && m.Venta.Fecha <= fFin && (m.Elaboracion.Productos.Any(p => p.ProductoId == id) || m.Agregados.Any(p => p.Agregado.ProductoId == id))).GroupBy(m => m.Elaboracion).Select(m => new MenusPorProductoViewModel()
+            {
+                Menu = m.Key.Nombre,
+                CantidadVendida = (int)m.Sum(e => e.Cantidad),
+            });
+            return View("VentasDeProducto", menus);
         }
     }
 }
