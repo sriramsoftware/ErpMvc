@@ -8,9 +8,9 @@
 <table class="table dynamic">
     <thead>
         <tr>
-            <th>Nombre</th>
-            <th>Usuario</th>
-            <th>Rol</th>
+            <th>Nombres y apellidos</th>
+            @*<th>Usuario</th>
+            <th>Rol</th>*@
             <th></th>
         </tr>
     </thead>
@@ -21,7 +21,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.NombreCompleto)
                 </td>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.Usuario.UserName)
                 </td>
                 <td>
@@ -29,11 +29,11 @@
                     {
                         @String.Join(",", item.Usuario.Roles.Select(r => r.Role.Name))
                     }
-                </td>
+                </td>*@
                 <td class="col-md-2 text-right">
                     @if (User.IsInRole(RolesMontin.Administrador))
                     {
-                        <a class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Restablecer contraseña" href="@Url.Action("ResetearContraseña","Seguridad", new {UsuarioId = item.UsuarioId})"><i class="glyphicon glyphicon-user"></i></a>
+                        @*<a class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Restablecer contraseña" href="@Url.Action("ResetearContraseña","Seguridad", new {UsuarioId = item.UsuarioId})"><i class="glyphicon glyphicon-user"></i></a>*@
                         <a class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="@Url.Action("Editar", new {Id = item.Id})"><i class="glyphicon glyphicon-edit"></i></a>
                         <a data-id="@item.Id" class="btn btn-danger btn-sm eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar" href="javascript:;"><i class="glyphicon glyphicon-trash"></i></a>
                     }

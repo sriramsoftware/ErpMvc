@@ -4,7 +4,7 @@
     ViewBag.Title = "Modificar trabajador";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm("Editar", "Trabajadores", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
@@ -16,7 +16,7 @@
         @Html.HiddenFor(m => m.Vendedor.DireccionId)
         @Html.HiddenFor(m => m.Vendedor.NoExpedienteLaboral)
         @Html.HiddenFor(m => m.Vendedor.PuntoDeVentaId)
-        @Html.HiddenFor(m => m.Vendedor.UsuarioId)
+        @*@Html.HiddenFor(m => m.Vendedor.UsuarioId)*@
 
         <div class="form-group">
             @Html.LabelFor(m => m.Vendedor.Ci, "CI", new { @class = "col-md-4 control-label" })
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        @*<div class="form-group">
             @Html.LabelFor(m => m.UsuarioViewModel.NombreUsuario, new {@class = "col-md-4 control-label"})
             <div class="col-md-8">
                 @Html.TextBoxFor(m => m.UsuarioViewModel.NombreUsuario, new {@class = "form-control"})
@@ -60,7 +60,7 @@
                 @Html.ListBox("Roles", null, new { @class = "form-control select" })
                 @Html.ValidationMessageFor(m => m.Roles)
             </div>
-        </div>
+        </div>*@
         <div class="form-group">
             <div class="col-md-offset-4 col-md-8">
                 @Html.ActionLink("Atrás", "Index", null, new {@class = "btn btn-default"})

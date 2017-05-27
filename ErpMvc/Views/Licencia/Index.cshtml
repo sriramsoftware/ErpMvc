@@ -1,0 +1,125 @@
+﻿@model ErpMvc.Models.LicenciaInfo
+@{
+    ViewBag.Title = "Licencia";
+}
+<div class="panel panel-primary">
+    <div class="panel-body ">
+        <div class="">
+            @if (Model != null)
+            {
+
+                <dl class="dl-horizontal col-md-offset-3">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Suscriptor)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Suscriptor)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FechaDeVencimiento)
+                    </dt>
+
+                    <dd>
+                        @Model.FechaDeVencimiento.ToShortDateString()
+                    </dd>
+                </dl>
+
+            }
+            else
+            {
+                <h3>No tiene licencia, consulte al administrador</h3>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("Nueva", "Licencia", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 id="modal-title" class="modal-title">Agregar Licencias</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="alert-danger" class="alert alert-warning hidden"></div>
+                    <div class="row">
+                        @Html.Label("Licencia", new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            <input type="file" name="Licencia" class="form-control" required="required" />
+                            @Html.ValidationMessage("Licencia")
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="button-submit" type="submit" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<div id="modalQuitarLicencia" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 id="modal-title" class="modal-title">Quitar Licencia</h4>
+            </div>
+            <div class="modal-body">
+               <div class="row">
+                    <p>Esta seguro que desea quitar la licencia, la aplicacion dejara de funcionar hasta que ponga una nueva licencia.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-success" href="@Url.Action("Quitar")" >Aceptar</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha">&nbsp;Licencia</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <a class="col-md-12 col-sm-12 col-xs-12 btn btn-default" id="agregar-lic-btn" href="javascript:;">Agregar Licencia</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <a class="col-md-12 col-sm-12 col-xs-12 btn btn-default" id="quitar-lic-btn" href="javascript:;">Quitar Licencia</a>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#agregar-lic-btn", function () {
+                $("#modal").modal('show');
+            });
+
+            $(document).on("click", "#quitar-lic-btn", function () {
+                $("#modalQuitarLicencia").modal('show');
+            });
+        });
+    </script>
+}

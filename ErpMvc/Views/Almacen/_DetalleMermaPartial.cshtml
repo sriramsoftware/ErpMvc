@@ -1,0 +1,54 @@
+﻿@model AlmacenCore.Models.SalidaPorMerma
+
+<div class="alert alert-danger" data-ng-show="tieneError">
+    <button type="button" class="close" aria-hidden="true" data-ng-click="closeAlert()">&times;</button>
+    <p>{{ error }}</p>
+</div>
+
+<table class="table">
+    <thead>
+        <tr class="text-center">
+            <th class="col-md-5">Producto</th>
+            <th class="col-md-2">Cantidad</th>
+            <th class="col-md-2">Unidad</th>
+            <th class="col-md-1"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="form-detalle-merma">
+            <td>
+                <select id="ProductoId" name="ProductoId" class="form-control" chosen ng-model="newDetalle.Producto" ng-options="producto.Nombre + ' (' + producto.Cantidad + ' ' + producto.Unidad + ')' for producto in productos track by producto.Id" ng-change="cambiarProducto()"></select>
+                @Html.ValidationMessageFor(model => model.ExistenciaAlmacenId)
+
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.Cantidad, new { @class = "form-control", @style = "max-width: 100px !important", @data_ng_model = "newDetalle.Cantidad" })
+                @Html.ValidationMessageFor(model => model.Cantidad)
+            </td>
+            <td>
+                <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" ng-model="newDetalle.Unidad" chosen="" ng-options="unidad.Siglas for unidad in unidades track by unidad.Id"></select>
+                @Html.ValidationMessageFor(model => model.UnidadDeMedidaId)
+            </td>
+            <td>
+                <a id="add_aprob" ng-click="agregarDetalle()" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
+            </td>
+        </tr>
+        <tr data-ng-repeat="detalle in detalles">
+            <td>
+                <strong data-ng-hide="detalle.editMode">{{ detalle.NombreProducto }}</strong>
+                <input name="Mermas[{{ $index }}].ExistenciaAlmacenId" ng-show="detalle.editMode" type="text" ng-model="detalle.ExistenciaAlmacenId" class="form-control" />
+            </td>
+            <td>
+                <p data-ng-hide="carga.editMode">{{ detalle.Cantidad }}</p>
+                <input name="Mermas[{{ $index }}].Cantidad" ng-show="detalle.editMode" type="text" ng-model="detalle.Cantidad" class="form-control" />
+            </td>
+            <td>
+                <p data-ng-hide="carga.editMode">{{ detalle.Unidad.Siglas }}</p>
+                <input name="Mermas[{{ $index }}].UnidadDeMedidaId" ng-show="detalle.editMode" type="text" ng-model="detalle.Unidad.Id" class="form-control" />
+            </td>
+            <td>
+                <a class="btn btn-danger" ng-click="borrarDetalle($index)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+    </tbody>
+</table>

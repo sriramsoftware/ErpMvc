@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -26,7 +25,19 @@ namespace ErpMvc.Controllers
         // GET: Menus
         public ActionResult Listado()
         {
+            ViewBag.Porcientos = _db.Set<PorcientoMenu>().ToList();
             return View(_elaboracionService.Elaboraciones().Include(e => e.Agregados).Where(e => e.Activo).ToList());
+        }
+
+        public ActionResult BajoPrecioDeCosto()
+        {
+            ViewBag.Porcientos = _db.Set<PorcientoMenu>().ToList();
+            return View("Listado",_elaboracionService.Elaboraciones().Include(e => e.Agregados).Where(e => e.Activo && e.Costo > e.PrecioDeVenta).ToList());
+        }
+        public ActionResult BajoPrecioConIndice()
+        {
+            ViewBag.Porcientos = _db.Set<PorcientoMenu>().ToList();
+            return View("Listado",_elaboracionService.Elaboraciones().Include(e => e.Agregados).Where(e => e.Activo && e.Costo * e.IndiceEsperado > e.PrecioDeVenta).ToList());
         }
 
         public JsonResult Menu(int id)
@@ -43,7 +54,8 @@ namespace ErpMvc.Controllers
                 IndiceEsperado = elaboracion.IndiceEsperado,
                 Presentacion = elaboracion.Presentacion,
                 Preparacion = elaboracion.Preparacion,
-                PorCiento = porCiento.SeCalcula
+                PorCiento = porCiento.SeCalcula,
+                CentroDeCostoId = elaboracion.CentroDeCostoId
             };
             return Json(e, JsonRequestBehavior.AllowGet);
         }
@@ -72,7 +84,7 @@ namespace ErpMvc.Controllers
             if (ModelState.IsValid)
             {
                 _elaboracionService.AgregarElaboracion(elaboracion);
-                _db.Set<PorcientoMenu>().Add(new PorcientoMenu() {ElaboracioId = elaboracion.Id,SeCalcula = porCiento.HasValue?porCiento.Value:false});
+                _db.Set<PorcientoMenu>().Add(new PorcientoMenu() {ElaboracioId = elaboracion.Id,SeCalcula = (porCiento.HasValue?porCiento.Value:false)});
                 _db.SaveChanges();
                 return RedirectToAction("Listado");
             }
@@ -92,6 +104,7 @@ namespace ErpMvc.Controllers
 
         public PartialViewResult AgregarMenuPartial()
         {
+            ViewBag.CentroDeCostoId = new SelectList(_db.Set<CentroDeCosto>(), "Id", "Nombre");
             return PartialView("_AgregarMenuPartial");
         }
 
@@ -110,15 +123,15 @@ namespace ErpMvc.Controllers
             {
                 elaboracion.Activo = true;
                 _elaboracionService.ModificarElaboracion(elaboracion);
-                if (_db.Set<PorcientoMenu>().Any())
+                if (_db.Set<PorcientoMenu>().Any(p => p.ElaboracioId == elaboracion.Id))
                 {
                     var porCientoMenu = _db.Set<PorcientoMenu>().SingleOrDefault(p => p.ElaboracioId == elaboracion.Id);
-                    porCientoMenu.SeCalcula = porCiento.HasValue ? porCiento.Value : false;
+                    porCientoMenu.SeCalcula = (porCiento.HasValue ? porCiento.Value : false);
                     _db.SaveChanges();
                 }
                 else
                 {
-                    _db.Set<PorcientoMenu>().Add(new PorcientoMenu() {ElaboracioId = elaboracion.Id, SeCalcula = porCiento.HasValue ? porCiento.Value : false });
+                    _db.Set<PorcientoMenu>().Add(new PorcientoMenu() {ElaboracioId = elaboracion.Id, SeCalcula = (porCiento.HasValue ? porCiento.Value : false) });
                     _db.SaveChanges();
                 }
             }
@@ -193,11 +206,11 @@ namespace ErpMvc.Controllers
 
         public JsonResult Menus()
         {
-            var menus = _elaboracionService.Elaboraciones().Where(e => e.Activo).ToList();
+            var menus = _elaboracionService.Elaboraciones().Where(e => e.Activo && e.Productos.Any()).ToList();
             var menusLista = new List<dynamic>();
             foreach (var menu in menus)
             {
-                menusLista.Add(new { Id = menu.Id, Nombre = menu.Nombre, Precio = menu.PrecioDeVenta });
+                menusLista.Add(new { Id = menu.Id, Nombre = menu.Nombre, Precio = menu.PrecioDeVenta,CentroDeCostoId = menu.CentroDeCostoId });
             }
 
             return Json(menusLista, JsonRequestBehavior.AllowGet);

@@ -1,0 +1,70 @@
+﻿@model IEnumerable<CajaCore.Models.CierreDeCaja>
+
+@{
+    ViewBag.Title = "Cierres de caja";
+}
+
+<table class="table dynamic">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Saldo en caja</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DiaContable.Fecha)
+                </td>
+                <td>
+                    @{
+                        var importe = 0m;
+                        foreach (var d in item.Desglose)
+                        {
+                            importe += (d.Cantidad * d.DenominacionDeMoneda.Valor);
+                        }
+                    }
+                    @importe
+                </td>
+                <td class="col-md-2 text-right">
+                    @*<a class="btn btn-info btn-sm btn-print" data-id="@item.DiaContableId" data-toggle="tooltip" data-placement="top" title="Imprimir" href="javascript:;"><i class="glyphicon glyphicon-print"></i></a>*@
+                    <a class="btn btn-info btn-sm btn-print" target="_blank" data-id="@item.DiaContableId" data-toggle="tooltip" data-placement="top" title="Imprimir" href="@Url.Action("CierreReporte","PeriodoContable", new { Id = item.DiaContableId})"><i class="glyphicon glyphicon-print"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha">&nbsp;@ViewBag.Title</p>
+        </div>
+    </div>
+}
+
+<!-- MODAL AGREGAR MENU -->
+<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+<!-- TERMINA MODAL AGREGAR MENU -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+        });
+    </script>
+}

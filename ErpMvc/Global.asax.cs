@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using ErpMvc.Utiles;
 
 namespace ErpMvc
 {
@@ -10,6 +11,7 @@ namespace ErpMvc
         {
             AreaRegistration.RegisterAllAreas();
             UnityConfig.RegisterComponents();
+            //GlobalFilters.Filters.Add(new LicenciaAttribute());
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

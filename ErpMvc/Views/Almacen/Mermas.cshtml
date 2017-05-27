@@ -1,0 +1,88 @@
+﻿@using ErpMvc.Models
+@using ErpMvc.ViewModels
+@model IEnumerable<AlmacenCore.Models.SalidaPorMerma>
+
+@{
+    ViewBag.Title = "Salidas por mermas de almacen";
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@*<div class="row">
+    <div class="col-md-4 col-sm-4 text-right">
+        Almacen
+    </div>
+    <div class="col-md-8 col-sm-8">
+        @Html.DropDownList("AlmacenId", null, String.Empty, new { @class = "form-control select" })
+    </div>
+</div>*@
+
+
+<table class="table dynamic">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Usuarios</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fecha)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExistenciaAlmacen.Producto.Producto.Nombre)
+                </td>
+                <td>
+                    @String.Format("{0} {1}",item.Cantidad, item.UnidadDeMedida.Siglas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Usuario.UserName)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha"><i class="glyphicon glyphicon-glass icono_derecha"></i>&nbsp;Lista de mermas de almacen</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" href="@Url.Action("Almacen","Inventario")">Inventario de almacen</a>
+            <br/>
+            <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" href="@Url.Action("DarSalidaPorMerma","Almacen")">Nueva Salida por Merma</a>
+            <br/>
+            <img class="imagen_derecho img-thumbnail" src="@Url.Content("~/Content/images/productos.jpg")" />
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+
+            @*$(document).on('change', '#AlmacenId', function () {
+                var id = $("#AlmacenId option:selected").val();
+                $("#inventario-list").load('@Url.Action("ProductosEnAlmacen")' + '/' + id);
+            });*@
+        });
+    </script>
+}

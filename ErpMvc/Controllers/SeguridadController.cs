@@ -5,14 +5,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using ErpMvc.Models;
 using ErpMvc.ViewModels;
+using LicenciaCore;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using SeguridadCore.Models;
 using SeguridadCore.Utiles;
 using SeguridadCore.ViewModels;
+using VerificadorDeLicencia;
 
 namespace ErpMvc.Controllers
 {
@@ -33,6 +36,26 @@ namespace ErpMvc.Controllers
         [AllowAnonymous]
         public ActionResult Autenticarse(string returnUrl)
         {
+            var licencia = _db.Set<LicenciaInfo>().SingleOrDefault();
+            if (licencia != null)
+            {
+                var cl = new ComprobadorDeLicencia();
+                var lic = new Licencia();
+                lic.Suscriptor = licencia.Suscriptor;
+                lic.Aplicacion = licencia.Aplicacion;
+                lic.FechaDeVencimiento = licencia.FechaDeVencimiento;
+                lic.LicenceHash = licencia.Hash;
+                if (!cl.Verificar(lic, DateTime.Now))
+                {
+                    _db.Set<LicenciaInfo>().RemoveRange(_db.Set<LicenciaInfo>().ToList());
+                    _db.SaveChanges();
+                    return RedirectToAction("Index", "Licencia");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Licencia");
+            }
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -161,7 +184,6 @@ namespace ErpMvc.Controllers
         //
         // POST: /Usuario/CerrarSesion
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult CerrarSesion()
         {
             _db.Set<LogDeAcceso>().Add(new LogDeAcceso(){UsuarioId = User.Identity.GetUserId(), Fecha = DateTime.Now, TipoDeAcceso = TipoDeAcceso.CerrarSesion});

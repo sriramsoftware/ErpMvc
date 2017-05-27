@@ -15,10 +15,12 @@ namespace ErpMvc.Controllers
     public class InventarioController : Controller
     {
         private DbContext _db;
+        private AlmacenService _almacenService;
 
         public InventarioController(DbContext context)
         {
             _db = context;
+            _almacenService = new AlmacenService(context);
         }
 
         public ActionResult Almacen()
@@ -95,6 +97,30 @@ namespace ErpMvc.Controllers
                     TempData["error"] = "No se pudo realizar el movimiento";
                 }
                 return RedirectToAction("CentroDeCosto");
+            }
+            return View();
+        }
+
+        public ActionResult MermaDeAlmacen()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult MermaDeAlmacen(ValeSalidaDeAlmacen vale)
+        {
+            if (ModelState.IsValid)
+            {
+                vale.UsuarioId = User.Identity.GetUserId();
+                if (!_almacenService.DarSalidaDeAlmacen(vale))
+                {
+                    TempData["error"] = "Error al dar salida";
+                }
+                else
+                {
+                    TempData["exito"] = "Salida efectuada correctamente";
+                }
+                return RedirectToAction("Almacen", "Inventario");
             }
             return View();
         }

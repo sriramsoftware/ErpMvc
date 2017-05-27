@@ -40,28 +40,32 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AlmacenCore, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AlmacenCore.1.3.3\lib\net45\AlmacenCore.dll</HintPath>
+    <Reference Include="AlmacenCore, Version=1.3.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AlmacenCore.1.3.7\lib\net45\AlmacenCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CajaCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CajaCore.1.0.0\lib\net45\CajaCore.dll</HintPath>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CajaCore, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CajaCore.1.1.2\lib\net45\CajaCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ComercialCore, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ComercialCore.1.5.0\lib\net45\ComercialCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaBL, Version=1.22.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaBL.1.22.0\lib\net45\CompraVentaBL.dll</HintPath>
+    <Reference Include="CompraVentaBL, Version=1.23.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaBL.1.23.3\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaCore, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaCore.1.10.0\lib\net45\CompraVentaCore.dll</HintPath>
+    <Reference Include="CompraVentaCore, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaCore.1.11.0\lib\net45\CompraVentaCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ContabilidadBL, Version=1.4.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ContabilidadBL.1.4.4\lib\net45\ContabilidadBL.dll</HintPath>
+    <Reference Include="ContabilidadBL, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ContabilidadBL.1.5.1\lib\net45\ContabilidadBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ContabilidadCore, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -181,6 +185,10 @@
       <HintPath>..\packages\IdentidadCore.1.0.0\lib\net45\IdentidadCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="LicenciaCore, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LicenciaCore.2.0.0\lib\net45\LicenciaCore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -208,6 +216,14 @@
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.9.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.9.5\lib\net45\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data.Entity.EF6, Version=6.9.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.Entity.6.9.5\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -280,6 +296,10 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="VerificadorDeLicencia, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\VerificadorDeLicencia.2.0.0\lib\net45\VerificadorDeLicencia.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
@@ -323,8 +343,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
-    <Compile Include="Controllers\AgregadosController.cs" />
     <Compile Include="Controllers\AlmacenController.cs" />
+    <Compile Include="Controllers\CajaController.cs" />
     <Compile Include="Controllers\CentrosDeCostosController.cs" />
     <Compile Include="Controllers\ClasificacionesDeProductosController.cs" />
     <Compile Include="Controllers\ComprasController.cs" />
@@ -333,6 +353,7 @@
     <Compile Include="Controllers\GruposDeProductosController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
     <Compile Include="Controllers\InventarioController.cs" />
+    <Compile Include="Controllers\LicenciaController.cs" />
     <Compile Include="Controllers\MenusController.cs" />
     <Compile Include="Controllers\OperacionesController.cs" />
     <Compile Include="Controllers\OtrosGastosController.cs" />
@@ -340,6 +361,7 @@
     <Compile Include="Controllers\ProductosController.cs" />
     <Compile Include="Controllers\PuntoDeVentaController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
+    <Compile Include="Controllers\SalvaRestauraController.cs" />
     <Compile Include="Controllers\SeguridadController.cs" />
     <Compile Include="Controllers\UnidadesDeMedidasController.cs" />
     <Compile Include="Controllers\TrabajadoresController.cs" />
@@ -347,18 +369,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701282300461_Cambios_En_Elaboracion.cs" />
-    <Compile Include="Migrations\201701282300461_Cambios_En_Elaboracion.Designer.cs">
-      <DependentUpon>201701282300461_Cambios_En_Elaboracion.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201701291516050_Agregando_Propiedad_EsInventariable.cs" />
-    <Compile Include="Migrations\201701291516050_Agregando_Propiedad_EsInventariable.Designer.cs">
-      <DependentUpon>201701291516050_Agregando_Propiedad_EsInventariable.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Asistencia.cs" />
     <Compile Include="Models\ConceptoDeGasto.cs" />
     <Compile Include="Models\ErpContext.cs" />
+    <Compile Include="Models\LicenciaInfo.cs" />
     <Compile Include="Models\OtrosGastos.cs" />
     <Compile Include="Models\PorcientoMenu.cs" />
     <Compile Include="Models\Propina.cs" />
@@ -370,6 +385,18 @@
     </Compile>
     <Compile Include="Reportes\Asistencia.Designer.cs">
       <DependentUpon>Asistencia.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\Cierre.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\Cierre.Designer.cs">
+      <DependentUpon>Cierre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\ResumenCentroDeCosto.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\ResumenCentroDeCosto.Designer.cs">
+      <DependentUpon>ResumenCentroDeCosto.cs</DependentUpon>
     </Compile>
     <Compile Include="Reportes\ValeDeVenta.cs">
       <SubType>Component</SubType>
@@ -390,11 +417,15 @@
       <DependentUpon>Inventario.cs</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="Utiles\LicenciaAttribute.cs" />
     <Compile Include="ViewModels\AsientoContableViewModel.cs" />
     <Compile Include="ViewModels\DenominacionViewModel.cs" />
     <Compile Include="ViewModels\DesgloceEfectivoViewModel.cs" />
+    <Compile Include="ViewModels\DetalleMovimientoProductoViewModel.cs" />
     <Compile Include="ViewModels\ExistenciaViewModel.cs" />
     <Compile Include="ViewModels\MovimientoProductosViewModel.cs" />
+    <Compile Include="ViewModels\ExtraccionDeCajaViewModel.cs" />
+    <Compile Include="ViewModels\OperacionCajaViewModel.cs" />
     <Compile Include="ViewModels\ParametrosViewModel.cs" />
     <Compile Include="ViewModels\ProductoConcretoViewModel.cs" />
     <Compile Include="ViewModels\ProductoViewModel.cs" />
@@ -411,17 +442,24 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\buttons.dataTables.min.css" />
     <Content Include="Content\chosen-sprite.png" />
     <Content Include="Content\chosen.min.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\icomoon.css" />
+    <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\productos.jpg" />
     <Content Include="Content\images\menus2.jpg" />
     <Content Include="Content\images\menus.jpg" />
+    <Content Include="Content\images\sort_asc.png" />
+    <Content Include="Content\images\sort_asc_disabled.png" />
+    <Content Include="Content\images\sort_both.png" />
+    <Content Include="Content\images\sort_desc.png" />
+    <Content Include="Content\images\sort_desc_disabled.png" />
     <Content Include="Content\jquery.datatables.css" />
     <Content Include="Content\jquery.dataTables.min.css" />
+    <Content Include="Content\logo.png" />
     <Content Include="Content\mbs-qdtf.css" />
-    <Content Include="Content\images\logo.jpg" />
     <Content Include="Content\morris.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -1375,6 +1413,8 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\toastr.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Scripts\jquery.highlight.js" />
+    <Content Include="Views\Productos\_AgregarProductoPartial.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1423,12 +1463,17 @@
     <Content Include="Views\Compras\TramitarCompra.cshtml" />
     <Content Include="Views\ClasificacionesDeProductos\Agregar.cshtml" />
     <Content Include="Views\ClasificacionesDeProductos\Listado.cshtml" />
-    <Content Include="Views\Agregados\Agregar.cshtml" />
-    <Content Include="Views\Agregados\Editar.cshtml" />
-    <Content Include="Views\Agregados\Index.cshtml" />
     <Content Include="Views\Almacen\_DetallePartial.cshtml" />
     <Content Include="Views\Almacen\DarSalida.cshtml" />
-    <None Include="Views\GruposDeProductos\Agregar.cshtml" />
+    <Content Include="Views\Caja\Index.cshtml" />
+    <Content Include="Views\Caja\Extraccion.cshtml" />
+    <Content Include="Views\Caja\Deposito.cshtml" />
+    <Content Include="Views\Compras\_ListaDeComprasPartial.cshtml" />
+    <Content Include="Views\Compras\_ProductosCompradosPartial.cshtml" />
+    <Content Include="Views\Compras\Index.cshtml" />
+    <Content Include="Views\Almacen\_DetalleMermaPartial.cshtml" />
+    <Content Include="Views\Almacen\DarSalidaPorMerma.cshtml" />
+    <Content Include="Views\Almacen\Mermas.cshtml" />
     <Content Include="Views\GruposDeProductos\Listado.cshtml" />
     <Content Include="Views\PeriodoContable\_DiaContablePartial.cshtml" />
     <Content Include="Views\Menus\AgregarMenu.cshtml" />
@@ -1460,13 +1505,18 @@
     <Content Include="Views\Inventario\MoverEntreCentrosDeCosto.cshtml" />
     <Content Include="Views\OtrosGastos\Historico.cshtml" />
     <Content Include="Views\Operaciones\AgregarOperacion.cshtml" />
+    <Content Include="Views\Licencia\Index.cshtml" />
+    <Content Include="Views\Licencia\Nueva.cshtml" />
+    <Content Include="Views\PeriodoContable\Cierres.cshtml" />
+    <Content Include="Views\PeriodoContable\_DesgloseDeEfectivoCierrePartial.cshtml" />
+    <Content Include="Views\PeriodoContable\ReporteCierre.cshtml" />
+    <Content Include="Views\GruposDeProductos\Agregar.cshtml" />
     <None Include="Views\Productos\Agregar.cshtml" />
     <Content Include="Views\Productos\Listado.cshtml" />
     <Content Include="Views\UnidadesDeMedidas\Listado.cshtml" />
     <Content Include="Views\UnidadesDeMedidas\Agregar.cshtml" />
     <Content Include="Views\UnidadesDeMedidas\Editar.cshtml" />
     <Content Include="Views\UnidadesDeMedidas\Eliminar.cshtml" />
-    <Content Include="Views\Productos\_AgregarProductoPartial.cshtml" />
     <Content Include="Views\Ventas\Index.cshtml" />
     <Content Include="Views\Ventas\NuevaVenta.cshtml" />
     <Content Include="Views\PuntoDeVenta\Agregar.cshtml" />
@@ -1489,25 +1539,29 @@
     <Content Include="Views\Productos\TramitarSalida.cshtml" />
     <Content Include="Views\Seguridad\ResetearContraseña.cshtml" />
     <Content Include="Views\Ventas\Editar.cshtml" />
+    <Content Include="Views\Reportes\Ventas.cshtml" />
+    <Content Include="Views\Ventas\_ListaDeVentasSoloVerPartial.cshtml" />
+    <Content Include="Views\Reportes\Inventario.cshtml" />
+    <Content Include="Views\Ventas\Pendientes.cshtml" />
+    <Content Include="Views\SalvaRestaura\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />
-    <Folder Include="Utiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201701282300461_Cambios_En_Elaboracion.resx">
-      <DependentUpon>201701282300461_Cambios_En_Elaboracion.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201701291516050_Agregando_Propiedad_EsInventariable.resx">
-      <DependentUpon>201701291516050_Agregando_Propiedad_EsInventariable.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Reportes\Asistencia.resx">
       <DependentUpon>Asistencia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\Cierre.resx">
+      <DependentUpon>Cierre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\ResumenCentroDeCosto.resx">
+      <DependentUpon>ResumenCentroDeCosto.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\ValeDeVenta.resx">
       <DependentUpon>ValeDeVenta.cs</DependentUpon>

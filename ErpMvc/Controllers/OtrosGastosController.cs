@@ -57,18 +57,30 @@ namespace ErpMvc.Controllers
             if (ModelState.IsValid)
             {
                 _db.Set<OtrosGastos>().Add(otrosGastos);
-                var cuentaCaja = _cuentasServices.FindCuentaByNombre("Caja");
+                var cta = _cuentasServices.FindCuentaByNombre(otrosGastos.PagadoPorCaja ? "Caja" : "Banco");
                 var cuentaGasto = _cuentasServices.FindCuentaByNombre("Gastos");
                 var concepto = _db.Set<ConceptoDeGasto>().Find(otrosGastos.ConceptoDeGastoId);
                 string detalle = "Pago de: " + concepto.Nombre;
-                if (_submayorService.AgregarOperacion(cuentaCaja.Id, cuentaGasto.Id, otrosGastos.Importe, DateTime.Now,
-                    detalle, User.Identity.GetUserId()))
+                bool result = true;
+                if (otrosGastos.PagadoPorCaja)
                 {
-                    TempData["exito"] = "Gasto agregado correctamente";
+                    if ( cta.Disponibilidad.Saldo - otrosGastos.Importe < 0)
+                    {
+                        TempData["error"] = "No existe saldo en caja para realizar la extracción";
+                        result = false;
+                    }
                 }
-                else
+                if (result)
                 {
-                    TempData["error"] = "Error al agregar el gasto";
+                    if (_submayorService.AgregarOperacion(cta.Id, cuentaGasto.Id, otrosGastos.Importe, DateTime.Now,
+                                detalle, User.Identity.GetUserId()))
+                    {
+                        TempData["exito"] = "Gasto agregado correctamente";
+                    }
+                    else
+                    {
+                        TempData["error"] = "Error al agregar el gasto";
+                    } 
                 }
                 return RedirectToAction("Index");
             }
@@ -94,23 +106,37 @@ namespace ErpMvc.Controllers
                 var entry = _db.Entry(otrosGastos);
                 entry.State = EntityState.Modified;
                 var importeAnterior = (decimal)entry.GetDatabaseValues()["Importe"];
+                var pagoPorCajaAnterior = (bool)entry.GetDatabaseValues()["PagadoPorCaja"];
+                bool result = true;
 
-                var cuentaCaja = _cuentasServices.FindCuentaByNombre("Caja");
+                var cuentaCaja = _cuentasServices.FindCuentaByNombre(otrosGastos.PagadoPorCaja? "Caja":"Banco");
+                var cuentaCajaAnterior = _cuentasServices.FindCuentaByNombre(pagoPorCajaAnterior ? "Caja" : "Banco");
                 var cuentaGasto = _cuentasServices.FindCuentaByNombre("Gastos");
                 var concepto = _db.Set<ConceptoDeGasto>().Find(otrosGastos.ConceptoDeGastoId);
 
                 string detalle = "Pago de: " + concepto.Nombre;
-                _db.Set<Asiento>().Add(_submayorService.CrearAsientoContable(cuentaGasto.Id, cuentaCaja.Id, importeAnterior, DateTime.Now,
-                    "Ajuste por error en gasto " + otrosGastos.Id + " de " + concepto.Nombre, User.Identity.GetUserId()));
-                _db.Set<Asiento>().Add(_submayorService.CrearAsientoContable(cuentaCaja.Id, cuentaGasto.Id, otrosGastos.Importe, DateTime.Now,
-                    detalle, User.Identity.GetUserId()));
-                if (_submayorService.GuardarCambios())
+                _db.Set<Asiento>().Add(_submayorService.CrearAsientoContable(cuentaGasto.Id, cuentaCajaAnterior.Id, importeAnterior, DateTime.Now,
+                    "Ajuste por error en gasto con id " + otrosGastos.Id + " de " + concepto.Nombre, User.Identity.GetUserId()));
+                if (otrosGastos.PagadoPorCaja)
                 {
-                    TempData["exito"] = "Gasto modificado correctamente";
+                    if (cuentaCaja.Disponibilidad.Saldo - otrosGastos.Importe < 0)
+                    {
+                        TempData["error"] = "No existe saldo en caja para realizar la extracción";
+                        result = false;
+                    }
                 }
-                else
+                if (result)
                 {
-                    TempData["error"] = "Error al modificar el gasto";
+                    _db.Set<Asiento>().Add(_submayorService.CrearAsientoContable(cuentaCaja.Id, cuentaGasto.Id, otrosGastos.Importe, DateTime.Now,
+                                detalle, User.Identity.GetUserId()));
+                    if (_submayorService.GuardarCambios())
+                    {
+                        TempData["exito"] = "Gasto modificado correctamente";
+                    }
+                    else
+                    {
+                        TempData["error"] = "Error al modificar el gasto";
+                    } 
                 }
                 return RedirectToAction("Index");
             }

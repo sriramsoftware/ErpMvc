@@ -1,0 +1,34 @@
+﻿@model IEnumerable<CompraVentaCore.Models.DetalleDeCompra>
+
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr class="primary">
+            <th>Menu</th>
+            <th>Cantidad</th>
+            <th>Importe</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => item.Producto.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.Cantidad)
+                    @Html.DisplayFor(m => item.UnidadDeMedida.Siglas)
+                </td>
+                <td>
+                    @String.Format("{0:C}", item.ImporteTotal)
+                </td>
+            </tr>
+        }
+        <tr>
+            <td></td>
+            <td>Total: </td>
+            <td>@String.Format("{0:C}", Model.Sum(v => v.ImporteTotal))</td>
+        </tr>
+    </tbody>
+</table>

@@ -1,7 +1,7 @@
 ﻿body {
 	padding-top: 60px;
 	padding-bottom: 60px;
-	background: #125688;
+	background: #2f2f30;
 	font-family: "Roboto" !important;
 	font-size: 15px !important;
 }
@@ -168,8 +168,7 @@ hr{
 }
 
 .img-logo{
-	height: 75px;
-	margin-top: -25px;
+	height: 50px;
 	float: right;
 	margin-right: 30px;
 }
@@ -189,7 +188,7 @@ hr{
 	font-family: Gaviota;
 	font-size: 40px;
 	font-weight: bold;
-	color: rgb(18, 86, 136);
+	color: rgb(42, 55, 65);
 }
 
 .desc{
@@ -355,6 +354,11 @@ h1.text-shadow{
 	color: #F0AD4E;
 	line-height: 46px;
 	text-shadow: 1px 1px 1px #373737;
+    font-weight: bold !important;
+}
+
+h1.message-body {
+    font-weight: bold !important;
 }
 
 .icon-euro:before {
@@ -450,7 +454,7 @@ h1.text-shadow{
 
 
 body{
-	background-color:#125688;
+	background-color:#2f2f30;
 }
 
 
@@ -505,7 +509,7 @@ body{
 }
 
 .modal-header{
-	background-color: #125688;
+	background-color: #2f2f30;
 	color:white;	   
 }
 
@@ -525,7 +529,7 @@ body{
 	background-color: #FFF;
 	border-radius: 50%;	
 	padding:10px;
-	color:#125688;	 
+	color:#2f2f30;	 
 }
    
 .parrafo_derecha{
@@ -573,7 +577,7 @@ body{
 
 .icono_izquierda_otra{
 	font-size:30px;
-	background-color: #125688;
+	background-color: #2f2f30;
 	border-radius: 50%;	
 	padding:10px;
 	color:#FFF;
@@ -656,4 +660,34 @@ img{
 
 .ng-cloak {
     display: none !important;
+}
+
+input[type="checkbox"] {
+    height: 20px !important;
+}
+
+.highlight {
+    background-color: #f0ad4e;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #b94a48;
+}
+
+.existencia-table tbody td {
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.print-content {
+    width: 450px !important;
+    margin-left: -70px !important;
+}
+
+.print-header {
+    margin-left: 50px !important;
+}
+
+.print-money {
+    margin-left: 50px !important;
+
 }

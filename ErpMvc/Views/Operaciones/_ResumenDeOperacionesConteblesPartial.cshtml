@@ -8,41 +8,31 @@
     <h1 class="message-body " style="margin-top: 0px;">
         Efectivo Final: @String.Format("{0:C}", ViewBag.ImporteAnterior + Model.Sum(m => m.Importe))
     </h1>
-    <div class="text-center">
-        <a href="" target="blank" class="btn btn-primary">Ver Resumen del Día</a>
-    </div>
 <hr/>
 <table class="table dynamic">
     <thead>
         <tr>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>Fecha</th>
+            <th>Operacion</th>
+            <th>Importe</th>
+            <th>Usuario</th>
+            <th>Descripcion</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var op in Model)
         {
             <tr>
-                <td class="col-md-5">
-                    <h4 class="title_insight">
-                        @op.Tipo
-                    </h4>
-                    <br />
-                    Fecha y Hora: @op.Fecha
-                    <br />
-                    Usuario del Sistema: @op.Usuario
-                    <br />
+                <td>
+                    @op.Fecha
                 </td>
+                <td>@op.Tipo</td>
+                <td>
+                    @string.Format("{0:C}", op.Importe)
+                </td>
+                <td>@op.Usuario</td>
                 <td class="col-md-4">
-                    <label class="badge badge-title">@string.Format("{0:C}", op.Importe)</label>
-                    <br/>
-                    Detalle: @op.Detalle
-                </td>
-                <td class="col-md-3">
-                    <a class="btn btn-primary btn-sm col-md-12 print-report" value="${row.id }">
-                        <i class="glyphicon glyphicon-print"></i>&nbsp;Imprimir Reporte
-                    </a>
+                    @op.Detalle
                 </td>
             </tr>
         }

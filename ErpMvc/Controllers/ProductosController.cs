@@ -71,9 +71,48 @@ namespace ErpMvc.Controllers
 
         public ActionResult Historial(int? id)
         {
+            //todo: agregar fecha y hora a los movimientos
             var producto = _db.Set<ProductoConcreto>().Find(id);
+            var entradasAlmacen = _db.Set<EntradaAlmacen>().Where(e => e.ProductoId == id);
+            var salidasDeAlmacen = _db.Set<DetalleSalidaAlmacen>().Where(d => d.Producto.ProductoId == id);
             var movimientos = _db.Set<MovimientoDeProducto>().Include(m => m.Tipo).Include(m => m.Usuario).Include(m => m.Producto).Where(m => m.ProductoId == id).ToList();
+
+            var resumenMov = new List<DetalleMovimientoProductoViewModel>();
+            resumenMov.AddRange(entradasAlmacen.Select(e => new DetalleMovimientoProductoViewModel()
+            {
+                Fecha = e.DiaContable.Fecha,
+                Cantidad = e.Cantidad,
+                Usuario = e.Usuario.UserName,
+                Lugar = "Almacen",
+                TipoDeMovimiento = "Entrada",
+                Unidad = e.Producto.UnidadDeMedida.Siglas,
+                Detalle = ""
+            }));
+
+            resumenMov.AddRange(salidasDeAlmacen.Select(s => new DetalleMovimientoProductoViewModel()
+            {
+                Fecha = s.Vale.DiaContable.Fecha,
+                Cantidad = s.Cantidad,
+                Usuario = s.Vale.Usuario.UserName,
+                Lugar = "Almacen",
+                TipoDeMovimiento = "Salida de almacen",
+                Unidad = s.Producto.Producto.UnidadDeMedida.Siglas,
+                Detalle = "entrada a " + s.Vale.CentroDeCosto.Nombre
+            }));
+
+            resumenMov.AddRange(movimientos.Select(s => new DetalleMovimientoProductoViewModel()
+            {
+                Fecha = s.Fecha,
+                Cantidad = s.Cantidad,
+                Usuario = s.Usuario.UserName,
+                Lugar = s.CentroDeCosto.Nombre,
+                TipoDeMovimiento = s.Tipo.Descripcion == TipoDeMovimientoConstantes.SalidaAProduccion?"Venta":s.Tipo.Descripcion,
+                Unidad = s.Producto.UnidadDeMedida.Siglas,
+                Detalle = ""
+            }));
+
             var existencia = _db.Set<ExistenciaCentroDeCosto>().Where(e => e.ProductoId == id).Select(e => new ExistenciaViewModel() {Lugar = e.CentroDeCosto.Nombre, Cantidad = e.Cantidad}).ToList();
+            existencia.Add(new ExistenciaViewModel() {Lugar = "Almacen", Cantidad = _db.Set<ExistenciaAlmacen>().Where(a => a.ProductoId == id).Sum(a => a.ExistenciaEnAlmacen)});
             //if (!existencia.Any())
             //{
             //    existencia = new List<ExistenciaCentroDeCosto>();
@@ -81,7 +120,7 @@ namespace ErpMvc.Controllers
             var viewModel = new ProductoConcretoViewModel()
             {
                 Producto = producto,
-                Movimientos = movimientos,
+                Movimientos = resumenMov,
                 Existencias = existencia
             };
             return View(viewModel);
@@ -124,7 +163,8 @@ namespace ErpMvc.Controllers
                 return HttpNotFound();
             }
             ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion", producto.Producto.GrupoId);
-            ViewBag.UnidadDeMedidaId = new SelectList(_service.ListaDeUnidadesDeMedida(), "Id", "Nombre", producto.UnidadDeMedidaId);
+            ViewBag.UnidadDeMedida = producto.UnidadDeMedida.Nombre;
+            //ViewBag.UnidadDeMedidaId = new SelectList(_service.ListaDeUnidadesDeMedida(), "Id", "Nombre", producto.UnidadDeMedidaId);
             return View(new ProductoViewModel(producto));
         }
 
@@ -138,8 +178,9 @@ namespace ErpMvc.Controllers
                 var productoConcreto = _db.Set<ProductoConcreto>().Find(productoViewModel.ProductoConcretoId);
                 producto.Nombre = productoViewModel.Nombre;
                 producto.GrupoId = productoViewModel.GrupoId;
-                productoConcreto.Cantidad = productoViewModel.Cantidad;
-                productoConcreto.UnidadDeMedidaId = productoViewModel.UnidadDeMedidaId;
+                //productoConcreto.Cantidad = productoViewModel.Cantidad;
+                //productoConcreto.UnidadDeMedidaId = productoViewModel.UnidadDeMedidaId;
+                productoConcreto.PrecioDeVenta = productoViewModel.PrecioUnitario;
                 producto.Descripcion = productoViewModel.Descripcion;
                 producto.EsInventariable = productoViewModel.EsInventariable;
                 _db.Entry(producto).State = EntityState.Modified;
@@ -244,12 +285,13 @@ namespace ErpMvc.Controllers
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult TramitarSalida()
         {
+            ViewBag.CentroDeCostoId = new SelectList(_centroCostoService.CentrosDeCosto(),"Id","Nombre");
             return View();
         }
 
         [HttpPost]
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        public ActionResult TramitarSalida(Compra compra)
+        public ActionResult TramitarSalida(Compra compra,int centroDeCostoId)
         {
             var usuario = User.Identity.GetUserId();
             compra.UsuarioId = usuario;
@@ -260,10 +302,9 @@ namespace ErpMvc.Controllers
                     TempData["error"] = "No se puede efectuar una merma vacia";
                     return View();
                 }
-                var centrocostoId = _db.Set<CentroDeCosto>().FirstOrDefault().Id;
                 foreach (var prod in compra.Productos)
                 {
-                    _centroCostoService.DarSalidaPorMerma(prod.ProductoId, centrocostoId, prod.Cantidad, prod.UnidadDeMedidaId, User.Identity.GetUserId());
+                    _centroCostoService.DarSalidaPorMerma(prod.ProductoId, centroDeCostoId, prod.Cantidad, prod.UnidadDeMedidaId, User.Identity.GetUserId());
                 }
 
                 if (_centroCostoService.GuardarCambios())
@@ -274,6 +315,7 @@ namespace ErpMvc.Controllers
                 TempData["error"] = "No se pudo registrar la salida correctamente";
                 return RedirectToAction("Listado", "Productos");
             }
+            ViewBag.CentroDeCostoId = new SelectList(_centroCostoService.CentrosDeCosto(), "Id", "Nombre",centroDeCostoId);
             return View(compra);
         }
 

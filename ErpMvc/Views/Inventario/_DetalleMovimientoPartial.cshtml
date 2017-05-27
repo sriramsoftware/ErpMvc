@@ -16,7 +16,7 @@
         <tbody>
             <tr id="form-detalle-compra">
                 <td>
-                    <select id="ProductoId" name="ProductoId" class="form-control" chosen ng-model="newDetalle.Producto" ng-options="producto.Nombre for producto in productos track by producto.Id"></select>
+                    <select id="ProductoId" name="ProductoId" class="form-control" chosen ng-model="newDetalle.Producto" ng-options="producto.Nombre + ' (' + producto.Cantidad + ')' for producto in productos track by producto.Id"></select>
                     @Html.ValidationMessageFor(model => model.ProductoId)
 
                 </td>

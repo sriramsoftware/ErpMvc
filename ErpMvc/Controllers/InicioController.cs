@@ -69,12 +69,14 @@ namespace ErpMvc.Controllers
 
                 
                 var finanzas = new List<dynamic>();
-                var movimientos = _cuentasService.GetMovimientosDeCuenta("Caja").Where(m => m.Asiento.DiaContableId == diaContable.Id);
-                finanzas.AddRange(movimientos.GroupBy(m => m.Asiento.DiaContable).Select(m => new 
+                var movimientos = _cuentasService.GetMovimientosDeCuenta("Gastos").Where(g => g.TipoDeOperacion == TipoDeOperacion.Debito).ToList();
+                movimientos.AddRange(_cuentasService.GetMovimientosDeCuenta("Caja").Where(g => g.TipoDeOperacion == TipoDeOperacion.Debito));
+
+                finanzas.AddRange(movimientos.GroupBy(m => m.Asiento.Fecha.Date).Select(m => new 
                 {
-                    period = m.Key.Fecha.ToShortDateString(),
-                    gastos = m.Where(e => e.TipoDeOperacion == TipoDeOperacion.Credito).Sum(e => e.Importe),
-                    ingresos = m.Where(e => e.TipoDeOperacion == TipoDeOperacion.Debito).Sum(e => e.Importe)
+                    period = String.Format("{0:yyyy-MM-dd}", m.Key),
+                    gastos = m.Where(e => e.Cuenta.Nivel.Nombre == "Gastos").Sum(e => e.Importe),
+                    ingresos = m.Where(e => e.Cuenta.Nivel.Nombre == "Caja").Sum(e => e.Importe)
                 }));
 
                 ViewBag.Finanzas = finanzas;

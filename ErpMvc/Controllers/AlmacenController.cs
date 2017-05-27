@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using AlmacenCore.Models;
 using CompraVentaBL;
+using Microsoft.AspNet.Identity;
 
 namespace ErpMvc.Controllers
 {
@@ -31,7 +32,11 @@ namespace ErpMvc.Controllers
                 Cantidad = a.ExistenciaEnAlmacen
             }), JsonRequestBehavior.AllowGet);
         }
-        
+
+        public ActionResult Mermas()
+        {
+            return View(_db.Set<SalidaPorMerma>().ToList());
+        }
 
         // GET: Almacen
         public ActionResult DarSalida()
@@ -45,6 +50,7 @@ namespace ErpMvc.Controllers
         {
             if (ModelState.IsValid)
             {
+                vale.UsuarioId = User.Identity.GetUserId();
                 if (!_almacenService.DarSalidaDeAlmacen(vale))
                 {
                     TempData["error"] = "Error al dar salida";
@@ -53,9 +59,42 @@ namespace ErpMvc.Controllers
                 {
                     TempData["exito"] = "Salida efectuada correctamente";
                 }
-                return RedirectToAction("Almacen","Inventario");
+                return RedirectToAction("Almacen", "Inventario");
             }
             return View();
+        }
+
+        public ActionResult DarSalidaPorMerma()
+        {
+            ViewBag.AlmacenId = _db.Set<Almacen>().FirstOrDefault().Id;
+            
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult DarSalidaPorMerma(List<SalidaPorMerma> mermas)
+        {
+            //todo: usar el ciclo del metodo de dar salida para recorrer una sola vez
+            var userId = User.Identity.GetUserId();
+            foreach (var merma in mermas)
+            {
+                merma.UsuarioId = userId;
+            }
+            if (!_almacenService.DarSalidaPorMerma(mermas))
+            {
+                TempData["error"] = "Error al dar salida por merma";
+            }
+            else
+            {
+                TempData["exito"] = "Salida efectuada correctamente";
+            }
+            return RedirectToAction("Almacen", "Inventario");
+        }
+
+        [HttpPost]
+        public JsonResult SePuedeDarSalida(SalidaPorMerma producto)
+        {
+            return _almacenService.SePuedeDarSalidaPorMerma(producto) ? Json(true, JsonRequestBehavior.AllowGet) : Json(false, JsonRequestBehavior.AllowGet);
         }
     }
 }

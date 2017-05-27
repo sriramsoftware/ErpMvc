@@ -13,11 +13,18 @@
         <div class="row">
             <label class="col-md-4 col-sm-4 col-xs-12 text-right">Nombre</label>
             <div class="col-md-8 col-sm-8 col-xs-12">
-                @Html.TextBoxFor(model => model.Nombre,new {@class = "form-control"})
+                @Html.TextBoxFor(model => model.Nombre, new {@class = "form-control"})
             </div>
         </div>
 
-        <div id="precio-venta-div" class="row hidden">
+        <div class="row">
+            <label class="col-md-4 col-sm-4 col-xs-12 text-right">Centro de costo</label>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.DropDownList("CentroDeCostoId",null, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div id="precio-venta-div" class="row">
             <label class="col-md-4 col-sm-4 col-xs-12 text-right">Precio de Venta</label>
             <div class="col-md-8 col-sm-8 col-xs-12">
                 @Html.TextBoxFor(model => model.PrecioDeVenta, new { @class = "form-control", @value = "0" })
@@ -58,11 +65,9 @@
         </div>
 
         <div class="row">
-            <label class="col-md-4 col-sm-4 col-xs-12 text-right">Se calcula porciento</label>
+            <label class="col-md-4 col-sm-4 col-xs-12 text-right">Se calcula 10%</label>
             <div class="col-md-8 col-sm-8 col-xs-12">
-                @* TODO: no carga si esta checked o no *@
                 @Html.CheckBox("porCiento", new {@class = "form-control"})
-                @*<input type="checkbox" class="form-control" name="porCiento" id="porCiento" value="false"/>*@
             </div>
         </div>
     </div>

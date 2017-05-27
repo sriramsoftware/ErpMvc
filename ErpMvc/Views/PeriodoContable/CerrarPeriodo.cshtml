@@ -1,47 +1,70 @@
-﻿@{
+﻿@using ContabilidadCore.Models
+@{
     ViewBag.Title = "Cerrar Periodo";
 }
 
-<div class="row" ng-controller="cierreController">
+<div ng-show="cerrando" class="row" ng-controller="cierreController">
     @Html.Partial("_ResumenDeEfectivoPartial")
 
+    <h3 class="text-center">EFECTIVO RESTANTE EN CAJA</h3>
+
     @Html.Partial("_DesgloseEfectivoPartial")
+    <div class="row">
+        <div class="text-center"><a id="cierre_btn" class="btn btn-primary">Realizar Cierre</a></div>
+    </div>
 </div>
 
 @section SeccionDerecha
 {
     <div class="row">
-    <div class="col-md-12 col-sm-12 col-xs-12 text-left">
-        <p class="parrafo_derecha">Cerrar periodo</p>
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha">Cerrar periodo</p>
+        </div>
     </div>
-</div>
 }
 
 @section scripts
 {
     <script>
-        $(document).ready(function () {
-            $("#cierre_btn").click(function () {
+        $(document).ready(function() {
+            $("#cierre_btn").click(function() {
                 $("#modalConfirmacion").modal('show');
             });
         });
 
+        function ImprimirCierre() {
+            @{
+                var dia = ViewBag.DiaContable as DiaContable;
+            }
+            var w = window.open('@Url.Action("CierreReporte","PeriodoContable")' + '/' + @dia.Id,"_blank");
+            w.onload=function(){
+                w.focus();
+                w.setTimeout(function () {
+                    w.print();
+                }, 1000);
+                w.close();
+            }
+        }
+
         erp.controller('cierreController', [
             '$scope', '$http', function ($scope, $http) {
+                $scope.cerrando = true;
 
-                $scope.urlResumen = '@Url.Action("ResumenEfectivoData","PeriodoContable")';
+                $scope.urlResumen = '@Url.Action("ResumenEfectivo","PeriodoContable")';
                 $scope.fetchResumen = function () {
                     $http.get($scope.urlResumen).then(function (result) {
                         $scope.efectivo_inicial = result.data.EfectivoAnterior;
                         $scope.ventas = result.data.Ventas;
                         $scope.ventas_sin_porciento = result.data.VentasSinPorciento;
                         $scope.ventas_con_porciento = $scope.ventas - $scope.ventas_sin_porciento;
-                        $scope.compras = result.data.Compras;
-                        $scope.gastos = result.data.Gastos;
+                        $scope.porciento = $scope.ventas_con_porciento * 0.1;
+                        $scope.extracciones = result.data.Extracciones;
+                        $scope.depositos = result.data.Depositos;
                         $scope.propinas = result.data.Propinas;
-                        $scope.efectivo_antes_cierre = $scope.efectivo_inicial + $scope.ventas - $scope.compras + $scope.gastos;
+                        $scope.efectivo_antes_cierre = $scope.efectivo_inicial+ $scope.ventas + $scope.depositos - $scope.extracciones;
                         $scope.efectivo_a_dejar_en_caja = 0;
                         $scope.efectivo_a_extraer = $scope.efectivo_antes_cierre - $scope.efectivo_a_dejar_en_caja;
+                        $scope.centrosDeCosto = result.data.CentrosDeCosto;
                     });
                 }
 
@@ -75,13 +98,35 @@
                     $scope.efectivo_a_dejar_en_caja = valorEnBilleteCuc + valorEnMonedaCuc + (valorEnBilleteCup / 24) + (valorEnMonedaCup / 24);
                     $scope.efectivo_a_extraer = $scope.efectivo_antes_cierre - $scope.efectivo_a_dejar_en_caja;
                 };
-                
-                $scope.realizarCierre = function () {
-                    var desgloceEfectivoViewModel = {};
-                    desgloceEfectivoViewModel.Billetes = $scope.billetes;
-                    desgloceEfectivoViewModel.Monedas = $scope.monedas;
 
-                    $http.post('@Url.Action("CerrarPeriodo","PeriodoContable")', desgloceEfectivoViewModel);
+                $scope.realizarCierre = function () {
+                    if ($scope.efectivo_a_extraer < 0) {
+                        toastr.options = { "positionClass": "toast-bottom-right" };
+                        window.setTimeout(function () { toastr.error("Efectivo a extraer negativo no se puede cerrar"); }, 1000);
+                    } else {
+                        var desgloceEfectivoViewModel = {};
+                        desgloceEfectivoViewModel.Billetes = $scope.billetes;
+                        desgloceEfectivoViewModel.Monedas = $scope.monedas;
+                        desgloceEfectivoViewModel.importeAExtraer = $scope.efectivo_a_extraer;
+                        $scope.cerrando = false;
+                        $http.post('@Url.Action("CerrarPeriodo","PeriodoContable")', desgloceEfectivoViewModel).then(function (result) {
+                            if (result.data.result) {
+                                ImprimirCierre();
+                                $http.post('@Url.Action("CerrarSesion", "Seguridad")').then(function(result) {
+                                    window.location = '/Inicio/Index';
+                                }
+                                    );
+
+                            } else {
+                                toastr.options = { "positionClass": "toast-bottom-right" };
+                                window.setTimeout(function () { toastr.error(result.data.mensaje); }, 1000);
+                            }
+                        });
+                    }
+                }
+
+                $scope.noSePuedeCerrar = function() {
+                    return $scope.efectivo_a_extraer < 0;
                 }
 
             }

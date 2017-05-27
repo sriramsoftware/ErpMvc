@@ -26,7 +26,7 @@
                     @Html.ValidationMessageFor(model => model.Cantidad)
                 </td>
                 <td>
-                    <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" chosen data-ng-model="newDetalle.UnidadId" data-ng-options="unidad.Nombre for unidad in unidades track by unidad.Id"></select>
+                    <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" chosen data-ng-model="newDetalle.UnidadId" data-ng-options="unidad.Siglas for unidad in unidades track by unidad.Id"></select>
                     @Html.ValidationMessageFor(model => model.UnidadDeMedidaId)
                 </td>
                 <td>

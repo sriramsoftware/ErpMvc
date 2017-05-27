@@ -33,24 +33,44 @@ namespace ErpMvc.Controllers
         }
         
         // GET: Ventas
-        public ActionResult Index(int id = 0)
+        public ActionResult Index()
         {
-            if (id == -1)
-            {
-                TempData["error"] = "El dia seleccionado no existe!";
-                id = 0;
-            }
-            var diaContable = id == 0
-                ? _periodoContableService.GetDiaContableActual()
-                : _periodoContableService.BuscarDiaContable(id);
+            var diaContable = _periodoContableService.GetDiaContableActual();
             ViewBag.DiaContable = diaContable;
+            ViewBag.CantidadDeVentas = _ventasService.Ventas().Count(v => v.DiaContableId == diaContable.Id);
+            return View();
+        }
+
+        public ActionResult Pendientes()
+        {
+            var diaContable = _periodoContableService.GetDiaContableActual();
+            ViewBag.DiaContable = diaContable;
+            ViewBag.CantidadDeVentas = _ventasService.Ventas().Count(v => v.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia);
             return View();
         }
 
         public PartialViewResult ListaDeVentasPartial(int id)
         {
             ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContableId == id).ToList();
-            return PartialView("_ListaDeVentasPartial", _ventasService.Ventas().Where(v => v.DiaContableId == id).ToList());
+            var ventas = _ventasService.Ventas().Where(v => v.DiaContableId == id).ToList().OrderByDescending(v => v.Fecha);
+            ViewBag.CantidadDeVentas = ventas.Count();
+            return PartialView("_ListaDeVentasPartial",ventas);
+        }
+
+        public PartialViewResult ListaDeVentasPendientesPartial()
+        {
+            ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia).ToList();
+            var ventas = _ventasService.Ventas().Where(v => v.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia).ToList().OrderByDescending(v => v.Fecha);
+            ViewBag.CantidadDeVentas = ventas.Count();
+            return PartialView("_ListaDeVentasPartial", ventas);
+        }
+
+        public PartialViewResult ListaDeVentasPorFechaPartial(DateTime fecha)
+        {
+            ViewBag.Propinas = _db.Set<Propina>().ToList().Where(p => p.Venta.DiaContable.Fecha.Date == fecha.Date);
+            var ventas = _ventasService.Ventas().ToList().Where(v => v.DiaContable.Fecha.Date == fecha.Date).OrderByDescending(v => v.Fecha);
+            ViewBag.CantidadDeVentas = ventas.Count();
+            return PartialView("_ListaDeVentasSoloVerPartial", ventas);
         }
 
         public ActionResult NuevaVenta()
@@ -63,12 +83,13 @@ namespace ErpMvc.Controllers
         [HttpPost]
         public ActionResult BuscarVentas(DateTime fecha)
         {
-            var diaContable = _periodoContableService.BuscarDiaContable(fecha);
-            if (diaContable == null)
-            {
-                return RedirectToAction("ListaDeVentasPartial", new { Id = -1 });
-            }
-            return RedirectToAction("ListaDeVentasPartial", new { Id = diaContable.Id });
+            //var diaContable = _periodoContableService.BuscarDiaContable(fecha);
+            //if (diaContable == null)
+            //{
+            //    return RedirectToAction("ListaDeVentasPartial", new { Id = -1 });
+            //}
+            //return RedirectToAction("ListaDeVentasPartial", new { Id = diaContable.Id });
+            return RedirectToAction("ListaDeVentasPorFechaPartial", new {Fecha = fecha});
         }
 
         [HttpPost]
@@ -326,6 +347,17 @@ namespace ErpMvc.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult PasarAImpreso(int id)
+        {
+            var venta = _db.Set<Venta>().Find(id);
+            if (venta.EstadoDeVenta == EstadoDeVenta.Pendiente)
+            {
+                venta.EstadoDeVenta = EstadoDeVenta.Facturada;
+                _db.SaveChanges();
+            }
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult ImprimirReporte(int id)
         {
             var venta = _db.Set<Venta>().Find(id);
@@ -336,6 +368,53 @@ namespace ErpMvc.Controllers
             }
             return RedirectToAction("ValeDeVenta", "Reportes", new {Id = id});
         }
+
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult PasarAOtroDia(int ventaId, string observacion)
+        {
+            var venta = _ventasService.Ventas().Find(ventaId);
+            if (venta == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+            venta.EstadoDeVenta = EstadoDeVenta.PendienteParaOtroDia;
+            venta.Observaciones = observacion;
+            if (_ventasService.GuardarCambios())
+            {
+                TempData["exito"] = "Se paso la venta para otro dia correctamente";
+            }
+            else
+            {
+                TempData["errro"] = "Error al pasar para otro dia";
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult PorCuentaDeLaCasa(int ventaId, string observacion)
+        {
+            var venta = _ventasService.Ventas().Find(ventaId);
+            if (venta == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+            venta.EstadoDeVenta = EstadoDeVenta.NoCobrada;
+            venta.Importe = 0;
+            venta.Observaciones = observacion;
+            if (_ventasService.GuardarCambios())
+            {
+                TempData["exito"] = "La venta se puso por cuenta de la casa correctamente";
+            }
+            else
+            {
+                TempData["errro"] = "Error al pasar por cuenta de la casa";
+            }
+            return RedirectToAction("Index");
+        }
+
 
     }
 }

@@ -3,7 +3,7 @@
 @model IEnumerable<ProductoConcretoViewModel>
 
 @{
-    ViewBag.Title = "productos";
+    ViewBag.Title = "Productos";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -13,30 +13,36 @@
     <thead>
         <tr>
             <th></th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    <div class="col-md-4">
+                <td class="col-md-5">
+                    
                         <h4 class="title_insight">@String.Format("{0} ({1} {2})", item.Producto.Producto.Nombre, item.Producto.Cantidad, item.Producto.UnidadDeMedida.Siglas)</h4>
-                        <br/>
+                        <br />
                         Grupo: @item.Producto.Producto.Grupo.Descripcion
-                        <br/>
-                        Precio de Compra Promedio por Unidad: @Html.DisplayFor(modelItem => item.Producto.PrecioUnitario)
-                        <br/>
+                        <br />
+                        Precio de Compra: @String.Format("{0:C}", item.Producto.PrecioDeVenta)
+                        <br />
+                        Precio promedio: @String.Format("{0:C}", item.Producto.PrecioUnitario * item.Producto.Cantidad)
+                        <br />
                         @if (item.Producto.Producto.EsInventariable)
                         {
                             @:Este producto es inventariable
-                        }
+                    }
                         else
                         {
                             @:Este producto no es inventariable
-                        }
-                    </div>
-                    <div class="col-md-4 text-center">
+                    }
+                    
+                </td>
+                <td class="col-md-4 text-center">
+                    <div class="row">
                         <label class="badge badge-title">
                             @if (item.Producto.Cantidad <= 1)
                             {
@@ -44,33 +50,39 @@
                             }
                             else
                             {
-                                @String.Format("{0} {1}, en {2} envaces", item.Existencias.Sum(e => e.Cantidad), item.Producto.UnidadDeMedida.Siglas, Math.Round(item.Existencias.Sum(e => e.Cantidad)/ item.Producto.Cantidad, 2))
+                                @String.Format("{0} {1}, en {2} envases", item.Existencias.Sum(e => e.Cantidad), item.Producto.UnidadDeMedida.Siglas, Math.Round(item.Existencias.Sum(e => e.Cantidad)/item.Producto.Cantidad, 2))
                             }
                         </label>
-                        @foreach (var ex in item.Existencias)
-                        {
-                            <br/>
-                            <span> @ex.Lugar : @ex.Cantidad @item.Producto.UnidadDeMedida.Siglas</span>
-                        }
                     </div>
-                    <div class="col-md-4 botones">
-                        @if (User.IsInRole(RolesMontin.UsuarioAvanzado) || User.IsInRole(RolesMontin.Administrador))
-                        {
-                            <a href="@Url.Action("Editar", new {Id = item.Producto.Id})" class="edit_grupo btn btn-primary btn-sm col-md-12 productoupd" data-toggle="tooltip" data-placement="top" title="Editar">
-                                <i class="glyphicon glyphicon-edit"></i>&nbsp;Editar este Producto
-                            </a>
-                        }
-                        <a href="@Url.Action("Historial",new {Id = item.Producto.Id})" class="btn btn-primary btn-sm col-md-12 productoentrar" value="${row.id }">
-                            <i class="glyphicon glyphicon-bookmark"></i>&nbsp;Movimientos / Historial
+                    <div class="row">
+                        @* todo: pegar las filas de la tabla *@
+                        <table class="existencia-table">
+                            @foreach (var ex in item.Existencias)
+                            {
+                                <tr>
+                                    <td>@ex.Lugar :</td>
+                                    <td>@ex.Cantidad @item.Producto.UnidadDeMedida.Siglas</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </td>
+                <td class="col-md-3 botones">
+                    @if (User.IsInRole(RolesMontin.UsuarioAvanzado) || User.IsInRole(RolesMontin.Administrador))
+                {
+                        <a href="@Url.Action("Editar", new {Id = item.Producto.Id})" class="edit_grupo btn btn-primary btn-sm col-md-12 productoupd" data-toggle="tooltip" data-placement="top" title="Editar">
+                            <i class="glyphicon glyphicon-edit"></i>&nbsp;Editar este Producto
                         </a>
-                        @if (User.IsInRole(RolesMontin.Administrador))
+                    }
+                    <a href="@Url.Action("Historial",new {Id = item.Producto.Id})" class="btn btn-primary btn-sm col-md-12 productoentrar" value="${row.id }">
+                        <i class="glyphicon glyphicon-bookmark"></i>&nbsp;Movimientos / Historial
+                    </a>
+                    @*@if (User.IsInRole(RolesMontin.Administrador))
                         {
                             <a class="btn btn-danger btn-sm col-md-12 " data-toggle="tooltip" data-placement="top" title="Eliminar" href="@Url.Action("Eliminar", new {Id = item.Producto.ProductoId})"><i class="glyphicon glyphicon-trash"></i> Eliminar este producto</a>
-                        }
-                        
-                    </div>
-                    
+                        }*@
                 </td>
+
             </tr>
         }
     </tbody>
@@ -105,11 +117,6 @@
         <div class="col-md-12 col-sm-12 col-xs-12 text-center">
             <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" data-toggle="modal" data-target="#myModal">Agregar Nuevo Producto</a>
             <br />
-            <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" href="@Url.Action("Inventario","Reportes")">Inventarios de Productos</a>
-            <br />
-            <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" href="@Url.Action("TramitarSalida","Productos")">Dar salida a productos</a>
-            <br />
-            
             <img class="imagen_derecho img-thumbnail" src="@Url.Content("~/Content/images/productos.jpg")" />
         </div>
     </div>

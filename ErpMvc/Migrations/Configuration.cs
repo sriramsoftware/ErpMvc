@@ -17,6 +17,7 @@ namespace ErpMvc.Migrations
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
             ContextKey = "PruebaSeguridadMvc.Models.ErpContext";
+            SetSqlGenerator("MySql.Data.MySqlClient", new MySql.Data.Entity.MySqlMigrationSqlGenerator());
         }
 
         protected override void Seed(ErpContext context)
@@ -48,9 +49,9 @@ namespace ErpMvc.Migrations
                 new UnidadDeMedida() { Id = 2, Nombre = "Litros", Siglas = "lt", TipoDeUnidadDeMedidaId = 2, FactorDeConversion = 0.001m },
                 new UnidadDeMedida() { Id = 3, Nombre = "gramos", Siglas = "g", TipoDeUnidadDeMedidaId = 1, FactorDeConversion = 1m },
                 new UnidadDeMedida() { Id = 4, Nombre = "Kilogramos", Siglas = "Kg", TipoDeUnidadDeMedidaId = 1, FactorDeConversion = 0.001m },
-                new UnidadDeMedida() { Id = 6, Nombre = "Onza", Siglas = "oz", TipoDeUnidadDeMedidaId = 1, FactorDeConversion = 0.0353m },
+                new UnidadDeMedida() { Id = 5, Nombre = "Onza", Siglas = "oz", TipoDeUnidadDeMedidaId = 1, FactorDeConversion = 0.0353m },
                 new UnidadDeMedida() { Id = 6, Nombre = "Unidad", Siglas = "u", TipoDeUnidadDeMedidaId = 4, FactorDeConversion = 1m },
-                new UnidadDeMedida() { Id = 5, Nombre = "Libras", Siglas = "lb", TipoDeUnidadDeMedidaId = 1, FactorDeConversion = 0.0022m }
+                new UnidadDeMedida() { Id = 7, Nombre = "Libras", Siglas = "lb", TipoDeUnidadDeMedidaId = 1, FactorDeConversion = 0.0022m }
                 );
 
             context.TiposDeMovimientos.AddOrUpdate(t => t.Id,
@@ -80,7 +81,7 @@ namespace ErpMvc.Migrations
                 new PuntoDeVenta() { Id = 1, Nombre = "Barra", CentroDeCostoId = 1 },
                 new PuntoDeVenta() { Id = 2, Nombre = "Mesa 1", CentroDeCostoId = 2 },
                 new PuntoDeVenta() { Id = 3, Nombre = "Mesa 2", CentroDeCostoId = 2 },
-                new PuntoDeVenta() { Id = 3, Nombre = "Mesa 3", CentroDeCostoId = 2 },
+                new PuntoDeVenta() { Id = 4, Nombre = "Mesa 3", CentroDeCostoId = 2 },
                 new PuntoDeVenta() { Id = 5, Nombre = "Mesa 4", CentroDeCostoId = 2 }
                 );
 
@@ -124,13 +125,17 @@ namespace ErpMvc.Migrations
             context.Niveles.AddOrUpdate(
                 n => n.Id,
                 new Nivel() {Id = 1, Nombre = "Caja" , Numero = "100"},
-                new Nivel() {Id = 2, Nombre = "Gastos" , Numero = "900"}
+                new Nivel() {Id = 2, Nombre = "Gastos" , Numero = "900"},
+                new Nivel() {Id = 3, Nombre = "Banco" , Numero = "200"},
+                new Nivel() {Id = 4, Nombre = "Ingresos" , Numero = "800"}
                 );
 
             context.Cuentas.AddOrUpdate(
                 c => c.Id,
                 new Cuenta() {Id = 1, NivelId = 1,Naturaleza = Naturaleza.Deudora},
-                new Cuenta() {Id = 2, NivelId = 2,Naturaleza = Naturaleza.Deudora}
+                new Cuenta() {Id = 2, NivelId = 2,Naturaleza = Naturaleza.Deudora},
+                new Cuenta() {Id = 3, NivelId = 3,Naturaleza = Naturaleza.Deudora},
+                new Cuenta() {Id = 4, NivelId = 4,Naturaleza = Naturaleza.Acreedora}
                 
                 );
 

@@ -1,0 +1,131 @@
+﻿@model IEnumerable<CajaCore.Models.DenominacionesEnCierreDeCaja>
+
+@if (Model.Any(m => m.DenominacionDeMoneda.Moneda.Sigla == "CUC"))
+{
+    <h3>CUC</h3>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any(m => m.DenominacionDeMoneda.Moneda.Sigla == "CUC" && m.DenominacionDeMoneda.Billete))
+            {
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Billetes</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                foreach (var denominacion in Model.Where(m => m.DenominacionDeMoneda.Moneda.Sigla == "CUC" && m.DenominacionDeMoneda.Billete).OrderByDescending(a => a.DenominacionDeMoneda.Valor))
+                {
+                    <tr>
+                        <td>@denominacion.Cantidad</td>
+                        <td> x </td>
+                        <td>@String.Format("{0:C}", denominacion.DenominacionDeMoneda.Valor)</td>
+                        <td> = </td>
+                        <td>@String.Format("{0:C}", denominacion.Cantidad * denominacion.DenominacionDeMoneda.Valor)</td>
+                    </tr>
+                }
+            }
+            @if (Model.Any(m => m.DenominacionDeMoneda.Moneda.Sigla == "CUC" && !m.DenominacionDeMoneda.Billete))
+            {
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Monedas</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                foreach (var denominacion in Model.Where(m => m.DenominacionDeMoneda.Moneda.Sigla == "CUC" && !m.DenominacionDeMoneda.Billete).OrderByDescending(a => a.DenominacionDeMoneda.Valor))
+                {
+                    <tr>
+                        <td>@denominacion.Cantidad</td>
+                        <td> x </td>
+                        <td>@String.Format("{0:C}", denominacion.DenominacionDeMoneda.Valor)</td>
+                        <td> = </td>
+                        <td>@String.Format("{0:C}", denominacion.Cantidad * denominacion.DenominacionDeMoneda.Valor)</td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td>Total</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>@Model.Where(m => m.DenominacionDeMoneda.Moneda.Sigla == "CUC").Sum(m => m.Cantidad * m.DenominacionDeMoneda.Valor)</td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@if (Model.Any(m => m.DenominacionDeMoneda.Moneda.Sigla == "CUP"))
+{
+    <h3>CUP</h3>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @if (Model.Any(m => m.DenominacionDeMoneda.Moneda.Sigla == "CUP" && m.DenominacionDeMoneda.Billete))
+        {
+            <tr>
+                <th></th>
+                <th></th>
+                <td>Billetes</td>
+                <td></td>
+                <td></td>
+            </tr>
+            foreach (var denominacion in Model.Where(m => m.DenominacionDeMoneda.Moneda.Sigla == "CUP" && m.DenominacionDeMoneda.Billete).OrderByDescending(a => a.DenominacionDeMoneda.Valor))
+            {
+                <tr>
+                    <td>@denominacion.Cantidad</td>
+                    <td> x </td>
+                    <td>@String.Format("{0:C}", denominacion.DenominacionDeMoneda.Valor)</td>
+                    <td> = </td>
+                    <td>@String.Format("{0:C}", denominacion.Cantidad * denominacion.DenominacionDeMoneda.Valor)</td>
+                </tr>
+            }
+        }
+        @if (Model.Any(m => m.DenominacionDeMoneda.Moneda.Sigla == "CUP" && !m.DenominacionDeMoneda.Billete))
+        {
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Monedas</td>
+                <td></td>
+                <td></td>
+            </tr>
+            foreach (var denominacion in Model.Where(m => m.DenominacionDeMoneda.Moneda.Sigla == "CUP" && !m.DenominacionDeMoneda.Billete).OrderByDescending(a => a.DenominacionDeMoneda.Valor))
+            {
+                <tr>
+                    <td>@denominacion.Cantidad</td>
+                    <td> x </td>
+                    <td>@String.Format("{0:C}", denominacion.DenominacionDeMoneda.Valor)</td>
+                    <td> = </td>
+                    <td>@String.Format("{0:C}", denominacion.Cantidad * denominacion.DenominacionDeMoneda.Valor)</td>
+                </tr>
+            }
+        }
+        <tr>
+            <td>Total</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>@Model.Where(m => m.DenominacionDeMoneda.Moneda.Sigla == "CUP").Sum(m => m.Cantidad*m.DenominacionDeMoneda.Valor)</td>
+        </tr>
+        </tbody>
+    </table>
+}

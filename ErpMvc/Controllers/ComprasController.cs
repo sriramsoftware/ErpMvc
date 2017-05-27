@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using ComercialCore.Models;
 using CompraVentaBL;
 using CompraVentaCore.Models;
+using ContabilidadBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
 using Microsoft.AspNet.Identity;
@@ -17,6 +18,8 @@ namespace ErpMvc.Controllers
     public class ComprasController : Controller
     {
         private ComprasService _comprasService;
+        private PeriodoContableService _periodoContableService;
+        private CuentasServices _cuentasServices;
         private DbContext _db;
 
 
@@ -24,6 +27,41 @@ namespace ErpMvc.Controllers
         {
             _db = context;
             _comprasService = new ComprasService(context);
+            _periodoContableService = new PeriodoContableService(context);
+            _cuentasServices = new CuentasServices(context);
+        }
+
+        public ActionResult Index(int id = 0)
+        {
+            if (id == -1)
+            {
+                TempData["error"] = "El dia seleccionado no existe!";
+                id = 0;
+            }
+            var diaContable = id == 0
+                ? _periodoContableService.GetDiaContableActual()
+                : _periodoContableService.BuscarDiaContable(id);
+            ViewBag.DiaContable = diaContable;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult BuscarCompras(DateTime fecha)
+        {
+            return RedirectToAction("ListaDeComprasPartial", "Compras", new {fecha = fecha});
+        }
+
+        public PartialViewResult ListaDeComprasPartial(DateTime fecha)
+        {
+            //todo: cambiar aqui y en compras la verificacion de la fecha para no cargar todos los registros
+            var compras = _db.Set<Compra>().ToList().Where(v => v.Fecha.Date == fecha.Date).ToList().OrderByDescending(v => v.Fecha);
+            return PartialView("_ListaDeComprasPartial", compras);
+        }
+
+        public PartialViewResult ProductosComprados(int id)
+        {
+            var detalleDeCompra = _db.Set<Compra>().Find(id).Productos;
+            return PartialView("_ProductosCompradosPartial", detalleDeCompra);
         }
 
         // GET: Compra
@@ -57,7 +95,7 @@ namespace ErpMvc.Controllers
 
         [HttpPost]
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        public ActionResult TramitarCompra(Compra compra)
+        public ActionResult TramitarCompra(Compra compra, bool esPorCaja)
         {
             var usuario = User.Identity.GetUserId();
             compra.UsuarioId = usuario;
@@ -68,13 +106,28 @@ namespace ErpMvc.Controllers
                     TempData["error"] = "No se puede efectuar una compra vacia";
                     return View();
                 }
-                if (_comprasService.ComprarYDarEntradaAAlmacen(compra,usuario))
+                bool result = true;
+                if (esPorCaja)
                 {
-
-                    return RedirectToAction("Index", "Inicio");
+                    var cta = _cuentasServices.FindCuentaByNombre("Caja");
+                    var totalCompra = compra.Productos.Sum(p => p.ImporteTotal);
+                    if (cta.Disponibilidad.Saldo - totalCompra < 0)
+                    {
+                        TempData["error"] = "No se puede pagar por caja porque no existe esta cantidad de efectivo";
+                        result = false;
+                    }
                 }
+                if (result)
+                {
+                    if (_comprasService.ComprarYDarEntradaAAlmacen(compra, esPorCaja, usuario))
+                    {
+                        TempData["exito"] = "Compra agregada correctamente";
+                        
+                    } 
+                }
+                return RedirectToAction("Index", "Compras");
             }
-            return View(compra);
+            return RedirectToAction("Index", "Compras");
         }
 
 

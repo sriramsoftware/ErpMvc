@@ -39,7 +39,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="@Url.Action("TramitarCompra", "Compras")">
+                <a href="@Url.Action("Index", "Compras")">
                     <div class="panel-footer">
                         <span class="pull-left">Ver detalles</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -131,8 +131,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">NO</button>
-                <a class="btn btn-success" href="@Url.Action("CerrarPeriodo","PeriodoContable")">SI</a>
+                <a class="btn btn-success col-md-2 col-md-offset-7" href="@Url.Action("CerrarPeriodo","PeriodoContable")">Aceptar</a>
+                <button type="button" class="btn btn-danger col-md-2" data-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>
@@ -156,11 +156,17 @@
 
             Morris.Area({
                 element: 'morris-area-chart',
-                data: @Html.Raw(Json.Encode(ViewBag.Finanzas))
-                    ,
+                data: @Html.Raw(Json.Encode(ViewBag.Finanzas)),
                 xkey: 'period',
                 ykeys: ['gastos', 'ingresos'],
                 labels: ['Gastos', 'Ingresos'],
+                xLabelFormat: function(period) {
+                    return period.getDate()+'/'+(period.getMonth()+1)+'/'+period.getFullYear(); 
+                },
+                dateFormat: function(period) {
+                    var d = new Date(period);
+                    return d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear(); 
+                },
                 pointSize: 2,
                 hideHover: 'auto',
                 resize: true
@@ -168,8 +174,7 @@
 
             Morris.Donut({
                 element: 'morris-donut-chart',
-                data: @Html.Raw(Json.Encode(ViewBag.MasVendidos))
-                    ,
+                data: @Html.Raw(Json.Encode(ViewBag.MasVendidos)),
                 resize: true
             });
         });

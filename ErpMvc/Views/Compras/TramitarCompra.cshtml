@@ -27,10 +27,17 @@
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(m => m.Fecha, new { @class = "col-md-4 control-label" })
+                @Html.LabelFor(m => m.Fecha, new {@class = "col-md-4 control-label"})
                 <div class="col-md-8">
-                    @Html.TextBoxFor(m => m.Fecha, new { @class = "form-control datepicker" })
+                    @Html.TextBoxFor(m => m.Fecha, new {@class = "form-control datepicker"})
                     @Html.ValidationMessageFor(m => m.Fecha)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("esPorCaja","Pagar por caja", new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    @Html.CheckBox("esPorCaja")
+                    @Html.ValidationMessage("esPorCaja")
                 </div>
             </div>
             <div class="form-group">
@@ -40,7 +47,7 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-4 col-md-8">
-                    @Html.ActionLink("Atrás", "Index", "Inicio", null, new { @class = "btn btn-default" })
+                    @Html.ActionLink("Atrás", "Index", "Compras", null, new { @class = "btn btn-default" })
                     <input id="comprar-btn" type="submit" class="btn btn-success" value="Comprar" />
                 </div>
             </div>

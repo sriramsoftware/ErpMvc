@@ -55,23 +55,23 @@ namespace ErpMvc.Controllers
         {
             vendedorViewModel.Vendedor.NoExpedienteLaboral = vendedorViewModel.Vendedor.Ci;
             vendedorViewModel.Vendedor.Direccion = new Direccion() {No = "1",Calle = "1",};
-            if (_db.Set<Usuario>().Any(t => t.UserName == vendedorViewModel.UsuarioViewModel.NombreUsuario) )
-            {
-                TempData["error"] = "Ya existe el usuario";
-                return RedirectToAction("Index");
-            }
-            var user = new Usuario
-            {
-                UserName = vendedorViewModel.UsuarioViewModel.NombreUsuario,
-                Activo = true,
-                Correo = vendedorViewModel.UsuarioViewModel.NombreUsuario + "@montin.com",
-            };
-            var result = UserManager.Create(user, vendedorViewModel.UsuarioViewModel.Contraseña);
-            foreach (var rol in vendedorViewModel.Roles)
-            {
-                UserManager.AddToRole(user.Id, rol);
-            }
-            vendedorViewModel.Vendedor.UsuarioId = user.Id;
+            //if (_db.Set<Usuario>().Any(t => t.UserName == vendedorViewModel.UsuarioViewModel.NombreUsuario) )
+            //{
+            //    TempData["error"] = "Ya existe el usuario";
+            //    return RedirectToAction("Index");
+            //}
+            //var user = new Usuario
+            //{
+            //    UserName = vendedorViewModel.UsuarioViewModel.NombreUsuario,
+            //    Activo = true,
+            //    Correo = vendedorViewModel.UsuarioViewModel.NombreUsuario + "@montin.com",
+            //};
+            //var result = UserManager.Create(user, vendedorViewModel.UsuarioViewModel.Contraseña);
+            //foreach (var rol in vendedorViewModel.Roles)
+            //{
+            //    UserManager.AddToRole(user.Id, rol);
+            //}
+            //vendedorViewModel.Vendedor.UsuarioId = user.Id;
             vendedorViewModel.Vendedor.PuntoDeVentaId = _vendedorService.PuntosDeVentas().FirstOrDefault().Id;
             if (_vendedorService.AgregarVendedor(vendedorViewModel.Vendedor))
             {
@@ -106,30 +106,30 @@ namespace ErpMvc.Controllers
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Editar(VendedorViewModel vendedorViewModel)
         {
-            if (vendedorViewModel.Vendedor.UsuarioId.IsNullOrWhiteSpace())
-            {
-                var user = new Usuario
-                {
-                    UserName = vendedorViewModel.UsuarioViewModel.NombreUsuario,
-                    Activo = true,
-                    Correo = vendedorViewModel.UsuarioViewModel.NombreUsuario + "@montin.com",
-                };
-                var result = UserManager.Create(user, "admin123*");
-                foreach (var rol in vendedorViewModel.Roles)
-                {
-                    UserManager.AddToRole(user.Id, rol);
-                }
-                vendedorViewModel.Vendedor.UsuarioId = user.Id;
-            }
-            else
-            {
-                UserManager.RemoveFromRole(vendedorViewModel.Vendedor.UsuarioId, RolesMontin.UsuarioAvanzado);
-                UserManager.RemoveFromRole(vendedorViewModel.Vendedor.UsuarioId, RolesMontin.Vendedor);
-                foreach (var rol in vendedorViewModel.Roles)
-                {
-                    UserManager.AddToRole(vendedorViewModel.Vendedor.UsuarioId, rol);
-                }
-            }
+            //if (vendedorViewModel.Vendedor.UsuarioId.IsNullOrWhiteSpace())
+            //{
+            //    var user = new Usuario
+            //    {
+            //        UserName = vendedorViewModel.UsuarioViewModel.NombreUsuario,
+            //        Activo = true,
+            //        Correo = vendedorViewModel.UsuarioViewModel.NombreUsuario + "@montin.com",
+            //    };
+            //    var result = UserManager.Create(user, "admin123*");
+            //    foreach (var rol in vendedorViewModel.Roles)
+            //    {
+            //        UserManager.AddToRole(user.Id, rol);
+            //    }
+            //    vendedorViewModel.Vendedor.UsuarioId = user.Id;
+            //}
+            //else
+            //{
+            //    UserManager.RemoveFromRole(vendedorViewModel.Vendedor.UsuarioId, RolesMontin.UsuarioAvanzado);
+            //    UserManager.RemoveFromRole(vendedorViewModel.Vendedor.UsuarioId, RolesMontin.Vendedor);
+            //    foreach (var rol in vendedorViewModel.Roles)
+            //    {
+            //        UserManager.AddToRole(vendedorViewModel.Vendedor.UsuarioId, rol);
+            //    }
+            //}
             if (_vendedorService.ModificarVendedor(vendedorViewModel.Vendedor))
             {
                 TempData["exito"] = "Trabajador modificado correctamente";

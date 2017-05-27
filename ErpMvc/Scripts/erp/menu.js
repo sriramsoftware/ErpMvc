@@ -141,10 +141,13 @@ $(document).ready(function(){
 					$("#IndiceEsperado").val(data.IndiceEsperado);
 					$("#Preparacion").val(data.Preparacion);
 					$("#Presentacion").val(data.Presentacion);
+					$("#CentroDeCostoId").val(data.CentroDeCostoId);
                     $("#porCiento").val(data.PorCiento);
 					if (data.PorCiento) {
 					    $("#porCiento").prop('checked', 'checked');
-				    } 
+					} else {
+					    $("#porCiento").attr('checked', false);
+					}
 					$("#menu-form").attr("action","/Menus/Editar/");
 					$("#button-submit").text("Modificar");
 					$("#modal-title").text("Modificar Menu: "+data.Nombre);

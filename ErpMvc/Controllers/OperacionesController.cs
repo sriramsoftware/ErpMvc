@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using CajaCore.Models;
 using CompraVentaCore.Models;
 using ContabilidadBL;
 using ContabilidadCore.Models;
@@ -90,7 +91,17 @@ namespace ErpMvc.Controllers
         public PartialViewResult ResumenDeOperacionesContables(int id)
         {
             var operaciones = ResumenDeOperaciones(id, "Caja");
-            ViewBag.ImporteAnterior = 0;
+            var diaAnterior = _db.Set<DiaContable>().Find(id - 1);
+            if (diaAnterior == null)
+            {
+                ViewBag.ImporteAnterior = 0;
+            }
+            else
+            {
+                var cierre = _db.Set<CierreDeCaja>().SingleOrDefault(c => c.DiaContableId == diaAnterior.Id);
+                ViewBag.ImporteAnterior = CalculoImporte(cierre.Desglose);
+
+            }
             return PartialView("_ResumenDeOperacionesConteblesPartial", operaciones);
         }
 
@@ -143,6 +154,11 @@ namespace ErpMvc.Controllers
                 Usuario = m.Asiento.Usuario.UserName
             }));
             return operaciones;
-        } 
+        }
+
+        private decimal CalculoImporte(ICollection<DenominacionesEnCierreDeCaja> denominaciones)
+        {
+            return denominaciones.Sum(d => (d.Cantidad*d.DenominacionDeMoneda.Valor));
+        }
     }
 }

@@ -1,0 +1,71 @@
+﻿@using ContabilidadCore.Models
+
+@{
+    Layout = "~/Views/Shared/_BasicLayout.cshtml";
+    ViewBag.Title = "Reporte Cierre";
+}
+
+@{
+    var dia = ViewBag.DiaContable as DiaContable;
+}
+<div class="print-content">
+    <h2 class="print-header">Cierre de caja @dia.Fecha.ToShortDateString()</h2>
+
+    <div ng-show="cerrando" class="row print-money" ng-controller="cierreController">
+        @Html.Partial("_ResumenDeEfectivoPartial")
+
+        <h3 class="text-center">EFECTIVO EN CAJA</h3>
+        @{
+            Html.RenderAction("DesgloseCierrePartial", "PeriodoContable", new { Id = dia.Id });
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+           
+        });
+
+        erp.controller('cierreController', [
+            '$scope', '$http', function ($scope, $http) {
+                $scope.cerrando = true;
+
+                $scope.urlResumen = '@Url.Action("ResumenEfectivoData","PeriodoContable", new {diaId = dia.Id})';
+                $scope.fetchResumen = function () {
+                    $http.get($scope.urlResumen).then(function (result) {
+                        $scope.efectivo_inicial = result.data.EfectivoAnterior;
+                        $scope.ventas = result.data.Ventas;
+                        $scope.ventas_sin_porciento = result.data.VentasSinPorciento;
+                        $scope.ventas_con_porciento = $scope.ventas - $scope.ventas_sin_porciento;
+                        $scope.porciento = $scope.ventas_con_porciento * 0.1;
+                        $scope.extracciones = result.data.Extracciones;
+                        $scope.depositos = result.data.Depositos;
+                        $scope.propinas = result.data.Propinas;
+                        $scope.efectivo_antes_cierre = $scope.efectivo_inicial+ $scope.ventas + $scope.depositos - $scope.extracciones;
+                        $scope.efectivo_a_dejar_en_caja = 0;
+                        $scope.efectivo_a_extraer = $scope.efectivo_antes_cierre - $scope.efectivo_a_dejar_en_caja;
+                        $scope.centrosDeCosto = result.data.CentrosDeCosto;
+                        window.setTimeout(function () {
+                            window.print();
+                        }, 1000);
+                       
+                    });
+                }
+
+                $scope.fetchResumen();
+                //window.print();
+                $scope.noSePuedeCerrar = function() {
+                    return $scope.efectivo_a_extraer < 0;
+                }
+
+                //$scope.imprimir = function() {
+                //    var w = window.open("/PeriodoContable/cierrereporte/2");
+                //    w.print();
+                //    w.close();
+                //}
+            }
+        ]);
+    </script>
+}

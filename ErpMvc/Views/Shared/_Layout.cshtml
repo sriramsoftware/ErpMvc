@@ -5,11 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amelia del Mar</title>
-
+    <link rel="shortcut icon" href="~/Content/logo.png">
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/Content/themes/base/all.css" rel="stylesheet" />
     <link href="~/Content/chosen.min.css" rel="stylesheet" />
     <link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/buttons.dataTables.min.css" rel="stylesheet" />
     <link href="~/Content/icomoon.css" rel="stylesheet" />
     <link href="~/Content/mbs-qdtf.css" rel="stylesheet" />
     <link href="~/Content/toastr.min.css" rel="stylesheet" />
@@ -30,8 +31,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <img class="img-logo" src="@Url.Content("~/Content/images/logo.jpg")" />
-                @Html.ActionLink("Amelia del Mar", "Index", "Inicio", null, new { @class = "navbar-brand" })
+                <a href="@Url.Action("Index","Inicio")"><img class="img-logo" alt="Amelia del Mar" src="@Url.Content("~/Content/images/logo.png")" /></a>
+                
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -42,12 +43,13 @@
                         <li><a href="@Url.Action("TramitarCompra", "Compras")">Comprar</a></li>
                         <li><a href="@Url.Action("NuevaVenta", "Ventas")">Vender</a></li>
                         <li><a href="@Url.Action("Index", "OtrosGastos")">Otros gastos</a></li>
+                        <li><a href="@Url.Action("Index", "Caja")">Caja</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Clasificadores<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href="@Url.Action("Listado","GruposDeProductos")">Grupos de productos</a></li>
-                                <li><a href="@Url.Action("Index","Trabajadores")">Trabajadores</a></li>
-                                <li><a href="@Url.Action("Index","ConceptosDeGastos")">Conceptos de gastos</a></li>
+                                <li><a href="@Url.Action("Listado", "ClasificacionesDeProductos")">Clasificacion de productos</a></li>
+                                <li><a href="@Url.Action("Listado", "GruposDeProductos")">Grupos de productos</a></li>
+                                <li><a href="@Url.Action("Index", "ConceptosDeGastos")">Conceptos de gastos</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -55,6 +57,8 @@
                             <ul class="dropdown-menu">
                                 <li><a href="@Url.Action("Inventario","Reportes")">Inventario</a></li>
                                 <li><a href="@Url.Action("Operaciones","Reportes")">Operaciones</a></li>
+                                <li><a href="@Url.Action("Ventas","Reportes")">Ventas</a></li>
+                                <li><a href="@Url.Action("Cierres","PeriodoContable")">Cierres</a></li>
                             </ul>
                         </li>
                     }
@@ -65,12 +69,12 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> Administración<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href="@Url.Action("Listado", "ClasificacionesDeProductos")">Clasificacion de productos</a></li>
+                                <li><a href="@Url.Action("Index","Trabajadores")">Trabajadores</a></li>
                                 @*<li><a href="@Url.Action("Listado", "UnidadesDeMedidas")">Unidades de medidas</a></li>*@
                                 <li class="divider"></li>
-                                <li><a href="@Url.Action("Index", "CentrosDeCostos")">Centros de costo</a></li>
+                                @*<li><a href="@Url.Action("Index", "CentrosDeCostos")">Centros de costo</a></li>*@
                                 <li><a href="@Url.Action("Index", "PuntoDeVenta")">Puntos de Ventas</a></li>
-                                <li><a href="@Url.Action("Index", "Operaciones")">Operaciones Contables</a></li>
+                                <li><a href="@Url.Action("ListaUsuario", "Seguridad")">Usuario</a></li>
 
                             </ul>
                         </li>
@@ -94,7 +98,7 @@
                                 <li><a href="@Url.Action("Listado", "Productos")" class="glyphicon glyphicon-glass icono_izquierda_otra" title="Productos" data-toggle="tooltip" data-placement="top"></a></li>
                                 <li><a href="@Url.Action("Almacen", "Inventario")" class="glyphicon glyphicon-list icono_izquierda_otra" title="Inventario" data-toggle="tooltip" data-placement="top"></a></li>
                                 <li><a href="@Url.Action("Listado", "Menus")" class="glyphicon glyphicon-book icono_izquierda_otra" title="Menus" data-toggle="tooltip" data-placement="top"></a></li>
-                                <li><a href="@Url.Action("TramitarCompra", "Compras")" class="glyphicon glyphicon-shopping-cart icono_izquierda_otra" title="Compras" data-toggle="tooltip" data-placement="top"></a></li>
+                                <li><a href="@Url.Action("Index", "Compras")" class="glyphicon glyphicon-shopping-cart icono_izquierda_otra" title="Compras" data-toggle="tooltip" data-placement="top"></a></li>
                                 <li><a href="@Url.Action("Index", "Ventas")" class="glyphicon glyphicon-usd icono_izquierda_otra" title="Ventas" data-toggle="tooltip" data-placement="top"></a></li>
                                 <li><a href="@Url.Action("Index", "Trabajadores")" class="glyphicon glyphicon-user icono_izquierda_otra" title="Trabajadores" data-toggle="tooltip" data-placement="top"></a></li>
                             </ul>

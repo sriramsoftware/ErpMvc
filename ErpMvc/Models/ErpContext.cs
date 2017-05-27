@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.CodeDom.Compiler;
+using System.Data.Entity;
 using AlmacenCore.Models;
 using CajaCore.DbConfigurations;
 using CajaCore.Models;
@@ -11,6 +12,7 @@ using HumanResourcesCore.Models;
 using IdentidadCore.DbConfigurations;
 using IdentidadCore.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MySql.Data.Entity;
 using SeguridadCore.Models;
 
 namespace ErpMvc.Models
@@ -20,6 +22,12 @@ namespace ErpMvc.Models
         public ErpContext()
             : base("DefaultConnection")
         {
+            //AutomaticMigrationsEnabled = false;
+            //SetSqlGenerator("MySql.Data.MySqlClient", new MySqlMigrationSqlGenerator());
+            //SetHistoryContextFactory("MySql.Data.MySqlClient", (conn, schema) => new MySqlHistoryContext(conn, schema));
+            
+            DbConfiguration.SetConfiguration(new MySql.Data.Entity.MySqlEFConfiguration());
+            Database.SetInitializer<ErpContext>(null);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -27,6 +35,7 @@ namespace ErpMvc.Models
             //modelBuilder.Configurations.Add(new DenominacionDeMonedasConfig());
             modelBuilder.Entity<UnidadDeMedida>().Property(u => u.FactorDeConversion).HasPrecision(15, 5);
             modelBuilder.Entity<MovimientoDeProducto>().Property(u => u.Cantidad).HasPrecision(15, 5);
+            modelBuilder.Entity<ProductoConcreto>().Property(u => u.PrecioUnitario).HasPrecision(15, 12);
             modelBuilder.Entity<ValeSalidaDeAlmacen>().HasMany(v => v.Productos).WithRequired(d => d.Vale).WillCascadeOnDelete(false);
             modelBuilder.Entity<ValeSalidaDeAlmacen>().HasRequired(v => v.Almacen).WithMany(a => a.ValesDeSalida).WillCascadeOnDelete(false);
             modelBuilder.Entity<Venta>().HasRequired(v => v.Vendedor).WithMany().WillCascadeOnDelete(false);
@@ -70,6 +79,8 @@ namespace ErpMvc.Models
             base.OnModelCreating(modelBuilder);
         }
 
+        public DbSet<LicenciaInfo> Licencias { get; set; } 
+
         public DbSet<LogDeAcceso> LogsDeAccesos { get; set; }
 
         public DbSet<Compra> Compras { get; set; }
@@ -100,6 +111,9 @@ namespace ErpMvc.Models
         public DbSet<TarjetaDeAsistencia> TarjetasDeAsistencia { get; set; }
         public DbSet<DenominacionDeMoneda> DenominacionDeMoneda { get; set; }
         public DbSet<Caja> Cajas { get; set; }
+        public DbSet<CierreDeCaja> CierresDeCajas { get; set; }
+        public DbSet<DenominacionesEnCierreDeCaja> DenominacionesEnCierreDeCajas { get; set; }
+        public DbSet<SalidaPorMerma> SalidasPorMermas { get; set; }
 
         //contabilidad
         public DbSet<Asiento> Asientos { get; set; }

@@ -39,7 +39,7 @@
                 <a id="add_aprob" data-ng-click="agregarDetalle()" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
             </td>
         </tr>
-        <tr data-ng-repeat="detalle in productosEnMenu">
+        <tr ng-repeat="detalle in productosEnMenu">
             <td>
                 <strong data-ng-hide="detalle.editMode">{{ detalle.Producto }}</strong>
                 <input name="Productos[{{ $index }}].ProductoId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ProductoId" class="form-control"/>

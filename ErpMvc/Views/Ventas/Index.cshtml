@@ -5,32 +5,11 @@
     ViewBag.Title = "Ventas";
 }
 
-<div class="row">
-    <div class="col-md-12 col-sm-12 col-xs-12">
-        <form class="form-horizontal" role="form" accept-charset="utf-8">
-            <div class="form-group">
-                <label class="col-md-6 col-sm-6  col-xs-12 control-label">Buscar Ventas del Día</label>
-                <div class="col-md-6 col-sm-6 col-xs-12 " style="padding: 0px;">
-                    <div class="input-group input-append date col-md-6 col-sm-6" data-date="" data-date-format="dd-mm-yyyy" id="datepicker" data-date="">
-                        <input class="input-small form-control  datepicker" type="text" id="date" name="date" value='@ViewBag.DiaContable.Fecha.ToShortDateString()'>
-                        <span class="input-group-addon add-on">
-                            <i class="glyphicon glyphicon-calendar"></i>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-@* TODO: Agregar botones de cambio de estado y que tengan observaciones *@
-
 <div id="ventas-div">
     @{
-        Html.RenderAction("ListaDeVentasPartial", new { Id = ViewBag.DiaContable.Id });
+        Html.RenderAction("ListaDeVentasPartial", new {Id = ViewBag.DiaContable.Id});
     }
 </div>
-
-
 
 @section SeccionDerecha
 {
@@ -42,7 +21,7 @@
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
             <p>Observe las ventas registradas en la fecha contable actual y sus menús asociados</p>
-            <p>Hoy se han registrado un total de 0 ventas.</p>
+            <p>Hoy se han registrado un total de @ViewBag.CantidadDeVentas ventas.</p>
         </div>
     </div>
     <div class="row">
@@ -50,6 +29,11 @@
             <a href="@Url.Action("NuevaVenta")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Registrar Nueva Venta</a>
         </div>
     </div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+        <a href="@Url.Action("Pendientes")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Pendientes de pago</a>
+    </div>
+</div>
     <br />
 }
 
@@ -57,7 +41,7 @@
 <div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header">  
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 id="modal-title" class="modal-title">Menús en venta</h4>
             </div>
@@ -132,7 +116,6 @@
     </div>
 </div>
 
-
 <div id="modalPropina" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true" ng-controller="propinaController">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -206,7 +189,6 @@
     </div>
 </div>
 
-
 <div id="modalImprimirVenta" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -216,9 +198,8 @@
             </div>
             <div id="modal-body" class="modal-body">
                 <p>
-                    Imprimir el comprobante de la comanda la pasara a estado <strong>impresa</strong>.<br />
-                    Ya <strong>no podra</strong> editar la comanda <strong>ni cancelarla</strong>.<br />
-                    ¿Esta seguro de imprimir la <strong id="numero-comanda-imprimir"></strong>?
+                    <strong>¡Atención!!!</strong> Si imprime el reporte correspondiente a la comanda<br/>
+                     no podrá realizar futuras ediciones en la venta y deberá realizar el pago correspondiente a esta.
                 </p>
             </div>
             <div class="modal-footer">
@@ -234,6 +215,63 @@
     </div>
 </div>
 
+<div id="modalOtroDia" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("PasarAOtroDia", "Ventas", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Pasar para otro dia</h4>
+                </div>
+                <div id="modal-body" class="modal-body">
+                    <input type="hidden" name="ventaId" id="otro-dia-id" value="0" />
+                    <div class="row">
+                        <div class="col-md-12">
+                            Detalle
+                        </div>
+                        <div class="col-md-12">
+                            <textarea class="form-control" rows="3" name="observacion" required="required"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Para otro dia</button>
+                    <a class="btn btn-default" data-dismiss="modal">Cerrar</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="modalPorCuentaCasa" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("PorCuentaDeLaCasa", "Ventas", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Por cuenta de la casa</h4>
+                </div>
+                <div id="modal-body" class="modal-body">
+                    <input type="hidden" name="ventaId" id="cuenta-casa-id" value="0" />
+                    <div class="row">
+                        <div class="col-md-12">
+                            Detalle
+                        </div>
+                        <div class="col-md-12">
+                            <textarea class="form-control" rows="3" name="observacion" required="required"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Por la casa</button>
+                    <a class="btn btn-default" data-dismiss="modal">Cerrar</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -243,44 +281,52 @@
     <script>
         $(document).ready(function () {
             $('btn').tooltip();
-            $('#date').change(function () {
-                console.log("cambio de fecha");
-                var fecha = $("#date").val();
-                $.ajax({
-                    url: "@Url.Action("BuscarVentas", "Ventas")",
-                    type: "POST",
-                    data: { fecha: fecha },
-                    dataType: "html",
-                    success: function (data) {
-                        $("#ventas-div").html(data);
-                        funcionesMenu();
-                    },
-                    error: function (data) { }
-                });
-            });
 
-            $(document).on('click', "#imprimir-btn", function () {
-                //window.print();
-                //$("#imprimir-btn").attr('href', '@Url.Action("ImprimirReporte","Ventas")' + '/' + id);
+            function ImprimirVenta(id) {
                 var w = window.open();
                 var div = $("<div></div>");
                 var div2 = $("<div></div>");
-                var id = $(this).attr("data-id");
                 $(div).append("<p>Comanda # " + id + "</p>");
                 $(div).append(div2);
-                $(div2).load('@Url.Action("MenusEnVentaPartial","Ventas")' + '/' + id, function() {
+                $(div2).load('@Url.Action("MenusEnVentaPartial","Ventas")' + '/' + id, function () {
                     w.document.write($(div).html());
                     w.print();
                     w.close();
+                    $("#modalImprimirVenta").modal('hide');
                 });
-                
+            }
+
+            $(document).on('click', "#imprimir-btn", function () {
+                var id = $(this).attr("data-id");
+                $.get('@Url.Action("PasarAImpreso")' + '/' + id, function() {
+                    ImprimirVenta(id);
+                    window.location = '/Ventas/Index';
+                });
+            });
+
+            $(document).on('click', ".otro-dia-btn", function () {
+                var id = $(this).attr("data-id");
+                $("#otro-dia-id").val(id);
+                $("#modalOtroDia").modal('show');
+            });
+
+            $(document).on('click', ".por-casa-btn", function () {
+                var id = $(this).attr("data-id");
+                $("#cuenta-casa-id").val(id);
+                $("#modalPorCuentaCasa").modal('show');
             });
 
             $(document).on('click', ".print-vale-btn", function () {
                 var id = $(this).attr("data-id");
-                $("#imprimir-btn").attr("data-id",id);
-                $("#numero-comanda-imprimir").html("comanda " + id);
-                $("#modalImprimirVenta").modal('show');
+                var estado = $(this).attr("data-estado");
+                if (estado == "Pendiente") {
+                    $("#imprimir-btn").attr("data-id", id);
+                    $("#numero-comanda-imprimir").html("comanda " + id);
+                    $("#modalImprimirVenta").modal('show');
+                } else {
+                    ImprimirVenta(id);
+                }
+                
             });
 
             $(document).on('click', ".pagar-vale-btn", function () {

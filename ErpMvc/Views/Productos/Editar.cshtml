@@ -4,19 +4,19 @@
     ViewBag.Title = "Modificar producto";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm("Editar", "Productos", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <hr />
     @Html.ValidationSummary()
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-10 col-md-offset-1">
         @Html.HiddenFor(model => model.ProductoId)
         @Html.HiddenFor(model => model.ProductoConcretoId)
         <div class="row">
             <div class="col-md-4 col-sm-4 text-right">
-                Nombre del producto
+                Producto
             </div>
             <div class="col-md-8 col-sm-8">
                 @Html.TextBoxFor(model => model.Nombre, new {@class = "form-control"})
@@ -39,18 +39,16 @@
                 Unidad de Medida
             </div>
             <div class="col-md-8 col-sm-8">
-                @Html.DropDownList("UnidadDeMedidaId", null, new {@class = "form-control"})
-                @Html.ValidationMessageFor(model => model.UnidadDeMedidaId)
+                <input disabled="disabled" value="@ViewBag.UnidadDeMedida" class="form-control"/>
             </div>
         </div>
 
         <div id="row-cantidad" class="row">
             <div class="col-md-4 col-sm-4 text-right">
-                Presentación en Envase
+                Presentación
             </div>
             <div class="col-md-8 col-sm-8">
-                @Html.TextBoxFor(model => model.Cantidad, new {@class = "form-control"})
-                @Html.ValidationMessageFor(model => model.Cantidad)
+                <input class="form-control" disabled="disabled" value="@Model.Cantidad"/>
             </div>
         </div>
 

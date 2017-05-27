@@ -42,6 +42,14 @@ $(document).ready(function () {
         "pagingType": "full_numbers",
         "columnDefs": [
             { "orderable": false, "targets": colums - 1 }
+        ],
+        "order": [[ 0, "desc" ]],
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'print',
+                text: 'Imprimir'
+            }
         ]
     });
     dynamicTable.on('draw', function() {

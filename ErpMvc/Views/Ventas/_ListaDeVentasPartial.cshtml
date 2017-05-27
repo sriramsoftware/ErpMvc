@@ -5,7 +5,7 @@
 @if (Model.Any(c => c.EstadoDeVenta == EstadoDeVenta.Pendiente || c.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia))
 {
     <div class="alert alert-warning text-center">
-        Por favor, recuerde que tiene @Model.Count(c => c.EstadoDeVenta == EstadoDeVenta.Pendiente || c.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia|| c.EstadoDeVenta == EstadoDeVenta.Facturada) comandas
+        Por favor, recuerde que tiene @Model.Count(c => c.EstadoDeVenta == EstadoDeVenta.Pendiente || c.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia || c.EstadoDeVenta == EstadoDeVenta.Facturada) comandas
         en espera de pago del cliente.
     </div>
 }
@@ -17,7 +17,7 @@
 
     <div class="row text-center">
         @{
-            var centrosDeCosto = Model.GroupBy(v => v.PuntoDeVenta.CentroDeCosto).Select(v => new { PuntoDeVenta = v.Key.Nombre, Importe = v.Sum(ve => ve.Importe) });
+            var centrosDeCosto = Model.SelectMany(vw => vw.Elaboraciones.GroupBy(e => e.Elaboracion.CentroDeCosto).Select(v => new { PuntoDeVenta = v.Key.Nombre, Importe = v.Sum(ve => ve.ImporteTotal) })).GroupBy(e => e.PuntoDeVenta).Select(e => new { PuntoDeVenta = e.Key, Importe = e.Sum(s => s.Importe) });
         }
         @foreach (var pto in centrosDeCosto)
         {
@@ -43,16 +43,11 @@
 @foreach (var venta in Model)
 {
     <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-            <label class="badge badge-title">
-                @String.Format("{0:C}", venta.Importe)
-            </label>
-        </div>
-        <div class="col-md-8 col-sm-8 col-xs-12">
+        <div class="col-md-4 col-sm-8 col-xs-12">
             <h4 class="title_insight">Comanda # @venta.Id</h4>
-            <br/>
+            <br />
             @venta.Fecha.ToShortDateString() @venta.Fecha.ToShortTimeString()
-            <br/>
+            <br />
             Posición en el Local:&nbsp; @venta.PuntoDeVenta.Nombre
             <br />
             Dependiente: @venta.Vendedor.NombreCompleto
@@ -60,32 +55,41 @@
             Usuario: @venta.Usuario.UserName
             <br />
             Estado: @switch (venta.EstadoDeVenta)
-                {
-                    case EstadoDeVenta.Pendiente:
+            {
+                case EstadoDeVenta.Pendiente:
                     @:<strong>En espera de pago por el cliente</strong>
-                                break;
-                    case EstadoDeVenta.PendienteParaOtroDia:
+                            break;
+                case EstadoDeVenta.PendienteParaOtroDia:
                     @:<strong>A pagar otro dia</strong>
-                                break;
-                    case EstadoDeVenta.PagadaEnEfectivo:
+                            break;
+                case EstadoDeVenta.PagadaEnEfectivo:
                     @:<strong>Pagada en efectivo</strong>
-                                break;
-                    case EstadoDeVenta.NoCobrada:
+                            break;
+                case EstadoDeVenta.NoCobrada:
                     @:<strong>Por cuenta de la casa</strong>
-                                break;
-                    case EstadoDeVenta.PagadaPorTarjeta:
+                            break;
+                case EstadoDeVenta.PagadaPorTarjeta:
                     @:<strong>Pagado con tarjeta de cliente</strong>
-                                break;
-                }
+                            break;
+                    case EstadoDeVenta.Facturada:
+                    @:<strong>En espera de pago por el cliente</strong>
+                            break;
+
+            }
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12 text-center">
+            <label class="badge badge-title">
+                @String.Format("{0:C}", venta.Importe)
+            </label>
         </div>
         <div class="col-md-4 col-sm-4 col-xs-12 botones">
             @Ajax.ActionLink("Ver Menus Consumidos", "MenusEnVentaPartial", "Ventas", new { Id = venta.Id }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, HttpMethod = "Get", UpdateTargetId = "modal-detalle", OnComplete = "mostrarModal" }, new { @class = "btn btn-primary btn-sm col-md-12" })
             <br />
-            <a class="btn btn-primary btn-sm col-md-12 print-vale-btn" href="javascript:;" data-id="@venta.Id">
+            <a class="btn btn-primary btn-sm col-md-12 print-vale-btn" href="javascript:;" data-id="@venta.Id" data-estado="@venta.EstadoDeVenta">
                 <i class="glyphicon glyphicon-print"></i>&nbsp;Imprimir Reporte
             </a>
-            @if (venta.EstadoDeVenta == EstadoDeVenta.NoCobrada || venta.EstadoDeVenta == EstadoDeVenta.Pendiente || venta.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia|| venta.EstadoDeVenta == EstadoDeVenta.Facturada)
-                {
+            @if (venta.EstadoDeVenta == EstadoDeVenta.Pendiente || venta.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia || venta.EstadoDeVenta == EstadoDeVenta.Facturada)
+            {
                 <br />
                 <a class="btn btn-primary btn-sm col-md-12 pagar-vale-btn" data-id="@venta.Id">
                     <i class="glyphicon glyphicon-usd"></i>&nbsp;Pagar Vale
@@ -99,16 +103,25 @@
                 </a>
             }
             @if (venta.EstadoDeVenta == EstadoDeVenta.Pendiente)
-                {
+            {
                 <br />
                 <a href="@Url.Action("Editar", "Ventas", new {Id = venta.Id})" class="btn btn-primary btn-sm col-md-12">
                     <i class="glyphicon glyphicon-edit"></i>&nbsp;Editar Comanda
                 </a>
+                <br />
+                <a class="btn btn-primary btn-sm col-md-12 eliminar-venta-btn" data-id="@venta.Id">
+                    <i class="glyphicon glyphicon-trash"></i>&nbsp;Eliminar esta venta
+                </a>
                     <br />
-                    <a class="btn btn-primary btn-sm col-md-12 eliminar-venta-btn" data-id="@venta.Id">
-                        <i class="glyphicon glyphicon-trash"></i>&nbsp;Eliminar esta venta
+                    <a class="btn btn-info btn-sm col-md-6 otro-dia-btn" data-id="@venta.Id">
+                        &nbsp;Otro dia
                     </a>
+                    <a class="btn btn-primary btn-sm col-md-6 por-casa-btn" data-id="@venta.Id">
+                        &nbsp;Por la casa
+                    </a>
+
             }
+
         </div>
     </div>
     <hr />

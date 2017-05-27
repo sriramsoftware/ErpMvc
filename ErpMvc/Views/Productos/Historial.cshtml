@@ -9,27 +9,31 @@
 <hr />
 
 <h1 class="message-body">
-    Existencia Total: @String.Format("{0} {1}",Model.Existencia.Cantidad, Model.Producto.UnidadDeMedida.Siglas)
+    Existencia Total: @String.Format("{0} {1}",Model.Existencias.Sum(e => e.Cantidad), Model.Producto.UnidadDeMedida.Siglas)
 </h1>
 
 <table class="table dynamic">
     <thead>
-        <tr>
-            <th>Movimiento</th>
-            <th>Fecha</th>
-            <th>Cantidad</th>
-            <th>Usuario</th>
-        </tr>
+    <tr>
+        <th>Fecha</th>
+        <th>Tipo</th>
+        <th>Lugar</th>
+        <th>Cantidad</th>
+        <th>Detalle</th>
+        <th>Usuario</th>
+    </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Movimientos)
         {
             <tr>
-                <td>@item.Tipo.Descripcion</td>
-                <td>@item.DiaContable.Fecha.ToShortDateString()</td>
-                <td>@String.Format("{0} {1}",Math.Round(item.Cantidad,2), item.Producto.UnidadDeMedida.Siglas)</td>
-                <td>@item.Usuario.UserName</td>
-                
+                <td>@item.Fecha</td>
+                <td>@item.TipoDeMovimiento</td>
+                <td>@item.Lugar</td>
+                <td>@String.Format("{0} {1}", Math.Round(item.Cantidad, 2), item.Unidad)</td>
+                <td>@item.Detalle</td>
+                <td>@item.Usuario</td>
+
             </tr>
         }
     </tbody>

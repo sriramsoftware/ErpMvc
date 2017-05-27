@@ -1,0 +1,111 @@
+﻿@using CompraVentaCore.Models
+@model IEnumerable<CompraVentaCore.Models.Compra>
+
+@{
+    ViewBag.Title = "Compras";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <form class="form-horizontal" role="form" accept-charset="utf-8">
+            <div class="form-group">
+                <label class="col-md-6 col-sm-6  col-xs-12 control-label">Buscar Compras del Día</label>
+                <div class="col-md-6 col-sm-6 col-xs-12 " style="padding: 0px;">
+                    <div class="input-group input-append date col-md-6 col-sm-6" data-date="" data-date-format="dd-mm-yyyy" id="datepicker" data-date="">
+                        <input class="input-small form-control  datepicker" type="text" id="date" name="date" value='@ViewBag.DiaContable.Fecha.ToShortDateString()'>
+                        <span class="input-group-addon add-on">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@* TODO: Agregar botones de cambio de estado y que tengan observaciones *@
+
+<div id="ventas-div">
+    @{
+        Html.RenderAction("ListaDeComprasPartial", new { Fecha = ViewBag.DiaContable.Fecha });
+    }
+</div>
+
+
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha"><i class="glyphicon glyphicon-usd icono_derecha"></i>&nbsp;Compras</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
+            <p>Observe las compras registradas en la fecha contable actual y sus productos asociados</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <a href="@Url.Action("TramitarCompra")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Registrar Nueva Compra</a>
+        </div>
+    </div>
+    <br />
+}
+
+<!-- MODAL AGREGAR MENU -->
+<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 id="modal-title" class="modal-title">Productos comprados</h4>
+            </div>
+            <div id="modal-detalle" class="modal-body">
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+            $('#date').change(function () {
+                //console.log("cambio de fecha");
+                var fecha = $("#date").val();
+                $.ajax({
+                    url: "@Url.Action("BuscarCompras", "Compras")",
+                    type: "POST",
+                    data: { fecha: fecha },
+                    dataType: "html",
+                    success: function (data) {
+                        $("#ventas-div").html(data);
+                    },
+                    error: function (data) { }
+                });
+            });
+        
+            $(document).on('click', ".prod-comprados-btn", function () {
+                var id = $(this).attr("data-id");
+                $("#modal-detalle").load("@Url.Action("ProductosComprados")" + "/" + id, function() {
+                    mostrarModal();
+                });
+            });
+
+        });
+
+        function mostrarModal() {
+            $("#modal").modal('show');
+        }
+
+    </script>
+}

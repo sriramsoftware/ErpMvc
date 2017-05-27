@@ -8,9 +8,9 @@
     <table class="table">
         <thead>
             <tr class="text-center">
-                <th class="col-md-6">Producto</th>
+                <th class="col-md-5">Producto</th>
                 <th class="col-md-2">Cantidad</th>
-                <th class="col-md-1">Unidad</th>
+                <th class="col-md-2">Unidad</th>
                 <th class="col-md-2">Importe Total</th>
                 <th class="col-md-1"></th>
             </tr>
@@ -57,14 +57,7 @@
                     <input name="Productos[{{ $index }}].MonedaId" type="hidden" value="1"/>
                 </td>
                 <td>
-                    <p data-ng-hide="carga.editMode">
-                        @*<a class="btn btn-info" data-ng-click="toggleEdit(aprobacion)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-edit" aria-hidden="true"></span></a> |*@
-                        <a class="btn btn-danger" data-ng-click="borrarCarga($index)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
-                    </p>
-                    <p data-ng-show="carga.editMode">
-                        <a class="btn btn-success" data-ng-click="save(carga)" href="javascript:;">Guardar</a> |
-                        <a class="btn btn-danger" data-ng-click="toggleEdit(carga)" href="javascript:;">Cancelar</a>
-                    </p>
+                    <a class="btn btn-danger" data-ng-click="borrarCarga($index)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
                 </td>
             </tr>
         </tbody>

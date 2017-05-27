@@ -33,7 +33,7 @@
                     decimal costo = precio * producto.Cantidad;
                     costoTotal += costo;
                 }
-                @String.Format("{0:C}", precio)
+                $ @precio
             </td>
             <td class="text-right">
                 @String.Format("{0:C}", costo)

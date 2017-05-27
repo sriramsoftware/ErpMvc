@@ -1,0 +1,156 @@
+﻿@model AlmacenCore.Models.ValeSalidaDeAlmacen
+
+@{
+    ViewBag.Title = "Dar salida de almacen por Merma";
+}
+
+<h1 class="message-body">@ViewBag.Title.</h1>
+
+@using (Html.BeginForm("DarSalidaPorMerma", "Almacen", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    <div id="salidaMermaController" ng-controller="salidaMermaController">
+        <div class="col-md-12">
+            <div class="form-group">
+                @{
+                    Html.RenderAction("DiaContable", "PeriodoContable");
+                }
+            </div>
+            <div class="form-group">
+                @{
+                    Html.RenderPartial("_DetalleMermaPartial", ViewData);
+                }
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-4 col-md-8">
+                    @Html.ActionLink("Atrás", "Mermas", "Almacen", null, new { @class = "btn btn-default" })
+                    <input id="comprar-btn" type="submit" class="btn btn-success" value="Dar salida" />
+                </div>
+            </div>
+        </div>
+    </div>
+                    }
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $(".select").chosen();
+
+            $('.nuevo').tooltip();
+
+            $('#comprar-btn').click(function () {
+                $('#form-detalle-merma').remove();
+            });
+
+            //$("#ProductoId").change(function () {
+            //    var msg = $("#ProductoId option:selected").val();
+            //    angular.element('#salidaMermaController').scope().fetchUnidades(msg);
+            //    angular.element('#salidaMermaController').scope().$apply();
+            //});
+        });
+
+        erp.controller('salidaMermaController', [
+            '$scope', '$http', function ($scope, $http) {
+                $scope.loading = true;
+                $scope.addMode = false;
+                $scope.tieneError = false;
+                $scope.error = "";
+                $scope.select_changed = 0;
+
+                $scope.productos = [];
+                $scope.urlProductos = '@Url.Action("ExistenciasAlmacen", "Almacen", new {Id = ViewBag.AlmacenId})';
+                $scope.fetchProductos = function () {
+                    $http.get($scope.urlProductos).then(function (result) {
+                        $scope.productos = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+                $scope.fetchProductos();
+
+                $scope.unidades = [];
+                $scope.urlUnidades = '@Url.Action("ListaUnidadesDeMedida", "Productos")';
+                $scope.fetchUnidades = function (id) {
+                    $http.get($scope.urlUnidades + "/" + id).then(function (result) {
+                        $scope.unidades = result.data;
+                        $scope.select_changed++;
+                    });
+                }
+
+
+                $scope.detalles = [];
+                $scope.newDetalle = {};
+
+                $scope.agregarDetalle = function () {
+                    $scope.show = false;
+                    var detalleNuevo = {};
+                    var valido = true;
+                    if ($scope.newDetalle.Cantidad == null || $scope.newDetalle.Producto === "") {
+                        $scope.error = "Debe insertar los datos del producto.";
+                        $scope.tieneError = true;
+                        valido = false;
+                    }
+
+
+                    if (valido && $scope.detalles.find(function (a) {
+                        if ($scope.newDetalle.Producto.Id === a.ProductoId) {
+                            return true;
+                    }
+                        return false;
+                    })) {
+                        $scope.error = "Ya agrego este producto al vale.";
+                        $scope.tieneError = true;
+                        valido = false;
+                    }
+                    if (valido) {
+                        var data = {
+                            ExistenciaAlmacenId: $scope.newDetalle.Producto.Id,
+                            Cantidad: $scope.newDetalle.Cantidad,
+                            UnidadDeMedidaId: $scope.newDetalle.Unidad.Id
+                        }
+                        $http.post('@Url.Action("SePuedeDarSalida","Almacen")', data).then(function (result) {
+                            if (!result.data) {
+                                $scope.error = "No existe la cantidad que quiere dar salida, solo hay " + $scope.newDetalle.Producto.Cantidad + " " + $scope.newDetalle.Producto.Unidad;
+                                $scope.tieneError = true;
+                                valido = false;
+                            }
+                            if (valido) {
+                                detalleNuevo.ExistenciaAlmacenId = $scope.newDetalle.Producto.Id;
+                                detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
+                                detalleNuevo.NombreProducto = $scope.newDetalle.Producto.Nombre;
+                                detalleNuevo.Unidad = $scope.newDetalle.Unidad;
+                                $scope.detalles.push(detalleNuevo);
+                                $("#save-aprob-btn").removeClass('disabled');
+                                $scope.newDetalle = {};
+                                $scope.fetchProductos();
+                                $scope.tieneError = false;
+                            }
+                        });
+                    }
+                };
+
+                $scope.closeAlert = function () {
+                    $scope.tieneError = false;
+                };
+
+                //Used to edit a record
+                $scope.borrarDetalle = function (index) {
+                    $scope.loading = true;
+                    var detalle = this.detalle;
+                    $scope.detalles.splice(index, 1);
+                    detalle.editMode = false;
+                    $scope.loading = false;
+                };
+
+                $scope.cambiarProducto = function() {
+                    $scope.fetchUnidades($scope.newDetalle.Producto.ProductoId);
+                };
+            }
+        ]);
+
+    </script>
+
+}

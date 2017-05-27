@@ -42,7 +42,7 @@ namespace ErpMvc.ViewModels
             GrupoId = producto.Producto.GrupoId;
             UnidadDeMedidaId = producto.UnidadDeMedidaId;
             Cantidad = producto.Cantidad;
-            PrecioUnitario = producto.PrecioUnitario;
+            PrecioUnitario = producto.PrecioDeVenta;
             EsInventariable = producto.Producto.EsInventariable;
         }
     }

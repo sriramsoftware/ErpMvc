@@ -4,7 +4,7 @@
     ViewBag.Title = "Modificar gasto";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm("Editar", "OtrosGastos", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
@@ -28,10 +28,17 @@
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.Importe, new { @class = "col-md-4 control-label" })
+            @Html.LabelFor(m => m.Importe, new {@class = "col-md-4 control-label"})
             <div class="col-md-8">
-                @Html.TextBoxFor(m => m.Importe, new { @class = "form-control" })
+                @Html.TextBoxFor(m => m.Importe, new {@class = "form-control"})
                 @Html.ValidationMessageFor(m => m.Importe)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.PagadoPorCaja, "Pagar por caja", new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.CheckBoxFor(m => m.PagadoPorCaja, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.PagadoPorCaja)
             </div>
         </div>
         <div class="form-group">

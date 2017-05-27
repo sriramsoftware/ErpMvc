@@ -8,8 +8,8 @@
 
         public bool Cuc { get; set; }
 
-        public decimal CantidadCup { get; set; } 
+        public int CantidadCup { get; set; } 
 
-        public decimal CantidadCuc { get; set; } 
+        public int CantidadCuc { get; set; } 
     }
 }

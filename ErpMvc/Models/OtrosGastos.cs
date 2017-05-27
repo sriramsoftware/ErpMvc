@@ -14,6 +14,8 @@ namespace ErpMvc.Models
 
         public int ConceptoDeGastoId { get; set; }
 
-        public virtual ConceptoDeGasto ConceptoDeGasto { get; set; } 
+        public virtual ConceptoDeGasto ConceptoDeGasto { get; set; }
+
+        public bool PagadoPorCaja { get; set; }
     }
 }

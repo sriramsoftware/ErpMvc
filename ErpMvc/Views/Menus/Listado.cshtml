@@ -33,23 +33,25 @@
                         @item.Nombre
                     </h4><br />
                     <p>
-                        Precio de Venta: @String.Format("{0:C}", item.PrecioDeVenta)<br />
-                        Precio Total de Materias Primas: @String.Format("{0:C}", item.Costo)<br />
-                        Precio con Índice: @String.Format("{0:C}", item.Costo * item.IndiceEsperado)<br />
-                        @if (true)
+                        Centro de costo: @item.CentroDeCosto.Nombre<br/>
+                        Precio de Venta: @String.Format("{0:C}", item.PrecioDeVenta)<br/>
+                        Precio Total de Materias Primas: @String.Format("{0:C}", item.Costo)<br/>
+                        Precio con Índice: @String.Format("{0:C}", item.Costo*item.IndiceEsperado)<br/>
+                        @if ((ViewBag.Porcientos as ICollection<PorcientoMenu>).Any(p => p.ElaboracioId == item.Id)
+                             && (ViewBag.Porcientos as ICollection<PorcientoMenu>).SingleOrDefault(p => p.ElaboracioId == item.Id).SeCalcula)
                         {
                             @: Se calcula porciento
                         }
                         else
                         {
-                            @: NO se calcula porciento
+                            @: No se calcula porciento
                         }
                         @if (item.Agregados.Any())
                         {
-                            <br />
+                            <br/>
                             @:Se le puede agregar : @String.Join(",", item.Agregados.Select(a => a.Producto.Nombre))
                         }
-                        
+
                     </p>
                 </td>
                 <td class="col-md-4 form-horizontal botones">
@@ -75,14 +77,14 @@
                             <a class="btn btn-primary btn-sm  col-md-12 edit-image"><i class="icon-picture"></i>&nbsp;Editar Imagen</a>
                         </form>
                     </div>
-                    @if (User.IsInRole(RolesMontin.Administrador))
+                    @*@if (User.IsInRole(RolesMontin.Administrador))
                     {
                         <div class="form-group">
                             <a href="@Url.Action("Eliminar",new {Id = item.Id})" class="btn btn-primary btn-sm  col-md-12">
                                 <i class="glyphicon glyphicon-trash"></i>&nbsp;Eliminar
                             </a>
                         </div>
-                    }
+                    }*@
 
                 </td>
             </tr>
@@ -109,13 +111,14 @@
             <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" data-toggle="modal" data-target="#modal">Agregar Nuevo Menú</a>
 
             <br />
-            <p>
+            <a class="btn btn-default col-md-12" href="@Url.Action("BajoPrecioDeCosto","Menus")">
                 <i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Menús bajo Precio de Costo
-            </p>
+            </a>
             <br />
-            <p>
+            <a class="btn btn-default col-md-12" href="@Url.Action("BajoPrecioConIndice","Menus")">
                 <i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Menús bajo Precio con Índice
-            </p>
+            </a>
+            @* TODO: Agregar boton para mostrar listado de productos vendidos que  no se calcula porciento*@
             @*<a href="fichasdecosto" target="blank"
                    class="btn btn-default col-md-12 col-sm-12 col-xs-12">
                     <i class="glyphicon glyphicon-file"></i>&nbsp;Ver Fichas de Costo
