@@ -689,5 +689,9 @@ input[type="checkbox"] {
 
 .print-money {
     margin-left: 50px !important;
+    width: 500px !important;
+}
 
+.print-money > table {
+    width: 500px !important;
 }
