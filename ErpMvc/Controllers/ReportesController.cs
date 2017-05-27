@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Linq;
 using System.Data.Entity;
 using AlmacenCore.Models;
+using CajaCore.Models;
 using CompraVentaCore.Models;
 using ContabilidadBL;
 using ContabilidadCore.Models;
@@ -17,8 +18,18 @@ namespace ErpMvc.Controllers
     [Authorize]
     public class ReportesController : Controller
     {
-        private ErpContext _db = new ErpContext();
         private PeriodoContableService _periodoContableService;
+        private CuentasServices _cuentasServices;
+        private SubmayorService _submayorService;
+        private DbContext _db;
+
+        public ReportesController(DbContext context)
+        {
+            _db = context;
+            _cuentasServices = new CuentasServices(context);
+            _submayorService = new SubmayorService(context);
+            _periodoContableService = new PeriodoContableService(context);     
+        }
 
         static Dictionary<string, XtraReport> reports = new Dictionary<string, XtraReport>();
 
@@ -64,6 +75,16 @@ namespace ErpMvc.Controllers
             return View("Plantilla");
         }
 
+        public ActionResult Cierre(int id)
+        {
+            var report = new Cierre(ResumenCierre(id));
+            string random = System.IO.Path.GetRandomFileName().Replace(".", string.Empty);
+
+            reports.Add(random, report);
+            ViewData["ReporteId"] = random;
+            return View("Plantilla");
+        }
+
 
         public ActionResult Operaciones()
         {
@@ -103,5 +124,67 @@ namespace ErpMvc.Controllers
             });
             return View("VentasDeProducto", menus);
         }
+
+
+
+        public CierreViewModel ResumenCierre(int id)
+        {
+            var cierre = _db.Set<CierreDeCaja>().Find(id);
+            var dia = cierre.DiaContable;
+            var cierreAnterior = _db.Set<CierreDeCaja>().OrderByDescending(d => d.DiaContable.Fecha).FirstOrDefault(d => d.DiaContable.Fecha < dia.Fecha);
+
+            var porcientos = _db.Set<PorcientoMenu>().ToList();
+            var efectivoAnterior = cierreAnterior != null ? cierreAnterior.Desglose.Sum(e => e.DenominacionDeMoneda.Valor * e.Cantidad) : 0;
+            var totalVentas = 0m;
+            var ventasSinPorciento = 0m;
+            dynamic centrosDeCosto = 0;
+            if (_db.Set<Venta>().Any(v => v.DiaContableId == dia.Id && (v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)))
+            {
+                var ventas = _db.Set<Venta>()
+                    .Where(
+                        v =>
+                            v.DiaContableId == dia.Id &&
+                            (v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo ||
+                             v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)).ToList();
+                totalVentas = ventas.Sum(v => v.Importe);
+                ventasSinPorciento = ventas.Sum(v => v.Elaboraciones.Where(e => porcientos.Any(p => p.ElaboracioId == e.ElaboracionId && !p.SeCalcula)).Sum(s => s.ImporteTotal));
+                centrosDeCosto = ventas.GroupBy(v => v.PuntoDeVenta.CentroDeCosto).Select(v => new { v.Key.Nombre, Importe = v.Sum(s => s.Importe) }).ToList();
+            }
+
+            var extracciones =
+                _cuentasServices.GetMovimientosDeCuenta("Caja")
+                .Where(m => m.Asiento.DiaContableId == dia.Id && m.TipoDeOperacion == TipoDeOperacion.Credito).Sum(m => m.Importe);
+
+            var depositos =
+                _cuentasServices.GetMovimientosDeCuenta("Caja")
+                .Where(m => m.Asiento.DiaContableId == dia.Id && m.TipoDeOperacion == TipoDeOperacion.Debito && m.Asiento.Detalle.StartsWith("Deposito")).Sum(m => m.Importe);
+
+            //var compras = _db.Set<Compra>().Any(v => v.DiaContableId == dia.Id)
+            //    ? _db.Set<Compra>()
+            //        .Where(v => v.DiaContableId == dia.Id)
+            //        .Sum(c => c.Productos.Any() ? c.Productos.Sum(p => p.ImporteTotal) : 0.0m)
+            //    : 0;
+            //var gastos = _db.Set<OtrosGastos>().Any(v => v.DiaContableId == dia.Id)
+            //    ? _db.Set<OtrosGastos>().Where(v => v.DiaContableId == dia.Id).Sum(c => c.Importe)
+            //    : 0;
+
+            var propinas = _db.Set<Propina>().Any(v => v.Venta.DiaContableId == dia.Id)
+                ? _db.Set<Propina>().Where(v => v.Venta.DiaContableId == dia.Id).Sum(c => c.Importe)
+                : 0;
+            var resumen = new CierreViewModel()
+            {
+                Fecha = cierre.Fecha,
+                EfectivoAnterior = efectivoAnterior,
+                Ventas = totalVentas,
+                VentasSinPorciento = ventasSinPorciento,
+                Depositos = depositos,
+                Extracciones = extracciones,
+                Propinas = propinas,
+                Desgloce = cierre.Desglose.ToList()
+                //CentrosDeCosto = centrosDeCosto
+            };
+            return resumen;
+        }
+
     }
 }

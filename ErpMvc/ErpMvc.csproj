@@ -386,17 +386,17 @@
     <Compile Include="Reportes\Asistencia.Designer.cs">
       <DependentUpon>Asistencia.cs</DependentUpon>
     </Compile>
-    <Compile Include="Reportes\Cierre.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reportes\Cierre.Designer.cs">
-      <DependentUpon>Cierre.cs</DependentUpon>
-    </Compile>
     <Compile Include="Reportes\ResumenCentroDeCosto.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reportes\ResumenCentroDeCosto.Designer.cs">
       <DependentUpon>ResumenCentroDeCosto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\Cierre.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\Cierre.Designer.cs">
+      <DependentUpon>Cierre.cs</DependentUpon>
     </Compile>
     <Compile Include="Reportes\ValeDeVenta.cs">
       <SubType>Component</SubType>
@@ -419,6 +419,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utiles\LicenciaAttribute.cs" />
     <Compile Include="ViewModels\AsientoContableViewModel.cs" />
+    <Compile Include="ViewModels\CierreViewModel.cs" />
     <Compile Include="ViewModels\ConsumoViewModel.cs" />
     <Compile Include="ViewModels\DenominacionViewModel.cs" />
     <Compile Include="ViewModels\DesgloceEfectivoViewModel.cs" />
@@ -1562,11 +1563,11 @@
     <EmbeddedResource Include="Reportes\Asistencia.resx">
       <DependentUpon>Asistencia.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reportes\Cierre.resx">
-      <DependentUpon>Cierre.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Reportes\ResumenCentroDeCosto.resx">
       <DependentUpon>ResumenCentroDeCosto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\Cierre.resx">
+      <DependentUpon>Cierre.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\ValeDeVenta.resx">
       <DependentUpon>ValeDeVenta.cs</DependentUpon>

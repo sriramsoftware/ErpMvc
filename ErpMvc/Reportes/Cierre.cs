@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using DevExpress.Data.WcfLinq.Helpers;
 using DevExpress.XtraReports.UI;
 using ErpMvc.Models;
@@ -15,69 +13,44 @@ namespace ErpMvc.Reportes
 {
     public partial class Cierre : DevExpress.XtraReports.UI.XtraReport
     {
-        public Cierre(ICollection<ResumenDeOperaciones> operaciones, DateTime FechaInicio, DateTime FechaFin)
+        public Cierre(CierreViewModel cierre)
         {
             InitializeComponent();
 
-            var db = new ErpContext();
+            titulo_reporte.Text = "Cierre        " + cierre.Fecha.ToShortDateString();
 
+            var efectivoEnCaja = String.Format("{0:C}", cierre.Desgloce.Sum(d => d.Cantidad * d.DenominacionDeMoneda.Valor));
 
-            
-            fecha_fin.Text = "Hasta: " + FechaFin.ToShortDateString();
+            efectivoInicial.Text = String.Format("{0:C}", cierre.EfectivoAnterior);
+            ventas.Text = String.Format("{0:C}", cierre.Ventas);
+            depositos.Text = String.Format("{0:C}", cierre.Depositos);
+            extracciones.Text = String.Format("{0:C}", cierre.Extracciones);
+            efectivoCaja.Text = efectivoEnCaja;
 
-            DataSource = operaciones.ToList();
+            ventasTotales.Text = String.Format("{0:C}", cierre.Ventas);
+            excentasPorciento.Text = String.Format("{0:C}", cierre.VentasSinPorciento);
+            calculaPorciento.Text = String.Format("{0:C}", cierre.Ventas - cierre.VentasSinPorciento);
+            porciento.Text = String.Format("{0:C}", (cierre.Ventas - cierre.VentasSinPorciento) * 0.1m);
 
-            var totalIngresos = operaciones.Where(o => o.Tipo == "Venta").Sum(o => o.Importe);
-            var totalGastosDirectos = operaciones.Where(o => o.Tipo == "Compra").Sum(o => o.Importe);
-            var totalGastosIndirectos = operaciones.Where(o => o.Tipo == "Gasto").Sum(o => o.Importe);
+            propina.Text = String.Format("{0:C}", cierre.Propinas);
 
-            total_ingresos.Text = String.Format("{0:C}", totalIngresos);
-            total_gastos_directos.Text = String.Format("{0:C}", totalGastosDirectos);
-            total_gastos_indirectos.Text = String.Format("{0:C}", totalGastosIndirectos);
-            relacion_ingresos_gastos.Text = String.Format("{0:C}", totalIngresos + totalGastosDirectos + totalGastosIndirectos);
+            DataSource = cierre.Desgloce.Select(d => new 
+            {
+                Valor = d.DenominacionDeMoneda.Valor,
+                Cantidad = d.Cantidad,
+                Importe = d.Cantidad * d.DenominacionDeMoneda.Valor
+            }).OrderByDescending(d => d.Valor);
 
-            this.fecha.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Fecha","{0:d}"), });
+            this.denominacionCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
+            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Valor")});
 
-            this.detalleCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Detalle")});
-
-            this.tipoOperacionCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Tipo")});
+            this.cantidadCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
+            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Cantidad")});
 
             this.importeCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Importe")});
+            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Importe","{0:C}")});
 
-            var gastos = operaciones.Where(o => o.Importe < 0);
-            var ingresos = operaciones.Where(o => o.Importe > 0);
-
-            var datosGrafico = new Dictionary<string, dynamic>();
-
-            datosGrafico.Add("Gastos", gastos.Select(g => new { Fecha = g.Fecha, Importe = -g.Importe }));
-            datosGrafico.Add("Ingresos", ingresos.Select(g => new { Fecha = g.Fecha, Importe = g.Importe }));
-
-            //DataTable table = new DataTable("Table1");
-
-            //// Add two columns to the table. 
-            //table.Columns.Add("Argument", typeof(DateTime));
-            //table.Columns.Add("Value", typeof(Decimal));
-
-            //// Add data rows to the table. 
-            //DataRow row = null;
-            //foreach (var ing in ingresos)
-            //{
-            //    row = table.NewRow();
-            //    row["Argument"] = ing.Fecha;
-            //    row["Value"] = ing.Importe;
-            //    table.Rows.Add(row);
-            //}
-
-            var data = operaciones.GroupBy(o => o.Fecha).Select(o => new { Fecha = o.Key, Ingresos = o.Where(op => op.Importe > 0).Sum(op => op.Importe), Gastos = -o.Where(op => op.Importe < 0).Sum(op => op.Importe) }).ToList();
-
-            
-            //grafico.SeriesDataMember = "Gastos";
-            //grafico.SeriesDataMember = "Ingresos";
-
+            totalCuc.Text = efectivoEnCaja;
         }
 
     }

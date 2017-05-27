@@ -66,9 +66,9 @@ namespace ErpMvc.Controllers
         {
             var dia = _service.BuscarDiaContable(diaId);
             var cierreAnterior = _db.Set<CierreDeCaja>().OrderByDescending(d => d.DiaContable.Fecha).FirstOrDefault(d => d.DiaContable.Fecha < dia.Fecha);
-            
+
             var porcientos = _db.Set<PorcientoMenu>().ToList();
-            var efectivoAnterior = cierreAnterior != null? cierreAnterior.Desglose.Sum(e => e.DenominacionDeMoneda.Valor * e.Cantidad): 0;
+            var efectivoAnterior = cierreAnterior != null ? cierreAnterior.Desglose.Sum(e => e.DenominacionDeMoneda.Valor * e.Cantidad) : 0;
             var totalVentas = 0m;
             var ventasSinPorciento = 0m;
             dynamic centrosDeCosto = 0;
@@ -236,7 +236,7 @@ namespace ErpMvc.Controllers
             var dia = _service.GetDiaContableActual();
             if (importe < 0)
             {
-                return Json(new { result = false, mensaje = "Importe a extraer negativo"}, JsonRequestBehavior.AllowGet);
+                return Json(new { result = false, mensaje = "Importe a extraer negativo" }, JsonRequestBehavior.AllowGet);
             }
             if (_db.Set<Venta>().Any(v => v.DiaContableId == dia.Id && (v.EstadoDeVenta == EstadoDeVenta.Facturada || v.EstadoDeVenta == EstadoDeVenta.Pendiente)))
             {

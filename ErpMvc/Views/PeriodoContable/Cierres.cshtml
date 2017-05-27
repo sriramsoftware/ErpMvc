@@ -31,7 +31,8 @@
                 </td>
                 <td class="col-md-2 text-right">
                     @*<a class="btn btn-info btn-sm btn-print" data-id="@item.DiaContableId" data-toggle="tooltip" data-placement="top" title="Imprimir" href="javascript:;"><i class="glyphicon glyphicon-print"></i></a>*@
-                    <a class="btn btn-info btn-sm btn-print" target="_blank" data-id="@item.DiaContableId" data-toggle="tooltip" data-placement="top" title="Imprimir" href="@Url.Action("CierreReporte","PeriodoContable", new { Id = item.DiaContableId})"><i class="glyphicon glyphicon-print"></i></a>
+                    <a class="btn btn-info btn-sm btn-print" target="_blank" data-id="@item.DiaContableId" data-toggle="tooltip" data-placement="top" title="Imprimir" href="@Url.Action("Cierre","Reportes", new { Id = item.DiaContableId})"><i class="glyphicon glyphicon-print"></i></a>
+                    @*<a class="btn btn-info btn-sm btn-print" target="_blank" data-id="@item.DiaContableId" data-toggle="tooltip" data-placement="top" title="Imprimir" href="@Url.Action("CierreReporte","PeriodoContable", new { Id = item.DiaContableId})"><i class="glyphicon glyphicon-print"></i></a>*@
                 </td>
             </tr>
         }
