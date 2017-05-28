@@ -33,10 +33,12 @@ namespace ErpMvc.Controllers
 
         static Dictionary<string, XtraReport> reports = new Dictionary<string, XtraReport>();
 
+        [AllowAnonymous]
         public ActionResult ReportViewerPartial(string reporteId)
         {
             return PartialView("ReportViewerPartial", reports[reporteId]);
         }
+        [AllowAnonymous]
         public ActionResult ExportReportViewer(string reporteId)
         {
             var reporte = reports[reporteId];
@@ -75,6 +77,7 @@ namespace ErpMvc.Controllers
             return View("Plantilla");
         }
 
+        [AllowAnonymous]
         public ActionResult Cierre(int id)
         {
             var report = new Cierre(ResumenCierre(id));

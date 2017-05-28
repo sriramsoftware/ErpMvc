@@ -220,7 +220,7 @@ namespace ErpMvc.Controllers
                     }
                     _service.CerrarDiaContable(cierre);
                     //HttpContext.GetOwinContext().Authentication.SignOut();
-                    return Json(new { result = true, mensaje = "Cierre correcto" }, JsonRequestBehavior.AllowGet);
+                    return Json(new { result = true, cierreId = cierre.Id, mensaje = "Cierre correcto" }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {

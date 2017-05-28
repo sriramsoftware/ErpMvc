@@ -32,18 +32,15 @@
             });
         });
 
-        function ImprimirCierre() {
-            @{
-                var dia = ViewBag.DiaContable as DiaContable;
-            }
-            var w = window.open('@Url.Action("CierreReporte","PeriodoContable")' + '/' + @dia.Id,"_blank");
-            w.onload=function(){
-                w.focus();
-                w.setTimeout(function () {
-                    w.print();
-                }, 1000);
-                w.close();
-            }
+        function ImprimirCierre(id) {
+            var w = window.open('@Url.Action("Cierre","Reportes")' + '/' + id,"_blank");
+            //w.onload=function(){
+            //    w.focus();
+            //    w.setTimeout(function () {
+            //        w.print();
+            //    }, 1000);
+            //    w.close();
+            //}
         }
 
         erp.controller('cierreController', [
@@ -111,7 +108,7 @@
                         $scope.cerrando = false;
                         $http.post('@Url.Action("CerrarPeriodo","PeriodoContable")', desgloceEfectivoViewModel).then(function (result) {
                             if (result.data.result) {
-                                ImprimirCierre();
+                                ImprimirCierre(result.data.cierreId);
                                 $http.post('@Url.Action("CerrarSesion", "Seguridad")').then(function(result) {
                                     window.location = '/Inicio/Index';
                                 }
