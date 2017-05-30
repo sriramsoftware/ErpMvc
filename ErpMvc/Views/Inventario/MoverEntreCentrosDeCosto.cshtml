@@ -23,7 +23,9 @@
         <div class="form-group">
             @Html.LabelFor(m => m.DestinoId, "A", new { @class = "col-md-4 control-label" })
             <div class="col-md-8">
-                <select class="form-control" name="DestinoId" chosen ng-model="destinoId" ng-options="centro.Nombre for centro in centrosDestino track by centro.Id"></select>
+                <select class="form-control" name="DestinoId" chosen ng-model="destinoId" ng-options="centro.Nombre for centro in centrosDestino track by centro.Id">
+                    <option></option>
+                </select>
                 @Html.ValidationMessageFor(m => m.DestinoId)
             </div>
         </div>

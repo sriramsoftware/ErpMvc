@@ -386,6 +386,12 @@
     <Compile Include="Reportes\Asistencia.Designer.cs">
       <DependentUpon>Asistencia.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reportes\ResumenDeGanaciaDiaria.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\ResumenDeGanaciaDiaria.Designer.cs">
+      <DependentUpon>ResumenDeGanaciaDiaria.cs</DependentUpon>
+    </Compile>
     <Compile Include="Reportes\ResumenCentroDeCosto.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -541,6 +547,7 @@
     <Content Include="CodeTemplates\MvcView\ModelMetadataFunctions.cs.include.t4" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\chosen.jquery.js" />
     <Content Include="Scripts\chosen.jquery.min.js" />
     <Content Include="Scripts\erp\menu.js" />
     <Content Include="Scripts\datatables.min.js" />
@@ -1550,6 +1557,9 @@
     <Content Include="Views\Reportes\Consumo.cshtml" />
     <Content Include="Views\Ventas\_ConsumoPartial.cshtml" />
     <Content Include="Views\Reportes\VentasDeProducto.cshtml" />
+    <Content Include="Views\Reportes\ComprasPersonalizado.cshtml" />
+    <Content Include="Views\Reportes\_ListaDeComprasPartial.cshtml" />
+    <Content Include="Views\Reportes\ResumenDeGanaciasDiario.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />
@@ -1562,6 +1572,9 @@
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Reportes\Asistencia.resx">
       <DependentUpon>Asistencia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\ResumenDeGanaciaDiaria.resx">
+      <DependentUpon>ResumenDeGanaciaDiaria.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\ResumenCentroDeCosto.resx">
       <DependentUpon>ResumenCentroDeCosto.cs</DependentUpon>

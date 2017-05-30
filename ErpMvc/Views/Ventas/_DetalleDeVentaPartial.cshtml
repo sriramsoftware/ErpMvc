@@ -10,22 +10,24 @@
 <table class="table">
     <thead>
         <tr>
-            <th class="col-md-7">
+            <th class="col-md-6">
                 Menu
             </th>
-            <th class="col-md-2">Cantidad</th>
+            <th class="col-md-3">Cantidad</th>
             <th class="col-md-2">Importe Total</th>
             <th class="col-md-1"></th>
         </tr>
     </thead>
     <tbody>
         <tr id="form-detalle-compra">
-            <td class="col-md-7">
-                <select id="ElaboracionId" name="ElaboracionId" class="form-control" chosen ng-model="newDetalle.Elaboracion" ng-options="menu.Nombre for menu in menus track by menu.Id"></select>
+            <td class="col-md-6">
+                <select id="ElaboracionId" name="ElaboracionId" class="form-control" chosen ng-model="newDetalle.Elaboracion" ng-options="menu.Nombre for menu in menus track by menu.Id">
+                    <option></option>
+                </select>
                 @Html.ValidationMessageFor(model => model.ElaboracionId)
 
             </td>
-            <td class="col-md-2">
+            <td class="col-md-3">
                 @Html.TextBoxFor(model => model.Cantidad, new { @class = "form-control", @style = "max-width: 100px !important", @ng_model = "newDetalle.Cantidad" })
                 @Html.ValidationMessageFor(model => model.Cantidad)
             </td>
@@ -69,10 +71,10 @@
         </td>
     </tr>
         <tr ng-cloak>
-            <td class="col-md-7">
+            <td class="col-md-6">
                 
             </td>
-            <td class="col-md-2">
+            <td class="col-md-3">
                 <strong>Total</strong>
             </td>
             <td class="col-md-2">{{importeTotal|currency}}<input type="hidden" name="Importe" value="{{importeTotal}}"/></td>

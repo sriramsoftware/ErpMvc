@@ -1,64 +1,68 @@
 ﻿@model CompraVentaCore.Models.DetalleDeCompra
 
-    <div class="alert alert-danger" data-ng-show="tieneError">
-        <button type="button" class="close" aria-hidden="true" data-ng-click="closeAlert()">&times;</button>
-        <p>{{ error }}</p>
-    </div>
+<div class="alert alert-danger" data-ng-show="tieneError">
+    <button type="button" class="close" aria-hidden="true" data-ng-click="closeAlert()">&times;</button>
+    <p>{{ error }}</p>
+</div>
 
-    <table class="table">
-        <thead>
-            <tr class="text-center">
-                <th class="col-md-5">Producto</th>
-                <th class="col-md-2">Cantidad</th>
-                <th class="col-md-2">Unidad</th>
-                <th class="col-md-2">Importe Total</th>
-                <th class="col-md-1"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr id="form-detalle-compra">
-                <td>
-                    <select id="ProductoId" name="ProductoId" class="form-control" chosen data-ng-model="newDetalle.ProductoId" data-ng-options="producto.Nombre for producto in productos track by producto.Id"></select>
-                    @Html.ValidationMessageFor(model => model.ProductoId)
+<table class="table">
+    <thead>
+        <tr class="text-center">
+            <th class="col-md-5">Producto</th>
+            <th class="col-md-2">Cantidad</th>
+            <th class="col-md-2">Unidad</th>
+            <th class="col-md-2">Importe Total</th>
+            <th class="col-md-1"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="form-detalle-compra">
+            <td>
+                <select id="ProductoId" name="ProductoId" class="form-control" chosen ng-model="newDetalle.ProductoId" ng-options="producto.Nombre for producto in productos track by producto.Id">
+                    <option></option>
+                </select>
+                @Html.ValidationMessageFor(model => model.ProductoId)
 
-                </td>
-                <td>
-                    @Html.TextBoxFor(model => model.Cantidad, new {@class = "form-control", @style = "max-width: 100px !important", @data_ng_model = "newDetalle.Cantidad"})
-                    @Html.ValidationMessageFor(model => model.Cantidad)
-                </td>
-                <td>
-                    <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" data-ng-model="newDetalle.UnidadId" chosen="" data-ng-options="unidad.Siglas for unidad in unidades track by unidad.Id"></select>
-                    @Html.ValidationMessageFor(model => model.UnidadDeMedidaId)
-                </td>
-                <td>
-                    @Html.TextBoxFor(model => model.ImporteTotal, new { @class = "form-control", @style = "max-width: 100px !important", @data_ng_model = "newDetalle.ImporteTotal" })
-                    @Html.ValidationMessageFor(model => model.ImporteTotal)
-                </td>
-                <td>
-                    <a id="add_aprob" data-ng-click="agregarDetalle()" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
-                </td>
-            </tr>
-            <tr data-ng-repeat="detalle in detallesCompra">
-                <td>
-                    <strong data-ng-hide="detalle.editMode">{{ detalle.NombreProducto }}</strong>
-                    <input name="Productos[{{ $index }}].ProductoId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ProductoId" class="form-control" />
-                </td>
-                <td>
-                    <p data-ng-hide="carga.editMode">{{ detalle.Cantidad }}</p>
-                    <input name="Productos[{{ $index }}].Cantidad" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.Cantidad" class="form-control"/>
-                </td>
-                <td>
-                    <p data-ng-hide="carga.editMode">{{ detalle.NombreUnidad }}</p>
-                    <input name="Productos[{{ $index }}].UnidadDeMedidaId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.UnidadId" class="form-control" />
-                </td>
-                <td>
-                    <p data-ng-hide="carga.editMode">{{ detalle.ImporteTotal }}</p>
-                    <input name="Productos[{{ $index }}].ImporteTotal" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ImporteTotal" class="form-control" />
-                    <input name="Productos[{{ $index }}].MonedaId" type="hidden" value="1"/>
-                </td>
-                <td>
-                    <a class="btn btn-danger" data-ng-click="borrarCarga($index)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.Cantidad, new { @class = "form-control", @style = "max-width: 100px !important", @data_ng_model = "newDetalle.Cantidad" })
+                @Html.ValidationMessageFor(model => model.Cantidad)
+            </td>
+            <td>
+                <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" data-ng-model="newDetalle.UnidadId" chosen="" data-ng-options="unidad.Siglas for unidad in unidades track by unidad.Id">
+                    <option></option>
+                </select>
+                @Html.ValidationMessageFor(model => model.UnidadDeMedidaId)
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.ImporteTotal, new { @class = "form-control", @style = "max-width: 100px !important", @data_ng_model = "newDetalle.ImporteTotal" })
+                @Html.ValidationMessageFor(model => model.ImporteTotal)
+            </td>
+            <td>
+                <a id="add_aprob" data-ng-click="agregarDetalle()" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
+            </td>
+        </tr>
+        <tr data-ng-repeat="detalle in detallesCompra">
+            <td>
+                <strong data-ng-hide="detalle.editMode">{{ detalle.NombreProducto }}</strong>
+                <input name="Productos[{{ $index }}].ProductoId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ProductoId" class="form-control" />
+            </td>
+            <td>
+                <p data-ng-hide="carga.editMode">{{ detalle.Cantidad }}</p>
+                <input name="Productos[{{ $index }}].Cantidad" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.Cantidad" class="form-control" />
+            </td>
+            <td>
+                <p data-ng-hide="carga.editMode">{{ detalle.NombreUnidad }}</p>
+                <input name="Productos[{{ $index }}].UnidadDeMedidaId" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.UnidadId" class="form-control" />
+            </td>
+            <td>
+                <p data-ng-hide="carga.editMode">{{ detalle.ImporteTotal }}</p>
+                <input name="Productos[{{ $index }}].ImporteTotal" data-ng-show="detalle.editMode" type="text" data-ng-model="detalle.ImporteTotal" class="form-control" />
+                <input name="Productos[{{ $index }}].MonedaId" type="hidden" value="1" />
+            </td>
+            <td>
+                <a class="btn btn-danger" data-ng-click="borrarCarga($index)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+    </tbody>
+</table>

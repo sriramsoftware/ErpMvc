@@ -23,7 +23,7 @@
                 @Html.LabelFor(m => m.CentroDeCostoId, "Centro de costo", new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
                     <select id="CentroDeCostoId" name="CentroDeCostoId" class="form-control" ng-model="centroDeCosto" ng-options="e.Nombre for e in centrosDeCosto track by e.Id" chosen="">
-                        
+                        <option></option>
                     </select>
                     @Html.ValidationMessageFor(m => m.CentroDeCostoId)
                 </div>

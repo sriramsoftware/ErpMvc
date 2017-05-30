@@ -18,7 +18,9 @@
         <tbody>
         <tr id="form-detalle-compra">
             <td>
-                <select id="ProductoId" name="ProductoId" class="form-control" chosen ng-model="newDetalle.ProductoId" ng-options="producto.Nombre for producto in productos track by producto.Id"></select>
+                <select id="ProductoId" name="ProductoId" class="form-control" chosen ng-model="newDetalle.ProductoId" ng-options="producto.Nombre for producto in productos track by producto.Id">
+                    <option></option>
+                </select>
                 @Html.ValidationMessageFor(model => model.ProductoId)
 
             </td>
@@ -27,7 +29,9 @@
                 @Html.ValidationMessageFor(model => model.Cantidad)
             </td>
             <td>
-                <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" chosen data-ng-model="newDetalle.UnidadId" data-ng-options="unidad.Siglas for unidad in unidades track by unidad.Id"></select>
+                <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" chosen data-ng-model="newDetalle.UnidadId" data-ng-options="unidad.Siglas for unidad in unidades track by unidad.Id">
+                    <option></option>
+                </select>
                 @Html.ValidationMessageFor(model => model.UnidadDeMedidaId)
             </td>
             <td>

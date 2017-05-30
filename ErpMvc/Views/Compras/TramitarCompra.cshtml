@@ -21,7 +21,9 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.EntidadId, "Tienda", new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    <select id="EntidadId" name="EntidadId" class="form-control" ng-model="entidad" ng-options="e.Nombre for e in entidades track by e.Id" chosen=""></select>
+                    <select id="EntidadId" name="EntidadId" class="form-control" ng-model="entidad" ng-options="e.Nombre for e in entidades track by e.Id" chosen="">
+                        <option></option>
+                    </select>
                     <a class="btn btn-info" ng-click="agregarEntidadModal()"><i class="glyphicon glyphicon-plus-sign"></i></a>
                     @Html.ValidationMessageFor(m => m.EntidadId)
                 </div>

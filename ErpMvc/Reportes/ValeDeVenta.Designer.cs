@@ -31,6 +31,7 @@
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.xrTable2 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow2 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.cantidadCell = new DevExpress.XtraReports.UI.XRTableCell();
             this.menuCell = new DevExpress.XtraReports.UI.XRTableCell();
             this.precioCell = new DevExpress.XtraReports.UI.XRTableCell();
             this.importeCell = new DevExpress.XtraReports.UI.XRTableCell();
@@ -43,6 +44,7 @@
             this.PageHeader = new DevExpress.XtraReports.UI.PageHeaderBand();
             this.xrTable1 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow1 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell6 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell1 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell4 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell3 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -55,8 +57,6 @@
             this.xrTableRow3 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell2 = new DevExpress.XtraReports.UI.XRTableCell();
             this.totalCuc = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCell6 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.cantidadCell = new DevExpress.XtraReports.UI.XRTableCell();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).BeginInit();
@@ -96,25 +96,30 @@
             this.xrTableRow2.Name = "xrTableRow2";
             this.xrTableRow2.Weight = 1D;
             // 
+            // cantidadCell
+            // 
+            this.cantidadCell.Name = "cantidadCell";
+            this.cantidadCell.Weight = 0.22167266009514655D;
+            // 
             // menuCell
             // 
             this.menuCell.Name = "menuCell";
             this.menuCell.StylePriority.UseTextAlignment = false;
             this.menuCell.Text = "Producto";
             this.menuCell.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.menuCell.Weight = 1.6084089635533654D;
+            this.menuCell.Weight = 1.5964723333892814D;
             // 
             // precioCell
             // 
             this.precioCell.Name = "precioCell";
             this.precioCell.Text = "Cantidad";
-            this.precioCell.Weight = 0.59426647149083345D;
+            this.precioCell.Weight = 0.60222441920990288D;
             // 
             // importeCell
             // 
             this.importeCell.Name = "importeCell";
             this.importeCell.Text = "Valor";
-            this.importeCell.Weight = 0.519949039265111D;
+            this.importeCell.Weight = 0.579630587305669D;
             // 
             // TopMargin
             // 
@@ -206,23 +211,29 @@
             this.xrTableRow1.Name = "xrTableRow1";
             this.xrTableRow1.Weight = 1D;
             // 
+            // xrTableCell6
+            // 
+            this.xrTableCell6.Name = "xrTableCell6";
+            this.xrTableCell6.Text = "#";
+            this.xrTableCell6.Weight = 0.22167277567908103D;
+            // 
             // xrTableCell1
             // 
             this.xrTableCell1.Name = "xrTableCell1";
             this.xrTableCell1.Text = "Ofertas";
-            this.xrTableCell1.Weight = 1.6084090859618399D;
+            this.xrTableCell1.Weight = 1.5964726003455279D;
             // 
             // xrTableCell4
             // 
             this.xrTableCell4.Name = "xrTableCell4";
             this.xrTableCell4.Text = "Precio";
-            this.xrTableCell4.Weight = 0.59426666517897109D;
+            this.xrTableCell4.Weight = 0.60222417654923832D;
             // 
             // xrTableCell3
             // 
             this.xrTableCell3.Name = "xrTableCell3";
             this.xrTableCell3.Text = "Total";
-            this.xrTableCell3.Weight = 0.51994860217368921D;
+            this.xrTableCell3.Weight = 0.57963044742615277D;
             // 
             // ReportFooter
             // 
@@ -304,17 +315,6 @@
             this.totalCuc.Text = "Valor";
             this.totalCuc.Weight = 0.339382992817031D;
             // 
-            // xrTableCell6
-            // 
-            this.xrTableCell6.Name = "xrTableCell6";
-            this.xrTableCell6.Text = "#";
-            this.xrTableCell6.Weight = 0.27737564668549963D;
-            // 
-            // cantidadCell
-            // 
-            this.cantidadCell.Name = "cantidadCell";
-            this.cantidadCell.Weight = 0.27737552569069D;
-            // 
             // ValeDeVenta
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -324,7 +324,7 @@
             this.ReportHeader,
             this.PageHeader,
             this.ReportFooter});
-            this.Margins = new System.Drawing.Printing.Margins(7, 100, 51, 100);
+            this.Margins = new System.Drawing.Printing.Margins(0, 100, 51, 100);
             this.Version = "14.1";
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).EndInit();
