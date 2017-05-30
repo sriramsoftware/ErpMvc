@@ -1,0 +1,34 @@
+﻿@model IEnumerable<CompraVentaCore.Models.Compra>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Fecha</th>
+            <th>Importe</th>
+            <th>Lugar de compra</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var compra in Model)
+        {
+            <tr>
+                <td><input type="checkbox"/></td>
+                <td>@compra.Fecha.ToShortDateString()</td>
+                <td>@String.Format("{0:C}", compra.Productos.Sum(p => p.ImporteTotal))</td>
+                <td>@compra.Entidad.Nombre</td>
+                <td>
+                    <a class="btn btn-info prod-comprados-btn" data-id="@compra.Id" ng-click="test()">Productos comprados</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+        <tfoot><tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>TOTAL</td>
+            <td>{{totalCompras}}</td>
+        </tr></tfoot>
+    </table>

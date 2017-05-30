@@ -55,6 +55,19 @@ namespace ErpMvc.Controllers
             return View();
         }
 
+        public ActionResult ComprasPersonalizado()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public PartialViewResult ComprasPersonalizado(ParametrosViewModel parametros)
+        {
+            var compras =
+                _db.Set<Compra>().Where(c => c.Fecha >= parametros.FechaInicio && c.Fecha <= parametros.FechaFin);
+            return PartialView("_ListaDeComprasPartial", compras.ToList());
+        }
+
         [HttpPost]
         public ActionResult Inventario(string origenId)
         {
@@ -98,6 +111,21 @@ namespace ErpMvc.Controllers
         public ActionResult Operaciones(ParametrosViewModel parametros)
         {
             var report = new Operaciones(parametros.FechaInicio,parametros.FechaFin);
+            string random = System.IO.Path.GetRandomFileName().Replace(".", string.Empty);
+            reports.Add(random, report);
+            ViewData["ReporteId"] = random;
+            return View("Plantilla");
+        }
+
+        public ActionResult ResumenDeGanaciasDiario()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ResumenDeGanaciasDiario(ParametrosViewModel parametros)
+        {
+            var report = new ResumenDeGanaciaDiaria(parametros.FechaInicio);
             string random = System.IO.Path.GetRandomFileName().Replace(".", string.Empty);
             reports.Add(random, report);
             ViewData["ReporteId"] = random;

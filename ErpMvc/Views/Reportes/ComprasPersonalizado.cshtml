@@ -1,0 +1,67 @@
+﻿@model ErpMvc.ViewModels.ParametrosViewModel
+
+@{
+    ViewBag.Tittle = "Compras personalizado";
+}
+
+@using (Ajax.BeginForm("ComprasPersonalizado", "Reportes", new AjaxOptions() {HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "compras-list"}))
+{
+    @Html.AntiForgeryToken()
+    <div class="formpanel panel-default">
+        <div class="panel-heading">
+            <h3 class="text-center">Seleccione la fecha de las compras</h3>
+        </div>
+        <div class="panel-body">
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true)
+               <div class="form-group">
+                    @Html.LabelFor(model => model.FechaInicio, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FechaInicio)
+                        @Html.ValidationMessageFor(model => model.FechaInicio)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaFin, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FechaFin)
+                        @Html.ValidationMessageFor(model => model.FechaFin)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="panel-footer text-right">
+            <div class="form-group">
+                <input type="submit" value="Mostrar" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+<div id="compras-list" ng-controller="comprasReporteController">
+    <h1>{{totalCompras}}</h1>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/chosen.jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".select").chosen();
+            $('#FechaInicio').val("");
+            $('#FechaFin').val("");
+
+        });
+
+        erp.controller('comprasReporteController', [
+            '$scope', '$http', function ($scope, $http) {
+                $scope.totalCompras = 1200;
+
+                $scope.test = function() {
+                    console.log('Testing angular');
+                }
+            }
+        ]);
+    </script>
+}
