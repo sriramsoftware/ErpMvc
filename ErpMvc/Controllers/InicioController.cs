@@ -55,11 +55,12 @@ namespace ErpMvc.Controllers
                     ViewBag.ComprasDiarias = 0;
                     ViewBag.ImporteComprasDiarias = 0;
                 }
-                
+
+                var porcientoCalcula = _db.Set<PorcientoMenu>().Where(p => p.SeCalcula).Select(p => p.ElaboracioId).ToList();
                 
                 ViewBag.MasVendidos =
                     _db.Set<DetalleDeVenta>()
-                        .GroupBy(v => v.Elaboracion).OrderByDescending(v => v.Sum(e => e.Cantidad))
+                        .GroupBy(v => v.Elaboracion).Where(e => porcientoCalcula.Contains(e.Key.Id)).OrderByDescending(v => v.Sum(e => e.Cantidad))
                         .Take(10)
                         .Select(v => new
                         {
@@ -72,7 +73,7 @@ namespace ErpMvc.Controllers
                 var movimientos = _cuentasService.GetMovimientosDeCuenta("Gastos").Where(g => g.TipoDeOperacion == TipoDeOperacion.Debito).ToList();
                 movimientos.AddRange(_cuentasService.GetMovimientosDeCuenta("Caja").Where(g => g.TipoDeOperacion == TipoDeOperacion.Debito));
 
-                finanzas.AddRange(movimientos.GroupBy(m => m.Asiento.Fecha.Date).Select(m => new 
+                finanzas.AddRange(movimientos.GroupBy(m => m.Asiento.DiaContable.Fecha.Date).Select(m => new 
                 {
                     period = String.Format("{0:yyyy-MM-dd}", m.Key),
                     gastos = m.Where(e => e.Cuenta.Nivel.Nombre == "Gastos").Sum(e => e.Importe),

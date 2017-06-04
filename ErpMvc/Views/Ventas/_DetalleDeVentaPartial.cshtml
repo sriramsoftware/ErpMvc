@@ -45,6 +45,7 @@
             <input ng-repeat-end name="Elaboraciones[{{ $parent.$index }}].Agregados[{{$index}}].Cantidad" type="hidden" value="{{agregado.Cantidad}}"/>
             <input name="Elaboraciones[{{ $index }}].ElaboracionId" ng-show="detalle.editMode" type="text" ng-model="detalle.Elaboracion.Id" class="form-control"/>
             <input name="Elaboraciones[{{ $index }}].VentaId" ng-show="detalle.editMode" type="text" ng-model="detalle.VentaId" class="form-control"/>
+            <a ng-show="{{detalle.ImporteTotal > 0}}" class="btn btn-default" ng-click="menuCuentaCasa(detalle)"><i class="glyphicon glyphicon-home"></i></a>
         </td>
         <td>
             <a class="btn btn-primary btn-sm rest-menu" ng-click="disminuirCantidad(detalle)">

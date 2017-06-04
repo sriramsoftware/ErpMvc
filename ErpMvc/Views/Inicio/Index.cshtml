@@ -127,11 +127,11 @@
                 <h4 id="modal-title" class="modal-title">Cierre del dia</h4>
             </div>
             <div id="modal-detalle" class="modal-body">
-                <p>Esta seguro que desea cerrar el día?</p>
+                <p id="mensaje-cierre">Esta seguro que desea cerrar el día?</p>
             </div>
 
             <div class="modal-footer">
-                <a class="btn btn-success col-md-2 col-md-offset-7" href="@Url.Action("CerrarPeriodo","PeriodoContable")">Aceptar</a>
+                <a id="btn-cierre" class="btn btn-success col-md-2 col-md-offset-7" href="@Url.Action("CerrarPeriodo","PeriodoContable")">Aceptar</a>
                 <button type="button" class="btn btn-danger col-md-2" data-dismiss="modal">Cancelar</button>
             </div>
         </div>
@@ -151,7 +151,14 @@
     <script>
         $(document).ready(function() {
             $("#cierreDia").click(function() {
-                $("#modal").modal();
+                $.get('@Url.Action("VentasPendientes","PeriodoContable")', function(result) {
+                    if (!result) {
+                        $('#btn-cierre').hide();
+                        $('#mensaje-cierre').html("No se puede cerrar porque existen comandas sin pagar");
+                    } 
+                    $("#modal").modal();
+                });
+                
             });
 
             Morris.Area({

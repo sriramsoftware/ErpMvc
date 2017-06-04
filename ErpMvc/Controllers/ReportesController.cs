@@ -184,7 +184,11 @@ namespace ErpMvc.Controllers
 
             var extracciones =
                 _cuentasServices.GetMovimientosDeCuenta("Caja")
-                .Where(m => m.Asiento.DiaContableId == dia.Id && m.TipoDeOperacion == TipoDeOperacion.Credito).Sum(m => m.Importe);
+                .Where(m => m.Asiento.DiaContableId == dia.Id && (m.Asiento.Detalle.StartsWith("Extracción") || m.Asiento.Detalle.StartsWith("Pago") || m.Asiento.Detalle.StartsWith("Compra"))).Sum(m => m.Importe);
+
+            var extraccionCierre =
+                _cuentasServices.GetMovimientosDeCuenta("Caja")
+                .Where(m => m.Asiento.DiaContableId == dia.Id && (m.Asiento.Detalle.StartsWith("Cierre") )).Sum(m => m.Importe);
 
             var depositos =
                 _cuentasServices.GetMovimientosDeCuenta("Caja")
@@ -204,13 +208,14 @@ namespace ErpMvc.Controllers
                 : 0;
             var resumen = new CierreViewModel()
             {
-                Fecha = cierre.Fecha,
+                Fecha = cierre.DiaContable.Fecha,
                 EfectivoAnterior = efectivoAnterior,
                 Ventas = totalVentas,
                 VentasSinPorciento = ventasSinPorciento,
                 Depositos = depositos,
                 Extracciones = extracciones,
                 Propinas = propinas,
+                ExtraccionCierre = extraccionCierre,
                 Desgloce = cierre.Desglose.ToList()
                 //CentrosDeCosto = centrosDeCosto
             };

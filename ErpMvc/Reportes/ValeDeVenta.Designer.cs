@@ -41,7 +41,6 @@
             this.atendidoPor = new DevExpress.XtraReports.UI.XRLabel();
             this.titulo_reporte = new DevExpress.XtraReports.UI.XRLabel();
             this.fecha_reporte = new DevExpress.XtraReports.UI.XRLabel();
-            this.PageHeader = new DevExpress.XtraReports.UI.PageHeaderBand();
             this.xrTable1 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow1 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell6 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -140,8 +139,9 @@
             this.ReportHeader.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.atendidoPor,
             this.titulo_reporte,
-            this.fecha_reporte});
-            this.ReportHeader.HeightF = 130.1666F;
+            this.fecha_reporte,
+            this.xrTable1});
+            this.ReportHeader.HeightF = 196.8333F;
             this.ReportHeader.Name = "ReportHeader";
             // 
             // atendidoPor
@@ -180,18 +180,11 @@
             this.fecha_reporte.Text = "fecha_reporte";
             this.fecha_reporte.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
-            // PageHeader
-            // 
-            this.PageHeader.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
-            this.xrTable1});
-            this.PageHeader.HeightF = 47.5F;
-            this.PageHeader.Name = "PageHeader";
-            // 
             // xrTable1
             // 
             this.xrTable1.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
             this.xrTable1.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrTable1.LocationFloat = new DevExpress.Utils.PointFloat(2.612432F, 0F);
+            this.xrTable1.LocationFloat = new DevExpress.Utils.PointFloat(2.61247F, 149.3333F);
             this.xrTable1.Name = "xrTable1";
             this.xrTable1.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow1});
@@ -322,7 +315,6 @@
             this.TopMargin,
             this.BottomMargin,
             this.ReportHeader,
-            this.PageHeader,
             this.ReportFooter});
             this.Margins = new System.Drawing.Printing.Margins(0, 100, 51, 100);
             this.Version = "14.1";
@@ -347,7 +339,6 @@
         private DevExpress.XtraReports.UI.ReportHeaderBand ReportHeader;
         private DevExpress.XtraReports.UI.XRLabel titulo_reporte;
         private DevExpress.XtraReports.UI.XRLabel fecha_reporte;
-        private DevExpress.XtraReports.UI.PageHeaderBand PageHeader;
         private DevExpress.XtraReports.UI.XRTable xrTable1;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow1;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell1;

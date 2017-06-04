@@ -11,27 +11,27 @@
     @Html.AntiForgeryToken()
     <hr />
     @Html.ValidationSummary()
-    <div class="col-md-12">
+    <div class="col-md-12" id="movimientoProductoController"  ng-controller="movimientoProductoController">
         <div class="form-group">
             @{
                 Html.RenderAction("DiaContable", "PeriodoContable");
             }
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.Descripcion, new {@class = "col-md-4 control-label"})
+            @Html.LabelFor(m => m.Descripcion, new { @class = "col-md-4 control-label" })
             <div class="col-md-8">
-                @Html.TextBoxFor(m => m.Descripcion, new {@class = "form-control"})
+                @Html.TextBoxFor(m => m.Descripcion, new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.Descripcion)
             </div>
         </div>
         <div class="form-group">
-            @Html.Label("CentroDeCostoId","Centro de costo", new { @class = "col-md-4 control-label" })
+            @Html.Label("CentroDeCostoId", "Centro de costo", new { @class = "col-md-4 control-label" })
             <div class="col-md-8">
-                @Html.DropDownList("CentroDeCostoId",null, new { @class = "form-control select" })
+                @Html.DropDownList("CentroDeCostoId", null, new { @class = "form-control", @ng_model = "origenId", @chosen = "", @ng_change = "cambiarOrigen()" })
                 @Html.ValidationMessage("CentroDeCostoId")
             </div>
         </div>
-        <div id="compraController" class="form-group" data-ng-controller="compraController">
+        <div class="form-group">
             @{
                 Html.RenderPartial("_DetalleSalidaPartial", ViewData);
             }
@@ -47,189 +47,22 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
+    <script src="~/Scripts/erp/movimientoProductoController.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $(".select").chosen();
 
             $('.nuevo').tooltip();
 
-            $('#comprar-btn').click(function() {
+            $('#comprar-btn').click(function () {
                 $('#form-detalle-compra').remove();
             });
 
-
-            $("#nuevo-vehiculo-btn").click(function() {
-                $("#vehiculo-modal").modal();
-            });
-
-            $("#nueva-carga-btn").click(function() {
-                $("#carga-modal").modal();
-            });
-
-            $("#nuevo-chofer-btn").click(function() {
-                $("#chofer-modal").modal();
-            });
-
-            $("#save-carga-btn").click(function() {
-                $("#form-carga").remove();
-            });
-
-            $("#ProductoId").change(function() {
-                var msg = $("#ProductoId option:selected").val();
-                angular.element('#compraController').scope().fetchUnidades(msg);
-                angular.element('#compraController').scope().$apply();
-            });
+            //$("#ProductoId").change(function() {
+            //    var msg = $("#ProductoId option:selected").val();
+            //    angular.element('#compraController').scope().fetchUnidades(msg);
+            //    angular.element('#compraController').scope().$apply();
+            //});
         });
-
-        function vehiculoAgregado() {
-            $("#vehiculo-modal").modal('hide');
-            $('#VehiculoId').chosen();
-            $('#form0 input:text').val('');
-            $("#nuevo-vehiculo-btn").click(function() {
-                $("#vehiculo-modal").modal();
-            });
-        };
-
-        function choferAgregado() {
-            $("#chofer-modal").modal('hide');
-            $('#ChoferId').chosen();
-            $('#form1 input:text').val('');
-            $("#nuevo-chofer-btn").click(function() {
-                $("#chofer-modal").modal();
-            });
-        };
-
-        function cargaAgregada() {
-            $("#carga-modal").modal('hide');
-            angular.element('#compraController').scope().fetchProductos();
-            angular.element('#compraController').scope().$apply();
-        };
-
-
-        erp.controller('compraController', [
-            '$scope', '$http', function($scope, $http) {
-                $scope.loading = true;
-                $scope.addMode = false;
-                $scope.tieneError = false;
-                $scope.error = "";
-                $scope.select_changed = 0;
-
-                $scope.productos = [];
-                $scope.urlProductos = '@Url.Action("ListaProductos", "Productos")';
-
-                $scope.fetchProductos = function() {
-                    $http.get($scope.urlProductos).then(function(result) {
-                        $scope.productos = result.data;
-                        $scope.select_changed++;
-                    });
-                }
-
-                $scope.fetchProductos();
-
-                $scope.unidades = [];
-                $scope.urlUnidades = '@Url.Action("ListaUnidadesDeMedida", "Productos")';
-
-                $scope.fetchUnidades = function(id) {
-                    $http.get($scope.urlUnidades + "/" + id).then(function(result) {
-                        $scope.unidades = result.data;
-                        $scope.select_changed++;
-                    });
-                }
-
-                $scope.fetchUnidades();
-
-                $scope.detallesCompra = [];
-                $scope.newDetalle = {};
-                //$scope.newCarga.Aprobado = true;
-
-                $scope.toggleEdit = function() {
-                    this.detalle.editMode = !this.detalle.editMode;
-                };
-                $scope.agregarDetalle = function() {
-                    //var index = $scope.cargas.length;
-                    $scope.show = false;
-                    var detalleNuevo = {};
-                    var valido = true;
-                    if ($scope.newDetalle.Cantidad == null || $scope.newDetalle.ProductoId === "") {
-                        $scope.error = "Debe insertar los datos del producto.";
-                        $scope.tieneError = true;
-                        valido = false;
-                    }
-                    //var form = $("#form-detalle-compra");
-                    //if (valido && !form.valid()) {
-                    //    $scope.error = "Datos incorrectos en el producto.";
-                    //    $scope.tieneError = true;
-                    //    valido = false;
-                    //}
-                    if (valido && $scope.detallesCompra.find(function(a) {
-                        if ($scope.newDetalle.ProductoId === a.ProductoId) {
-                            return true;
-                    }
-                        return false;
-                    })) {
-                        $scope.error = "Ya existe una carga con el mismo concepto.";
-                        $scope.tieneError = true;
-                        valido = false;
-                    }
-                    var url = "@Url.Action("SePuedeDarSalida", "Productos")" + "?productoId=" + $scope.newDetalle.ProductoId.Id + "&cantidad=" + $scope.newDetalle.Cantidad + "&unidadId=" + $scope.newDetalle.UnidadId.Id;
-                    $http.get(url).then(function (result) {
-                        valido = result.data;
-                        if (valido) {
-                            detalleNuevo.ProductoId = $scope.newDetalle.ProductoId.Id;
-                            detalleNuevo.UnidadId = $scope.newDetalle.UnidadId.Id;
-                            detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
-                            detalleNuevo.ImporteTotal = $scope.newDetalle.ImporteTotal;
-                            var productoNombre = $("#ProductoId option:selected").html();
-                            detalleNuevo.NombreProducto = productoNombre;
-                            var nombreUnidad = $("#UnidadDeMedidaId option:selected").html();
-                            detalleNuevo.NombreUnidad = nombreUnidad;
-                            $scope.detallesCompra.push(detalleNuevo);
-                            $("#save-aprob-btn").removeClass('disabled');
-                            $scope.newDetalle = {};
-                            $("#Aprobacion_Fecha").val("");
-                            $scope.fetchProductos();
-                            $scope.fetchUnidades();
-                        } else {
-                            $scope.error = "No hay la cantidad de producto para dar salida.";
-                            $scope.tieneError = true;
-                        }
-                    });
-                };
-
-                $scope.closeAlert = function() {
-                    $scope.tieneError = false;
-                };
-
-                //Used to save a record after edit
-                $scope.save = function(data) {
-                    $scope.loading = true;
-                    var carga = this.carga;
-                    carga.CargaId = data.CargaId;
-                    carga.Cantidad = data.Cantidad;
-                    var cargaNombre = $("#carga_" + carga.Id + " option:selected").html();
-                    carga.CargaNombre = cargaNombre;
-                    carga.editMode = false;
-                    $scope.loading = false;
-                };
-
-                $scope.cancelar = function() {
-                    $scope.detallesCompra = [];
-                    $("#save-carga-btn").addClass('disabled');
-                    $scope.newDetalle = {};
-                };
-
-                //Used to edit a record
-                $scope.borrarCarga = function(index) {
-                    $scope.loading = true;
-                    var detalle = this.detalle;
-                    $scope.detallesCompra.splice(index, 1);
-                    detalle.editMode = false;
-                    $scope.loading = false;
-                };
-            }
-        ]);
-
     </script>
-
 }

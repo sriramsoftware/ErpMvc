@@ -87,7 +87,11 @@ namespace ErpMvc.Controllers
 
             var extracciones =
                 _cuentasServices.GetMovimientosDeCuenta("Caja")
-                .Where(m => m.Asiento.DiaContableId == dia.Id && m.TipoDeOperacion == TipoDeOperacion.Credito).Sum(m => m.Importe);
+                .Where(m => m.Asiento.DiaContableId == dia.Id && m.TipoDeOperacion == TipoDeOperacion.Credito && (m.Asiento.Detalle.StartsWith("Extracción") ||m.Asiento.Detalle.StartsWith("Pago") ||m.Asiento.Detalle.StartsWith("Compra"))).Sum(m => m.Importe);
+
+            var extraccionCierre =
+                _cuentasServices.GetMovimientosDeCuenta("Caja")
+                .Where(m => m.Asiento.DiaContableId == dia.Id && m.TipoDeOperacion == TipoDeOperacion.Credito && (m.Asiento.Detalle.StartsWith("Cierre"))).Sum(m => m.Importe);
 
             var depositos =
                 _cuentasServices.GetMovimientosDeCuenta("Caja")
@@ -158,7 +162,7 @@ namespace ErpMvc.Controllers
                 }
                 var cuentaCaja = _cuentasServices.FindCuentaByNombre("Caja");
                 var cuentaBanco = _cuentasServices.FindCuentaByNombre("Banco");
-                var result = _submayorService.AgregarOperacion(cuentaCaja.Id, cuentaBanco.Id, importeAExtraer, DateTime.Now, "Extracción de efectivo al cierre del dia",
+                var result = _submayorService.AgregarOperacion(cuentaCaja.Id, cuentaBanco.Id, importeAExtraer, DateTime.Now, "Cierre del dia",
                     User.Identity.GetUserId());
                 if (result)
                 {
@@ -243,6 +247,16 @@ namespace ErpMvc.Controllers
                 return Json(new { result = false, mensaje = "No se puede cerrar, ventas pendientes de pago" }, JsonRequestBehavior.AllowGet);
             }
             return Json(new { result = true, mensaje = "Se puede cerrar" }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult VentasPendientes()
+        {
+            var dia = _service.GetDiaContableActual();
+            if (_db.Set<Venta>().Any(v => v.DiaContableId == dia.Id && (v.EstadoDeVenta == EstadoDeVenta.Facturada || v.EstadoDeVenta == EstadoDeVenta.Pendiente)))
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult CerrarPeriodo()

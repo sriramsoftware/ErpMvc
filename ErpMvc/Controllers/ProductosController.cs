@@ -71,7 +71,6 @@ namespace ErpMvc.Controllers
 
         public ActionResult Historial(int? id)
         {
-            //todo: agregar fecha y hora a los movimientos
             var producto = _db.Set<ProductoConcreto>().Find(id);
             var entradasAlmacen = _db.Set<EntradaAlmacen>().Where(e => e.ProductoId == id);
             var salidasDeAlmacen = _db.Set<DetalleSalidaAlmacen>().Where(d => d.Producto.ProductoId == id);
@@ -112,7 +111,7 @@ namespace ErpMvc.Controllers
             }));
 
             var existencia = _db.Set<ExistenciaCentroDeCosto>().Where(e => e.ProductoId == id).Select(e => new ExistenciaViewModel() {Lugar = e.CentroDeCosto.Nombre, Cantidad = e.Cantidad}).ToList();
-            existencia.Add(new ExistenciaViewModel() {Lugar = "Almacen", Cantidad = _db.Set<ExistenciaAlmacen>().Where(a => a.ProductoId == id).Sum(a => a.ExistenciaEnAlmacen)});
+            existencia.Add(new ExistenciaViewModel() {Lugar = "Almacen", Cantidad = _db.Set<ExistenciaAlmacen>().Any(a => a.ProductoId == id)? _db.Set<ExistenciaAlmacen>().Where(a => a.ProductoId == id).Sum(a => a.ExistenciaEnAlmacen):0});
             //if (!existencia.Any())
             //{
             //    existencia = new List<ExistenciaCentroDeCosto>();
@@ -355,39 +354,39 @@ namespace ErpMvc.Controllers
         }
 
 
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        public ActionResult MoverEntreCentrosDeCosto()
-        {
-            return View();
-        }
+        //[Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        //public ActionResult MoverEntreCentrosDeCosto()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        public ActionResult MoverEntreCentrosDeCosto(MovimientoProductosViewModel movimiento)
-        {
-            var usuario = User.Identity.GetUserId();
-            if (ModelState.IsValid)
-            {
-                if (!movimiento.Productos.Any())
-                {
-                    TempData["error"] = "No se puede efectuar un movimiento sin productos";
-                    return View();
-                }
-                foreach (var prod in movimiento.Productos)
-                {
-                    _centroCostoService.TrasladarProductoDeCentroDeCosto(movimiento.OrigenId,movimiento.DestinoId,prod.ProductoId,prod.Cantidad, prod.UnidadDeMedidaId,usuario);
-                }
+        //[HttpPost]
+        //[Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        //public ActionResult MoverEntreCentrosDeCosto(MovimientoProductosViewModel movimiento)
+        //{
+        //    var usuario = User.Identity.GetUserId();
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (!movimiento.Productos.Any())
+        //        {
+        //            TempData["error"] = "No se puede efectuar un movimiento sin productos";
+        //            return View();
+        //        }
+        //        foreach (var prod in movimiento.Productos)
+        //        {
+        //            _centroCostoService.TrasladarProductoDeCentroDeCosto(movimiento.OrigenId,movimiento.DestinoId,prod.ProductoId,prod.Cantidad, prod.UnidadDeMedidaId,usuario);
+        //        }
 
-                if (_centroCostoService.GuardarCambios())
-                {
-                    TempData["exito"] = "Movimiento registrado correctamente";
-                    return RedirectToAction("Listado", "Productos");
-                }
-                TempData["error"] = "No se pudo registrar el movimiento";
-                return RedirectToAction("Listado", "Productos");
-            }
-            return View(movimiento);
-        }
+        //        if (_centroCostoService.GuardarCambios())
+        //        {
+        //            TempData["exito"] = "Movimiento registrado correctamente";
+        //            return RedirectToAction("Listado", "Productos");
+        //        }
+        //        TempData["error"] = "No se pudo registrar el movimiento";
+        //        return RedirectToAction("Listado", "Productos");
+        //    }
+        //    return View(movimiento);
+        //}
 
         public JsonResult SePuedeDarSalida(int productoId, decimal cantidad, int unidadId)
         {

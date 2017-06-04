@@ -8,6 +8,7 @@ using AlmacenCore.Models;
 using CompraVentaBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
+using ErpMvc.ViewModels;
 
 namespace ErpMvc.Controllers
 {
@@ -38,6 +39,12 @@ namespace ErpMvc.Controllers
                 UnidadId = e.Producto.UnidadDeMedidaId,
                 Unidad = e.Producto.UnidadDeMedida.Siglas
             }), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult SePuedeDarSalida(DetalleProductoViewModel producto)
+        {
+            return _centroDeCostoService.PuedeDarSalida(producto.ProductoId,producto.CentroCostoId,producto.Cantidad,producto.UnidadId) ? Json(true, JsonRequestBehavior.AllowGet) : Json(false, JsonRequestBehavior.AllowGet);
         }
 
         // GET: CentrosDeCostos
@@ -78,17 +85,5 @@ namespace ErpMvc.Controllers
             }
             return View(centroDeCosto);
         }
-        
-        //public ActionResult Eliminar(int id)
-        //{
-        //    return PartialView("_EliminarTrabajadorPartial");
-        //}
-
-        //[HttpPost]
-        //public ActionResult EliminarConfirmado(int id)
-        //{
-        //    return RedirectToAction("Index");
-        //}
-
     }
 }

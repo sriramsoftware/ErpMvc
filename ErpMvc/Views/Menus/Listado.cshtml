@@ -131,7 +131,7 @@
                 <a id="vermenunbajoprecioconindice" class="btn btn-default col-md-12 col-sm-12 col-xs-12">
                     <i class="icon-exclamation-sign"></i>&nbsp;Menús bajo Precio con Índice
                 </a>*@
-            <img class="imagen_derecho img-thumbnail" src="@Url.Content("~/Content/images/menus.jpg")" />
+            @*<img class="imagen_derecho img-thumbnail" src="@Url.Content("~/Content/images/menus.jpg")" />*@
         </div>
     </div>
 
@@ -167,6 +167,10 @@
                 } else {
                     $("#porCiento").val(false);
                 }
+            });
+            $(document).on('shown.bs.modal', function (e) {
+                //$(e.target, '[autofocus]').focus();
+                $('#Nombre').focus();
             });
         });
     </script>

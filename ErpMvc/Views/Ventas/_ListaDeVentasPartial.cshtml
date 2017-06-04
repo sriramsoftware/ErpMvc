@@ -28,6 +28,9 @@
         <div class="col-md-3 col-sm-3 col-xs-12">
             <h4 class="title_insight ">Total:<br /> @String.Format("{0:C}", Model.Sum(v => v.Importe))</h4>
         </div>
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <h4 class="title_insight ">Propinas:<br /> @String.Format("{0:C}", (ViewBag.Propinas as ICollection<Propina>).Sum(p => p.Importe))</h4>
+        </div>
     </div>
 
             }
@@ -102,7 +105,7 @@
                     <i class="glyphicon glyphicon-usd"></i>&nbsp;Propina
                 </a>
             }
-            @if (venta.EstadoDeVenta == EstadoDeVenta.Pendiente)
+            @if (User.IsInRole(RolesMontin.Administrador) || (venta.EstadoDeVenta != EstadoDeVenta.PagadaEnEfectivo && venta.EstadoDeVenta != EstadoDeVenta.PagadaPorTarjeta&& venta.EstadoDeVenta != EstadoDeVenta.Facturada))
             {
                 <br />
                 <a href="@Url.Action("Editar", "Ventas", new {Id = venta.Id})" class="btn btn-primary btn-sm col-md-12">
@@ -112,10 +115,13 @@
                 <a class="btn btn-primary btn-sm col-md-12 eliminar-venta-btn" data-id="@venta.Id">
                     <i class="glyphicon glyphicon-trash"></i>&nbsp;Eliminar esta venta
                 </a>
-                    <br />
-                    <a class="btn btn-info btn-sm col-md-6 otro-dia-btn" data-id="@venta.Id">
-                        &nbsp;Otro dia
-                    </a>
+            }
+            @if (venta.EstadoDeVenta == EstadoDeVenta.Pendiente)
+            {
+                <br />
+                <a class="btn btn-info btn-sm col-md-6 otro-dia-btn" data-id="@venta.Id">
+                    &nbsp;Otro dia
+                </a>
                     <a class="btn btn-primary btn-sm col-md-6 por-casa-btn" data-id="@venta.Id">
                         &nbsp;Por la casa
                     </a>

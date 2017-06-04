@@ -27,7 +27,7 @@ namespace ErpMvc.Reportes
             {
                 Menu = e.Elaboracion.Nombre + (e.Agregados.Count > 0? " con: " + String.Join(",",e.Agregados.Select(a => a.Agregado.Producto.Nombre + " (" + a.Cantidad + ")")):""),
                 Cantidad = (int)e.Cantidad,
-                Precio = e.Elaboracion.PrecioDeVenta + e.Elaboracion.Agregados.Sum(a => a.Precio),
+                Precio = e.Elaboracion.PrecioDeVenta + e.Agregados.Sum(a => a.Agregado.Precio),
                 Importe = Math.Round(e.ImporteTotal, 2)
             }).ToList();
             DataSource = data;

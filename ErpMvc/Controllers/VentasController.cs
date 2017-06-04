@@ -67,8 +67,10 @@ namespace ErpMvc.Controllers
 
         public PartialViewResult ListaDeVentasPorFechaPartial(DateTime fecha)
         {
-            ViewBag.Propinas = _db.Set<Propina>().ToList().Where(p => p.Venta.DiaContable.Fecha.Date == fecha.Date);
-            var ventas = _ventasService.Ventas().ToList().Where(v => v.DiaContable.Fecha.Date == fecha.Date).OrderByDescending(v => v.Fecha);
+            var fIni = fecha.Date;
+            var fFin = fecha.Date.AddHours(23).AddMinutes(59);
+            ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContable.Fecha >= fIni && p.Venta.DiaContable.Fecha <= fFin).ToList();
+            var ventas = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin).OrderByDescending(v => v.Fecha).ToList();
             ViewBag.CantidadDeVentas = ventas.Count();
             return PartialView("_ListaDeVentasSoloVerPartial", ventas);
         }
@@ -76,9 +78,9 @@ namespace ErpMvc.Controllers
         public PartialViewResult ConsumoPorFechaPartial(DateTime fecha)
         {
             var fIni = fecha.Date;
-            var fFin = fecha.Date.AddHours(23);
+            var fFin = fecha.Date.AddHours(23).AddMinutes(59);
 
-            var consumo = _db.Set<MovimientoDeProducto>().Where(m => m.Fecha >= fIni && m.Fecha <= fFin  && m.Tipo.Descripcion == TipoDeMovimientoConstantes.SalidaAProduccion).GroupBy(m => m.Producto).Select(m => new ConsumoViewModel()
+            var consumo = _db.Set<MovimientoDeProducto>().Where(m => m.DiaContable.Fecha >= fIni && m.DiaContable.Fecha <= fFin  && m.Tipo.Descripcion == TipoDeMovimientoConstantes.SalidaAProduccion).GroupBy(m => m.Producto).Select(m => new ConsumoViewModel()
             {
                 ProductoId = m.Key.Id,
                 Producto = m.Key.Producto.Nombre,
@@ -110,7 +112,7 @@ namespace ErpMvc.Controllers
         [HttpPost]
         public ActionResult NuevaVenta(Venta venta)
         {
-            if (User.IsInRole(RolesMontin.Vendedor) || User.IsInRole(RolesMontin.UsuarioAvanzado))
+            if (User.IsInRole(RolesMontin.Vendedor))
             {
                 var usuarioId = User.Identity.GetUserId();
                 var vendedor = _ventasService.Vendedores().SingleOrDefault(v => v.UsuarioId == usuarioId);
@@ -154,6 +156,12 @@ namespace ErpMvc.Controllers
         public ActionResult Editar(int id)
         {
             var venta = _ventasService.Ventas().Find(id);
+            if (!User.IsInRole(RolesMontin.Administrador) && (venta.EstadoDeVenta == EstadoDeVenta.Facturada || venta.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || venta.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta))
+            {
+                TempData["error"] = "Usted no puede editar una venta impresa o pagada";
+                return RedirectToAction("Index");
+            }
+            
             ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre", venta.PuntoDeVentaId);
             ViewBag.VendedorId = new SelectList(_ventasService.Vendedores(), "Id", "NombreCompleto", venta.VendedorId);
             return View(venta);
@@ -163,6 +171,11 @@ namespace ErpMvc.Controllers
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Editar(Venta venta)
         {
+            if (!User.IsInRole(RolesMontin.Administrador) && (venta.EstadoDeVenta == EstadoDeVenta.Facturada || venta.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || venta.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta))
+            {
+                TempData["error"] = "Usted no puede editar una venta impresa o pagada";
+                return RedirectToAction("Index");
+            }
             if (ModelState.IsValid)
             {
                 var result = _ventasService.Editar(venta, User.Identity.GetUserId());
@@ -189,7 +202,7 @@ namespace ErpMvc.Controllers
             return View(venta);
         }
 
-        [Authorize(Roles = RolesMontin.Administrador)]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         [HttpPost]
         [ActionName("Eliminar")]
         public ActionResult EliminarConfirmado(int id)
@@ -197,6 +210,12 @@ namespace ErpMvc.Controllers
             if (id == 0)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var venta = _ventasService.Ventas().Find(id);
+            if (!User.IsInRole(RolesMontin.Administrador) && (venta.EstadoDeVenta == EstadoDeVenta.Facturada || venta.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || venta.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta))
+            {
+                TempData["error"] = "Usted no puede editar una venta impresa o pagada";
+                return RedirectToAction("Index");
             }
             if (_ventasService.EliminarVenta(id, User.Identity.GetUserId()))
             {
@@ -223,12 +242,14 @@ namespace ErpMvc.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public JsonResult DisminuirMenu(int id)
         {
             var result = _ventasService.DisminuirMenuEnVenta(id, User.Identity.GetUserId());
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public JsonResult DisminuirAgregado(int detalleId, int agregadoId)
         {
             var result = _ventasService.DisminuirAgregadoEnVenta(detalleId,agregadoId, User.Identity.GetUserId());
@@ -239,6 +260,7 @@ namespace ErpMvc.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public JsonResult AumentarAgregado(int detalleId, int agregadoId)
         {
             var result = _ventasService.AumentarAgregadoEnVenta(detalleId,agregadoId, User.Identity.GetUserId());
@@ -249,6 +271,7 @@ namespace ErpMvc.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public JsonResult AumentarMenu(int id)
         {
             var result = _ventasService.AumentarMenuEnVenta(id, User.Identity.GetUserId());
@@ -260,19 +283,28 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public JsonResult AgregarMenuAVenta(DetalleDeVenta detalle)
         {
+            detalle.Elaboracion = null;
             var result = _ventasService.AgregarDetalleAVenta(detalle, User.Identity.GetUserId());
             if (result)
             {
                 result = _ventasService.GuardarCambios();
             }
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(new {Result = result, DetalleId = detalle.Id}, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public JsonResult EliminarDetalle(int id)
         {
             var result = _ventasService.EliminarDetalleAVenta(id, User.Identity.GetUserId());
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult MenuPorCuentaCasa(int id)
+        {
+            var result = _ventasService.MenuPorCuentaCasa(id, User.Identity.GetUserId());
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

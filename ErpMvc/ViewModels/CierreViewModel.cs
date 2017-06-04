@@ -20,6 +20,8 @@ namespace ErpMvc.ViewModels
 
         public decimal Propinas { get; set; }
 
+        public decimal ExtraccionCierre { get; set; }
+
         public List<DenominacionesEnCierreDeCaja> Desgloce { get; set; }
 
         public CierreViewModel()

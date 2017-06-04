@@ -117,7 +117,7 @@
         <div class="col-md-12 col-sm-12 col-xs-12 text-center">
             <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" data-toggle="modal" data-target="#myModal">Agregar Nuevo Producto</a>
             <br />
-            <img class="imagen_derecho img-thumbnail" src="@Url.Content("~/Content/images/productos.jpg")" />
+            @*<img class="imagen_derecho img-thumbnail" src="@Url.Content("~/Content/images/productos.jpg")" />*@
         </div>
     </div>
 }
@@ -131,7 +131,11 @@
     <script>
         $(document).ready(function () {
             $('btn').tooltip();
-
+            
+            $(document).on('shown.bs.modal', function (e) {
+                //$(e.target, '[autofocus]').focus();
+                $('#Nombre').focus();
+            });
         });
     </script>
 }

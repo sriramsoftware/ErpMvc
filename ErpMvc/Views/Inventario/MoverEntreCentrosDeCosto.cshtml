@@ -11,7 +11,7 @@
     @Html.AntiForgeryToken()
     <hr />
     @Html.ValidationSummary()
-    <div class="col-md-12" id="trasladoController" ng-controller="trasladoController">
+    <div class="col-md-12" id="movimientoProductoController" ng-controller="movimientoProductoController">
 
         <div class="form-group">
             @Html.LabelFor(m => m.OrigenId, "Desde", new { @class = "col-md-4 control-label" })
@@ -45,7 +45,7 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
+    <script src="~/Scripts/erp/movimientoProductoController.js"></script>
     <script>
         $(document).ready(function () {
             $(".select").chosen();
@@ -56,112 +56,5 @@
                 $('#form-detalle-compra').remove();
             });
         });
-
-        erp.controller('trasladoController', [
-            '$scope', '$http', function ($scope, $http) {
-                $scope.loading = true;
-                $scope.addMode = false;
-                $scope.tieneError = false;
-                $scope.error = "";
-                $scope.select_changed = 0;
-                $scope.origenId = 0;
-                $scope.destinoId = 0;
-                $scope.centrosDestino = [];
-
-                $scope.centros = [];
-                $scope.fetchCentros = function () {
-                    $http.get('@Url.Action("ListaCentrosDeCosto", "CentrosDeCostos")').then(function (result) {
-                        $scope.centros = result.data;
-                        $scope.select_changed++;
-                    });
-                }
-                $scope.fetchCentros();
-
-                $scope.productos = [];
-                $scope.fetchProductos = function (id) {
-                    $http.get('@Url.Action("Existencias", "CentrosDeCostos")' + '/' + id).then(function (result) {
-                        $scope.productos = result.data;
-                        $scope.select_changed++;
-                    });
-                }
-
-                $scope.unidades = [];
-                $scope.urlUnidades = '@Url.Action("ListaUnidadesDeMedida", "Productos")';
-                $scope.fetchUnidades = function (id) {
-                    $http.get($scope.urlUnidades + "/" + id).then(function (result) {
-                        $scope.unidades = result.data;
-                        $scope.select_changed++;
-                    });
-                }
-
-                $scope.cambiarOrigen = function () {
-                    $scope.fetchProductos($scope.origenId);
-                    $scope.fetchCentros();
-                    $scope.centrosDestino = $scope.centros;
-                    var index = $scope.centrosDestino.findIndex(function (a) {
-                        if ($scope.origenId == a.Id) {
-                            return true;
-                        }
-                        return false;
-                    });
-                    $scope.centrosDestino.splice(index, 1);
-                }
-
-                $scope.detalles = [];
-                $scope.newDetalle = {};
-
-                $scope.agregarDetalle = function () {
-                    $scope.show = false;
-                    var detalleNuevo = {};
-                    var valido = true;
-                    if ($scope.newDetalle.Cantidad == null || $scope.newDetalle.ProductoId === "") {
-                        $scope.error = "Debe insertar los datos del producto.";
-                        $scope.tieneError = true;
-                        valido = false;
-                    }
-
-                    if (valido && $scope.detalles.find(function (a) {
-                        if ($scope.newDetalle.ProductoId === a.ProductoId) {
-                            return true;
-                    }
-                        return false;
-                    })) {
-                        $scope.error = "Ya agrego este producto.";
-                        $scope.tieneError = true;
-                        valido = false;
-                    }
-                    if (valido && $scope.newDetalle.Producto.Cantidad < $scope.newDetalle.Cantidad) {
-                        $scope.error = "No hay la cantidad de producto para dar salida.";
-                        $scope.tieneError = true;
-                        valido = false;
-                    }
-                    if (valido) {
-                        detalleNuevo.Producto = $scope.newDetalle.Producto;
-                        detalleNuevo.Cantidad = $scope.newDetalle.Cantidad;
-                        $scope.detalles.push(detalleNuevo);
-                        $("#save-aprob-btn").removeClass('disabled');
-                        $scope.newDetalle = {};
-                        $("#Aprobacion_Fecha").val("");
-                        $scope.fetchProductos();
-                        $scope.tieneError = false;
-                    }
-                };
-
-                $scope.closeAlert = function () {
-                    $scope.tieneError = false;
-                };
-
-                $scope.borrarCarga = function (index) {
-                    $scope.loading = true;
-                    var detalle = this.detalle;
-                    $scope.detalles.splice(index, 1);
-                    detalle.editMode = false;
-                    $scope.loading = false;
-                    $scope.fetchProductos();
-                };
-            }
-        ]);
-
     </script>
-
 }

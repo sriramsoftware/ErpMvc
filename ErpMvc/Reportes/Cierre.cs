@@ -25,14 +25,18 @@ namespace ErpMvc.Reportes
             ventas.Text = String.Format("{0:C}", cierre.Ventas);
             depositos.Text = String.Format("{0:C}", cierre.Depositos);
             extracciones.Text = String.Format("{0:C}", cierre.Extracciones);
+            extraccionCierre.Text = String.Format("{0:C}", cierre.ExtraccionCierre);
             efectivoCaja.Text = efectivoEnCaja;
 
             ventasTotales.Text = String.Format("{0:C}", cierre.Ventas);
             excentasPorciento.Text = String.Format("{0:C}", cierre.VentasSinPorciento);
             calculaPorciento.Text = String.Format("{0:C}", cierre.Ventas - cierre.VentasSinPorciento);
-            porciento.Text = String.Format("{0:C}", (cierre.Ventas - cierre.VentasSinPorciento) * 0.1m);
+            var porCiento = (cierre.Ventas - cierre.VentasSinPorciento) * 0.1m;
+            porciento.Text = String.Format("{0:C}", porCiento);
 
             propina.Text = String.Format("{0:C}", cierre.Propinas);
+            totalPropinaPorciento.Text = String.Format("{0:C}", porCiento + cierre.Propinas);
+
 
             DataSource = cierre.Desgloce.Select(d => new 
             {

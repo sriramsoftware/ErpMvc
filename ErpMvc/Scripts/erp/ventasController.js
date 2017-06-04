@@ -194,9 +194,10 @@
                         var url = "/Ventas/AgregarMenuAVenta/";
                         detalleNuevo.VentaId = $("#Id").val();
                         $http.post(url, detalleNuevo).then(function (result) {
-                            valido = result.data;
+                            valido = result.data.Result;
                             if (valido) {
                                 $scope.importeTotal += ($scope.newDetalle.Elaboracion.Precio * $scope.newDetalle.Cantidad);
+                                detalleNuevo.Id = result.data.DetalleId;
                                 $scope.detallesVenta.push(detalleNuevo);
                                 $("#save-aprob-btn").removeClass('disabled');
                                 $scope.newDetalle = {};
@@ -295,5 +296,25 @@
                         $scope.detallesVenta.splice(index, 1);
                     }
                 };
+
+                $scope.menuCuentaCasa = function(detalle) {
+                    $scope.loading = true;
+                    var valido = true;
+                    if (detalle.Id != undefined) {
+                        $http.get('/Ventas/MenuPorCuentaCasa/' + detalle.Id).then(function (result) {
+                            if (result.data) {
+                                $scope.tieneError = false;
+                            } else {
+                                $scope.error = "Error, este menu no puede ser cuenta casa.";
+                                valido = false;
+                                $scope.tieneError = true;
+                            }
+                        });
+                    }
+                    if (valido) {
+                        $scope.importeTotal -= detalle.ImporteTotal;
+                        detalle.ImporteTotal = 0;
+                    }
+                }
             }
 ]);

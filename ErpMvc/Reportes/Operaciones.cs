@@ -21,12 +21,13 @@ namespace ErpMvc.Reportes
             InitializeComponent();
 
             var db = new ErpContext();
+            FechaFin = FechaFin.AddHours(23).AddMinutes(59);
 
             fecha_inicio.Text = "Desde: " + FechaInicio.ToShortDateString();
             fecha_fin.Text = "Hasta: " + FechaFin.ToShortDateString();
 
             //compras
-            var compras = db.Compras.Where(c => c.Fecha >= FechaInicio && c.Fecha <= FechaFin).ToList();
+            var compras = db.Compras.Where(c => c.DiaContable.Fecha >= FechaInicio && c.DiaContable.Fecha <= FechaFin).ToList();
 
             var comprasData = compras.SelectMany(c => c.Productos.Select(p => new
             {
@@ -57,7 +58,7 @@ namespace ErpMvc.Reportes
             totalComprasCell.Text = String.Format("{0:C}", comprasData.Sum(c => c.Importe));
 
             //ventas
-            var ventas = db.Ventas.Where(c => c.Fecha >= FechaInicio && c.Fecha <= FechaFin && (c.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || c.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)).ToList();
+            var ventas = db.Ventas.Where(c => c.DiaContable.Fecha >= FechaInicio && c.DiaContable.Fecha <= FechaFin && (c.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || c.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)).ToList();
             var ventasData = ventas.Select(v => new
             {
                 Fecha = v.Fecha,
@@ -92,7 +93,7 @@ namespace ErpMvc.Reportes
             var gastos = db.OtrosGastos.Where(c => c.DiaContable.Fecha >= FechaInicio && c.DiaContable.Fecha <= FechaFin).ToList();
             var gastosData = gastos.Select(g => new
             {
-                Fecha = g.DiaContable.Fecha,
+                Fecha = g.DiaContable.Fecha.Date,
                 Concepto = g.ConceptoDeGasto.Nombre,
                 Importe = g.Importe
             }).ToList();
@@ -126,17 +127,17 @@ namespace ErpMvc.Reportes
 
             var resumenGastos = new List<ResumenOperaciones>();
 
-            resumenGastos.AddRange(gastosData.Select(g => new ResumenOperaciones() {Fecha = g.Fecha,Gastos = g.Importe}));
+            resumenGastos.AddRange(gastosData.GroupBy(g => g.Fecha.Date).Select(g => new ResumenOperaciones() {Fecha = g.Key,Gastos = g.Sum(d => d.Importe)}));
 
             foreach (var c in comprasData)
             {
-                if (resumenGastos.Any(r => r.Fecha.Date.Date == c.Fecha))
+                if (resumenGastos.Any(r => r.Fecha.Year == c.Fecha.Year && r.Fecha.Month == c.Fecha.Month && r.Fecha.Day == c.Fecha.Day))
                 {
-                    resumenGastos.SingleOrDefault(r => r.Fecha.Date == c.Fecha.Date).Gastos += c.Importe;
+                    resumenGastos.SingleOrDefault(r => r.Fecha.Year == c.Fecha.Year && r.Fecha.Month == c.Fecha.Month && r.Fecha.Day == c.Fecha.Day).Gastos += c.Importe;
                 }
                 else
                 {
-                    resumenGastos.Add(new ResumenOperaciones() { Fecha = c.Fecha, Gastos = c.Importe});
+                    resumenGastos.Add(new ResumenOperaciones() { Fecha = c.Fecha.Date, Gastos = c.Importe});
                 } 
             }
 
@@ -146,7 +147,7 @@ namespace ErpMvc.Reportes
             {
                 if (data.Any(d => d.Fecha.Date == v.Fecha.Date))
                 {
-                    data.SingleOrDefault(d => d.Fecha.Date == v.Fecha.Date).Ingresos = v.Importe;
+                    data.SingleOrDefault(d => d.Fecha.Date == v.Fecha.Date).Ingresos += v.Importe;
                 }
                 else
                 {
