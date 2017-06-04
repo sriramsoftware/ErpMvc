@@ -1537,7 +1537,6 @@
     <Content Include="Views\Ventas\_ListaDeVentasPartial.cshtml" />
     <Content Include="Views\Reportes\Plantilla.cshtml" />
     <Content Include="Views\Reportes\ReportViewerPartial.cshtml" />
-    <Content Include="Views\Reportes\VehiculosEnPeriodo.cshtml" />
     <Content Include="Views\Reportes\OperacionesEnPeriodo.cshtml" />
     <Content Include="Views\Reportes\_VisitantePartial.cshtml" />
     <Content Include="Views\Trabajadores\_EliminarTrabajadorPartial.cshtml" />
@@ -1557,6 +1556,7 @@
     <Content Include="Views\Reportes\ComprasPersonalizado.cshtml" />
     <Content Include="Views\Reportes\_ListaDeComprasPartial.cshtml" />
     <Content Include="Views\Reportes\ResumenDeGanaciasDiario.cshtml" />
+    <Content Include="Views\Reportes\MovimientosDeProductos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />
