@@ -54,14 +54,14 @@
                     $scope.show = false;
                     var detalleNuevo = {};
                     var valido = true;
-                    if ($scope.newDetalle.Cantidad == null || $scope.newDetalle.ProductoId === "") {
+                    if ($scope.newDetalle.Cantidad == null || $scope.newDetalle.Producto.Id === "") {
                         $scope.error = "Debe insertar los datos del producto.";
                         $scope.tieneError = true;
                         valido = false;
                     }
 
                     if (valido && $scope.detalles.find(function (a) {
-                        if ($scope.newDetalle.ProductoId === a.ProductoId) {
+                        if ($scope.newDetalle.Producto.Id === a.Producto.Id) {
                             return true;
                     }
                         return false;

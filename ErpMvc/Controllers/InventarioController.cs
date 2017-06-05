@@ -7,11 +7,13 @@ using System.Web.Mvc;
 using AlmacenCore.Models;
 using CompraVentaBL;
 using ContabilidadCore.Models;
+using ErpMvc.Models;
 using ErpMvc.ViewModels;
 using Microsoft.AspNet.Identity;
 
 namespace ErpMvc.Controllers
 {
+    [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
     public class InventarioController : Controller
     {
         private DbContext _db;
@@ -101,28 +103,28 @@ namespace ErpMvc.Controllers
             return View();
         }
 
-        public ActionResult MermaDeAlmacen()
-        {
-            return View();
-        }
+        //public ActionResult MermaDeAlmacen()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        public ActionResult MermaDeAlmacen(ValeSalidaDeAlmacen vale)
-        {
-            if (ModelState.IsValid)
-            {
-                vale.UsuarioId = User.Identity.GetUserId();
-                if (!_almacenService.DarSalidaDeAlmacen(vale))
-                {
-                    TempData["error"] = "Error al dar salida";
-                }
-                else
-                {
-                    TempData["exito"] = "Salida efectuada correctamente";
-                }
-                return RedirectToAction("Almacen", "Inventario");
-            }
-            return View();
-        }
+        //[HttpPost]
+        //public ActionResult MermaDeAlmacen(ValeSalidaDeAlmacen vale)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        vale.UsuarioId = User.Identity.GetUserId();
+        //        if (!_almacenService.DarSalidaDeAlmacen(vale))
+        //        {
+        //            TempData["error"] = "Error al dar salida";
+        //        }
+        //        else
+        //        {
+        //            TempData["exito"] = "Salida efectuada correctamente";
+        //        }
+        //        return RedirectToAction("Almacen", "Inventario");
+        //    }
+        //    return View();
+        //}
     }
 }

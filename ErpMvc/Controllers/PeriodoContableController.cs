@@ -151,6 +151,7 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public JsonResult CerrarPeriodo(DesgloceEfectivoViewModel desgloceEfectivoViewModel, decimal importeAExtraer)
         {
             if (importeAExtraer >= 0)
@@ -235,6 +236,7 @@ namespace ErpMvc.Controllers
             return Json(new { result = false, mensaje = "No se puede cerrar, importe a extraer negativo" }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public JsonResult SePuedeCerrar(decimal importe)
         {
             var dia = _service.GetDiaContableActual();
@@ -259,6 +261,7 @@ namespace ErpMvc.Controllers
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult CerrarPeriodo()
         {
             ViewBag.DiaContable = _service.GetDiaContableActual();
@@ -289,6 +292,7 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult AbrirDia(DateTime? fecha)
         {
             if (fecha != null)

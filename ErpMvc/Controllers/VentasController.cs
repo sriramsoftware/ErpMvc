@@ -450,6 +450,10 @@ namespace ErpMvc.Controllers
             }
             venta.EstadoDeVenta = EstadoDeVenta.NoCobrada;
             venta.Importe = 0;
+            foreach (var menu in venta.Elaboraciones)
+            {
+                menu.ImporteTotal = 0;
+            }
             venta.Observaciones = observacion;
             if (_ventasService.GuardarCambios())
             {

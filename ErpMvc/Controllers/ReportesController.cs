@@ -15,7 +15,7 @@ using ErpMvc.ViewModels;
 
 namespace ErpMvc.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
     public class ReportesController : Controller
     {
         private PeriodoContableService _periodoContableService;
@@ -156,7 +156,80 @@ namespace ErpMvc.Controllers
             return View("VentasDeProducto", menus);
         }
 
+        public ActionResult MovimientosDeProductos()
+        {
+            ViewBag.ProductoId = new SelectList(_db.Set<ProductoConcreto>().ToList(),"Id","Producto.Nombre");
+            var lista = new List<string>() {"Almacen"};
+            lista.AddRange(_db.Set<CentroDeCosto>().Select(c => c.Nombre).ToList());
+            ViewBag.Lugar = new SelectList(lista);
+            return View();
+        }
 
+        [HttpPost]
+        public PartialViewResult MovimientosDeProductos(ParametrosMovProdViewModel parametros)
+        {
+            var fIni = parametros.FechaInicio.Date;
+            var fFin = parametros.FechaFin.Date.AddHours(23).AddMinutes(59);
+            if (parametros.Lugar == "Almacen")
+            {
+                var entradas =
+                    _db.Set<EntradaAlmacen>().Where(e => e.DiaContable.Fecha >= fIni && 
+                    e.DiaContable.Fecha <= fFin && e.ProductoId == parametros.ProductoId).ToList();
+                var salidas =
+                    _db.Set<DetalleSalidaAlmacen>()
+                        .Where(e => e.Vale.DiaContable.Fecha >= fIni && e.Vale.DiaContable.Fecha <= fFin && 
+                        e.Producto.ProductoId == parametros.ProductoId)
+                        .ToList();
+                var mermas =
+                    _db.Set<SalidaPorMerma>()
+                        .Where(e => e.DiaContable.Fecha >= fIni && e.DiaContable.Fecha <= fFin &&
+                        e.ExistenciaAlmacen.ProductoId == parametros.ProductoId)
+                        .ToList();
+
+                var result = entradas.Select(ent => new DetalleMovimientoProductoViewModel()
+                {
+                    Fecha = ent.Fecha, Lugar = ent.Almacen.Descripcion, TipoDeMovimiento = "Entrada Almacen", Cantidad = ent.Cantidad, Unidad = ent.Producto.UnidadDeMedida.Siglas, Usuario = ent.Usuario.UserName,
+                }).ToList();
+                result.AddRange(salidas.Select(sal => new DetalleMovimientoProductoViewModel()
+                {
+                    Fecha = sal.Vale.Fecha, Lugar = sal.Vale.CentroDeCosto.Nombre, TipoDeMovimiento = "Salida", Cantidad = -sal.Cantidad, Unidad = sal.Producto.Producto.UnidadDeMedida.Siglas, Usuario = sal.Vale.Usuario.UserName,
+                }));
+                result.AddRange(mermas.Select(merma => new DetalleMovimientoProductoViewModel()
+                {
+                    Fecha = merma.Fecha, Lugar = "Almacen", TipoDeMovimiento = "Merma", Cantidad = -merma.Cantidad, Unidad = merma.ExistenciaAlmacen.Producto.UnidadDeMedida.Siglas, Usuario = merma.Usuario.UserName,
+                }));
+                ViewBag.SaldoAnterior = (_db.Set<EntradaAlmacen>().Any(e => e.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId)?
+                    _db.Set<EntradaAlmacen>().Where(e => e.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad):0m) -
+                    (_db.Set<DetalleSalidaAlmacen>().Any(e => e.Vale.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId)?
+                    _db.Set<DetalleSalidaAlmacen>().Where(e => e.Vale.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad):0m) -
+                    (_db.Set<SalidaPorMerma>().Any(e => e.DiaContable.Fecha < fIni && e.ExistenciaAlmacen.ProductoId == parametros.ProductoId) ?
+                    _db.Set<SalidaPorMerma>().Where(e => e.DiaContable.Fecha < fIni && e.ExistenciaAlmacen.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad) : 0m);
+                return PartialView("_MovDeProductosPartial",result.OrderBy(r => r.Fecha));
+            }
+            else
+            {
+                var movimientos =
+                   _db.Set<MovimientoDeProducto>().Include(e => e.Tipo).Include(e => e.Usuario).Include(e => e.CentroDeCosto).Include(e => e.Producto).Include(e => e.Producto.UnidadDeMedida).Where(e => e.DiaContable.Fecha >= fIni &&
+                   e.DiaContable.Fecha <= fFin && e.ProductoId == parametros.ProductoId && e.CentroDeCosto.Nombre == parametros.Lugar).ToList();
+
+                var result = movimientos.Select(m => new DetalleMovimientoProductoViewModel()
+                {
+                    Fecha = m.Fecha,
+                    Lugar = m.CentroDeCosto.Nombre,
+                    TipoDeMovimiento = m.Tipo.Descripcion,
+                    Cantidad = m.Tipo.Factor * (m.Cantidad),
+                    Unidad = m.Producto.UnidadDeMedida.Siglas,
+                    Usuario = m.Usuario.UserName,
+                }).ToList();
+                
+                ViewBag.SaldoAnterior = (_db.Set<MovimientoDeProducto>().Any(e => e.DiaContable.Fecha < fIni &&
+                e.ProductoId == parametros.ProductoId && e.CentroDeCosto.Nombre == parametros.Lugar) ?
+                    _db.Set<MovimientoDeProducto>().Where(e => e.DiaContable.Fecha < fIni &&
+                e.ProductoId == parametros.ProductoId && e.CentroDeCosto.Nombre == parametros.Lugar).Sum(e => e.Cantidad * e.Tipo.Factor) : 0m);
+                return PartialView("_MovDeProductosPartial", result.OrderBy(r => r.Fecha));
+            }
+            return PartialView("_MovDeProductosPartial");
+        }
 
         public CierreViewModel ResumenCierre(int id)
         {

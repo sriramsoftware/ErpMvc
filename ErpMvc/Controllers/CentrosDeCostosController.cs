@@ -12,7 +12,7 @@ using ErpMvc.ViewModels;
 
 namespace ErpMvc.Controllers
 {
-    [Authorize(Roles = RolesMontin.Administrador)]
+    [Authorize]
     public class CentrosDeCostosController : Controller
     {
         private DbContext _db;
@@ -48,17 +48,20 @@ namespace ErpMvc.Controllers
         }
 
         // GET: CentrosDeCostos
+        [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult Index()
         {
             return View(_centroDeCostoService.CentrosDeCosto());
         }
 
+        [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult Agregar()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult Agregar(CentroDeCosto centroDeCosto)
         {
             if (_centroDeCostoService.AgregarCentroDeCosto(centroDeCosto))
@@ -69,6 +72,7 @@ namespace ErpMvc.Controllers
             return View(centroDeCosto);
         }
 
+        [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult Editar(int id)
         {
             var centro = _centroDeCostoService.CentrosDeCosto().Find(id);
@@ -76,6 +80,7 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult Editar(CentroDeCosto centroDeCosto)
         {
             if (_centroDeCostoService.ModificarCentroDeCosto(centroDeCosto))

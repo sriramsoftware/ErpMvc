@@ -436,6 +436,7 @@
     <Compile Include="ViewModels\MovimientoProductosViewModel.cs" />
     <Compile Include="ViewModels\ExtraccionDeCajaViewModel.cs" />
     <Compile Include="ViewModels\OperacionCajaViewModel.cs" />
+    <Compile Include="ViewModels\ParametrosMovProdViewModel.cs" />
     <Compile Include="ViewModels\ParametrosViewModel.cs" />
     <Compile Include="ViewModels\ProductoConcretoViewModel.cs" />
     <Compile Include="ViewModels\ProductoViewModel.cs" />
@@ -1557,6 +1558,7 @@
     <Content Include="Views\Reportes\_ListaDeComprasPartial.cshtml" />
     <Content Include="Views\Reportes\ResumenDeGanaciasDiario.cshtml" />
     <Content Include="Views\Reportes\MovimientosDeProductos.cshtml" />
+    <Content Include="Views\Reportes\_MovDeProductosPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />

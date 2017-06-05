@@ -30,6 +30,7 @@ namespace ErpMvc.Controllers
             _submayorService = new SubmayorService(context);
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Index()
         {
             
@@ -42,6 +43,7 @@ namespace ErpMvc.Controllers
             
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public PartialViewResult ResumenDeOperaciones(int id)
         {
             var diaContable = _periodoContableService.BuscarDiaContable(id);
@@ -88,6 +90,7 @@ namespace ErpMvc.Controllers
             return PartialView("_ResumenDeOperacionesPartial", operaciones);
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public PartialViewResult ResumenDeOperacionesContables(int id)
         {
             var operaciones = ResumenDeOperaciones(id, "Caja");
@@ -105,6 +108,7 @@ namespace ErpMvc.Controllers
             return PartialView("_ResumenDeOperacionesConteblesPartial", operaciones);
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult AgregarOperacion()
         {
             ViewBag.CuentaCreditoId = new SelectList(_db.Set<Cuenta>().ToList(),"Id","Nombre");
@@ -112,6 +116,7 @@ namespace ErpMvc.Controllers
             return View();
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public JsonResult Cuentas()
         {
             var cuentas = _db.Set<Cuenta>().ToList().Select(c => new {Id = c.Id, Nombre = c.Nombre});
@@ -120,6 +125,7 @@ namespace ErpMvc.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult AgregarOperacion(AsientoContableViewModel asiento)
         {
             if (ModelState.IsValid)
@@ -139,7 +145,7 @@ namespace ErpMvc.Controllers
             return View(asiento);
         }
 
-
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         private List<ResumenDeOperaciones> ResumenDeOperaciones(int diaContableId, string nombreCuenta)
         {
             var operaciones = new List<ResumenDeOperaciones>();
@@ -156,6 +162,7 @@ namespace ErpMvc.Controllers
             return operaciones;
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         private decimal CalculoImporte(ICollection<DenominacionesEnCierreDeCaja> denominaciones)
         {
             return denominaciones.Sum(d => (d.Cantidad*d.DenominacionDeMoneda.Valor));

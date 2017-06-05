@@ -11,6 +11,7 @@ using ErpMvc.ViewModels;
 
 namespace ErpMvc.Controllers
 {
+    [Authorize]
     public class InicioController : Controller
     {
         private DbContext _db;

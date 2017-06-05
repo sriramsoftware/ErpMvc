@@ -10,6 +10,7 @@ using VerificadorDeLicencia;
 
 namespace ErpMvc.Controllers
 {
+    [Authorize(Roles = RolesMontin.Administrador)]
     public class LicenciaController : Controller
     {
         private ErpContext _db = new ErpContext();
