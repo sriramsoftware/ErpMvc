@@ -11,7 +11,7 @@
     @Html.AntiForgeryToken()
     <hr />
     @Html.ValidationSummary()
-    <div id="compraController"  data-ng-controller="compraController">
+    <div id="compraController"  ng-controller="compraController">
         <div class="col-md-12">
             <div class="form-group">
                 @{
@@ -19,13 +19,20 @@
                 }
             </div>
             <div class="form-group">
-                @Html.LabelFor(m => m.EntidadId, "Tienda", new { @class = "col-md-4 control-label" })
+                @Html.LabelFor(m => m.EntidadId, "Tienda", new {@class = "col-md-4 control-label"})
                 <div class="col-md-8">
                     <select id="EntidadId" name="EntidadId" class="form-control" ng-model="entidad" ng-options="e.Nombre for e in entidades track by e.Id" chosen="">
                         <option></option>
                     </select>
                     <a class="btn btn-info" ng-click="agregarEntidadModal()"><i class="glyphicon glyphicon-plus-sign"></i></a>
                     @Html.ValidationMessageFor(m => m.EntidadId)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.TieneComprobante, new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    @Html.EditorFor(m => m.TieneComprobante, new { @class = "form-control datepicker" })
+                    @Html.ValidationMessageFor(m => m.TieneComprobante)
                 </div>
             </div>
             <div class="form-group">

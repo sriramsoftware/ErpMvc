@@ -1,0 +1,118 @@
+﻿@model ErpMvc.ViewModels.ParametrosMovProdViewModel
+
+@{
+    ViewBag.Tittle = "Mov de Prod";
+}
+
+@using (Ajax.BeginForm("MovimientosDeProductos", "Reportes", new AjaxOptions() { InsertionMode = InsertionMode.Replace, HttpMethod = "Post", UpdateTargetId = "resumen", OnSuccess = "completo" , OnBegin = "empezando", OnFailure = "fallido"}))
+{
+    @Html.AntiForgeryToken()
+    <div class="formpanel panel-default">
+        <div class="panel-heading">
+            <h3 class="text-center">Ver movimientos de productos en periodo</h3>
+        </div>
+        <div class="panel-body">
+            @*<p class="alert-success"><strong>Nota:</strong> Utilice los diferentes filtros de búsqueda para obtener la información que desee</p>*@
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaInicio, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FechaInicio)
+                        @Html.ValidationMessageFor(model => model.FechaInicio)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaFin, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FechaFin)
+                        @Html.ValidationMessageFor(model => model.FechaFin)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ProductoId, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("ProductoId", null, new { @class = "form-control select" })
+                        @Html.ValidationMessageFor(model => model.ProductoId)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Lugar, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("Lugar", null, new { @class = "form-control select" })
+                        @Html.ValidationMessageFor(model => model.Lugar)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="panel-footer text-right">
+            <div class="form-group">
+                <input type="submit" value="Generar reporte" class="btn btn-success"  id="reporte-btn"/>
+                <a class="btn btn-info" href="@Url.Action("Index","Inicio")">Cancelar</a>
+            </div>
+        </div>
+    </div>
+}
+
+<div id="resumen">
+
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/chosen.jquery.min.js"></script>
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".select").chosen();
+            $('#FechaInicio').val("");
+            $('#FechaFin').val("");
+
+        });
+
+        function completo() {
+            $('#reporte-btn').attr('disabled', false);
+            $('#resumen-mov-tabla').DataTable({
+                "lengthMenu": [[20, 25, 30, 50, 100, -1], [20, 25, 30, 50, 100, "Todos"]],
+                "language": {
+                    "paginate": {
+                        "first": "Primera",
+                        "previous": "Anterior",
+                        "next": "Siguiente",
+                        "last": "&Uacute;ltima"
+                    },
+                    "info": "Mostrando resultados del _START_ al _END_ de un total de _TOTAL_",
+                    "lengthMenu": "Mostrando _MENU_ resultados",
+                    "search": "Buscar: ",
+                    "infoEmpty": "Mostrando 0 resultados",
+                    "infoFiltered": "(filtrado de un total de _MAX_ resultados)",
+                    "sZeroRecords": "No se encontraron resultados con este criterio"
+                },
+                "pagingType": "full_numbers",
+                "order": [[0, "desc"]],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: 'Imprimir'
+                    }
+                ]
+            });
+        }
+
+        function empezando() {
+            $('#reporte-btn').attr('disabled', true);
+            $('#resumen').html("");
+        }
+
+        function fallido() {
+            $('#resumen').append("<p> No existe movimientos</p>");
+        }
+    </script>
+}
