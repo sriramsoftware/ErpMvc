@@ -54,6 +54,9 @@
             this.xrTableRow7 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell13 = new DevExpress.XtraReports.UI.XRTableCell();
             this.extracciones = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableRow8 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell9 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.extraccionCierre = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableRow9 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell17 = new DevExpress.XtraReports.UI.XRTableCell();
             this.efectivoCaja = new DevExpress.XtraReports.UI.XRTableCell();
@@ -74,6 +77,9 @@
             this.xrTableRow11 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell21 = new DevExpress.XtraReports.UI.XRTableCell();
             this.propina = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableRow10 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell10 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.totalPropinaPorciento = new DevExpress.XtraReports.UI.XRTableCell();
             this.PageHeader = new DevExpress.XtraReports.UI.PageHeaderBand();
             this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrTable1 = new DevExpress.XtraReports.UI.XRTable();
@@ -86,12 +92,9 @@
             this.xrTableRow3 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell2 = new DevExpress.XtraReports.UI.XRTableCell();
             this.totalCuc = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableRow8 = new DevExpress.XtraReports.UI.XRTableRow();
-            this.xrTableCell9 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.extraccionCierre = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableRow10 = new DevExpress.XtraReports.UI.XRTableRow();
-            this.xrTableCell10 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.totalPropinaPorciento = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableRow16 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell12 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.pagoTrab = new DevExpress.XtraReports.UI.XRTableCell();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).BeginInit();
@@ -187,7 +190,7 @@
             this.xrTable4,
             this.xrTable5,
             this.xrTable6});
-            this.ReportHeader.HeightF = 677.5F;
+            this.ReportHeader.HeightF = 693.3333F;
             this.ReportHeader.Name = "ReportHeader";
             // 
             // e
@@ -226,8 +229,9 @@
             this.xrTableRow6,
             this.xrTableRow7,
             this.xrTableRow8,
+            this.xrTableRow16,
             this.xrTableRow9});
-            this.xrTable4.SizeF = new System.Drawing.SizeF(628.3333F, 244F);
+            this.xrTable4.SizeF = new System.Drawing.SizeF(628.3333F, 284.6667F);
             this.xrTable4.StylePriority.UseBorders = false;
             this.xrTable4.StylePriority.UseFont = false;
             this.xrTable4.StylePriority.UseTextAlignment = false;
@@ -313,6 +317,26 @@
             this.extracciones.Text = "extracciones";
             this.extracciones.Weight = 0.9464861362222825D;
             // 
+            // xrTableRow8
+            // 
+            this.xrTableRow8.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.xrTableCell9,
+            this.extraccionCierre});
+            this.xrTableRow8.Name = "xrTableRow8";
+            this.xrTableRow8.Weight = 1D;
+            // 
+            // xrTableCell9
+            // 
+            this.xrTableCell9.Name = "xrTableCell9";
+            this.xrTableCell9.Text = "Extracción del cierre";
+            this.xrTableCell9.Weight = 1.5413902474502308D;
+            // 
+            // extraccionCierre
+            // 
+            this.extraccionCierre.Name = "extraccionCierre";
+            this.extraccionCierre.Text = "extraccionCierre";
+            this.extraccionCierre.Weight = 0.9464861362222825D;
+            // 
             // xrTableRow9
             // 
             this.xrTableRow9.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
@@ -337,7 +361,7 @@
             // 
             this.xrTable5.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
             this.xrTable5.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrTable5.LocationFloat = new DevExpress.Utils.PointFloat(0F, 416.6667F);
+            this.xrTable5.LocationFloat = new DevExpress.Utils.PointFloat(0F, 434.1666F);
             this.xrTable5.Name = "xrTable5";
             this.xrTable5.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow12,
@@ -434,7 +458,7 @@
             // 
             this.xrTable6.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
             this.xrTable6.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrTable6.LocationFloat = new DevExpress.Utils.PointFloat(0F, 587.5F);
+            this.xrTable6.LocationFloat = new DevExpress.Utils.PointFloat(0.0003242493F, 599.9999F);
             this.xrTable6.Name = "xrTable6";
             this.xrTable6.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow11,
@@ -465,6 +489,26 @@
             this.propina.Text = "xrTableCell10";
             this.propina.Weight = 0.93614178809314763D;
             // 
+            // xrTableRow10
+            // 
+            this.xrTableRow10.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.xrTableCell10,
+            this.totalPropinaPorciento});
+            this.xrTableRow10.Name = "xrTableRow10";
+            this.xrTableRow10.Weight = 1D;
+            // 
+            // xrTableCell10
+            // 
+            this.xrTableCell10.Name = "xrTableCell10";
+            this.xrTableCell10.Text = "Total propina y 10%";
+            this.xrTableCell10.Weight = 1.5517345955793658D;
+            // 
+            // totalPropinaPorciento
+            // 
+            this.totalPropinaPorciento.Name = "totalPropinaPorciento";
+            this.totalPropinaPorciento.Text = "totalPropinaPorciento";
+            this.totalPropinaPorciento.Weight = 0.93614178809314763D;
+            // 
             // PageHeader
             // 
             this.PageHeader.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
@@ -482,7 +526,7 @@
             this.xrLabel1.SizeF = new System.Drawing.SizeF(628.3334F, 50.5F);
             this.xrLabel1.StylePriority.UseFont = false;
             this.xrLabel1.StylePriority.UseTextAlignment = false;
-            this.xrLabel1.Text = "Efectivo en caja";
+            this.xrLabel1.Text = "Entregado a casa";
             this.xrLabel1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
             // xrTable1
@@ -569,45 +613,25 @@
             this.totalCuc.Text = "Valor";
             this.totalCuc.Weight = 0.45210109567358009D;
             // 
-            // xrTableRow8
+            // xrTableRow16
             // 
-            this.xrTableRow8.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.xrTableCell9,
-            this.extraccionCierre});
-            this.xrTableRow8.Name = "xrTableRow8";
-            this.xrTableRow8.Weight = 1D;
+            this.xrTableRow16.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.xrTableCell12,
+            this.pagoTrab});
+            this.xrTableRow16.Name = "xrTableRow16";
+            this.xrTableRow16.Weight = 1D;
             // 
-            // xrTableCell9
+            // xrTableCell12
             // 
-            this.xrTableCell9.Name = "xrTableCell9";
-            this.xrTableCell9.Text = "Extracción del cierre";
-            this.xrTableCell9.Weight = 1.5413902474502308D;
+            this.xrTableCell12.Name = "xrTableCell12";
+            this.xrTableCell12.Text = "Pago a trabajadores";
+            this.xrTableCell12.Weight = 1.5413902474502308D;
             // 
-            // extraccionCierre
+            // pagoTrab
             // 
-            this.extraccionCierre.Name = "extraccionCierre";
-            this.extraccionCierre.Text = "extraccionCierre";
-            this.extraccionCierre.Weight = 0.9464861362222825D;
-            // 
-            // xrTableRow10
-            // 
-            this.xrTableRow10.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.xrTableCell10,
-            this.totalPropinaPorciento});
-            this.xrTableRow10.Name = "xrTableRow10";
-            this.xrTableRow10.Weight = 1D;
-            // 
-            // xrTableCell10
-            // 
-            this.xrTableCell10.Name = "xrTableCell10";
-            this.xrTableCell10.Text = "Total propina y 10%";
-            this.xrTableCell10.Weight = 1.5517345955793658D;
-            // 
-            // totalPropinaPorciento
-            // 
-            this.totalPropinaPorciento.Name = "totalPropinaPorciento";
-            this.totalPropinaPorciento.Text = "totalPropinaPorciento";
-            this.totalPropinaPorciento.Weight = 0.93614178809314763D;
+            this.pagoTrab.Name = "pagoTrab";
+            this.pagoTrab.Text = "pagoTrab";
+            this.pagoTrab.Weight = 0.9464861362222825D;
             // 
             // Cierre
             // 
@@ -696,5 +720,8 @@
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow10;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell10;
         private DevExpress.XtraReports.UI.XRTableCell totalPropinaPorciento;
+        private DevExpress.XtraReports.UI.XRTableRow xrTableRow16;
+        private DevExpress.XtraReports.UI.XRTableCell xrTableCell12;
+        private DevExpress.XtraReports.UI.XRTableCell pagoTrab;
     }
 }

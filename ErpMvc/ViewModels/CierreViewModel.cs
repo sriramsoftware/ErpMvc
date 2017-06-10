@@ -22,6 +22,8 @@ namespace ErpMvc.ViewModels
 
         public decimal ExtraccionCierre { get; set; }
 
+        public decimal PagoTrabajadores { get; set; }
+
         public List<DenominacionesEnCierreDeCaja> Desgloce { get; set; }
 
         public CierreViewModel()

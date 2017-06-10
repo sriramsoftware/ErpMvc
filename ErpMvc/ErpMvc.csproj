@@ -423,6 +423,7 @@
       <DependentUpon>Inventario.cs</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="Utiles\DiaContableAttribute.cs" />
     <Compile Include="Utiles\LicenciaAttribute.cs" />
     <Compile Include="ViewModels\AsientoContableViewModel.cs" />
     <Compile Include="ViewModels\CierreViewModel.cs" />
@@ -1559,6 +1560,7 @@
     <Content Include="Views\Reportes\ResumenDeGanaciasDiario.cshtml" />
     <Content Include="Views\Reportes\MovimientosDeProductos.cshtml" />
     <Content Include="Views\Reportes\_MovDeProductosPartial.cshtml" />
+    <Content Include="Views\Reportes\ComprasConComprobante.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />

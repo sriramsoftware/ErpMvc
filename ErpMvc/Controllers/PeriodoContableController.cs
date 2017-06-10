@@ -61,7 +61,7 @@ namespace ErpMvc.Controllers
             var cierre = _db.Set<CierreDeCaja>().SingleOrDefault(c => c.DiaContableId == dia.Id);
             return PartialView("_DesgloseDeEfectivoCierrePartial", cierre.Desglose);
         }
-
+        
         public JsonResult ResumenEfectivoData(int diaId)
         {
             var dia = _service.BuscarDiaContable(diaId);
@@ -111,7 +111,7 @@ namespace ErpMvc.Controllers
                 : 0;
             var resumen = new
             {
-                EfectivoAnterior = efectivoAnterior,
+                EfectivoAnterior = 100,
                 Ventas = totalVentas,
                 VentasSinPorciento = ventasSinPorciento,
                 Depositos = depositos,
@@ -152,7 +152,7 @@ namespace ErpMvc.Controllers
 
         [HttpPost]
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        public JsonResult CerrarPeriodo(DesgloceEfectivoViewModel desgloceEfectivoViewModel, decimal importeAExtraer)
+        public JsonResult CerrarPeriodo(DesgloceEfectivoViewModel desgloceEfectivoViewModel, decimal importeAExtraer, decimal pagoTrabajadores)
         {
             if (importeAExtraer >= 0)
             {
@@ -163,8 +163,11 @@ namespace ErpMvc.Controllers
                 }
                 var cuentaCaja = _cuentasServices.FindCuentaByNombre("Caja");
                 var cuentaBanco = _cuentasServices.FindCuentaByNombre("Banco");
+                var cuentaGasto = _cuentasServices.FindCuentaByNombre("Gastos");
                 var result = _submayorService.AgregarOperacion(cuentaCaja.Id, cuentaBanco.Id, importeAExtraer, DateTime.Now, "Cierre del dia",
                     User.Identity.GetUserId());
+                result = _submayorService.AgregarOperacion(cuentaCaja.Id, cuentaGasto.Id, pagoTrabajadores, DateTime.Now, "Trabajadores : Pago al cierre",
+                   User.Identity.GetUserId());
                 if (result)
                 {
                     var caja = _db.Set<Caja>().FirstOrDefault();
@@ -288,6 +291,12 @@ namespace ErpMvc.Controllers
 
         public ActionResult AbrirDia()
         {
+            var fecha = DateTime.Now;
+            while (_service.BuscarDiaContable(fecha) != null)
+            {
+                fecha = fecha.AddDays(1);
+            }
+            ViewBag.Fecha = fecha;
             return View();
         }
 

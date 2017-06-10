@@ -45,8 +45,16 @@
                 <td id="caja" class="col-md-1 text-right">{{efectivo_a_dejar_en_caja | currency}}</td>
             </tr>
             <tr>
-                <td class="primary col-md-2">(=) Extracción Antes del Cierre</td>
+                <td class="primary col-md-2">(-) Pago a trabajadores</td>
+                <td id="pagoTrabajadores" class="col-md-1 text-right">{{pago_a_trabajadores | currency}}</td>
+            </tr>
+            <tr>
+                <td class="primary col-md-2">(=) Entregar a casa</td>
                 <td id="extraccion" class="col-md-1 text-right">{{efectivo_a_extraer | currency}}</td>
+            </tr>
+            <tr>
+                <td class="primary col-md-2">Desglose de efectivo</td>
+                <td id="desglose" class="col-md-1 text-right">{{desgloseEfectivo | currency}}</td>
             </tr>
         </table>
     </div>
@@ -82,6 +90,12 @@
                 <td class="primary col-md-2">Propinas</td>
                 <td class="col-md-1 text-right">
                     {{propinas | currency }}
+                </td>
+            </tr>
+            <tr>
+                <td class="primary col-md-2">Pago a trabajadores</td>
+                <td class="col-md-1 text-right">
+                    {{total_pago | currency }}
                 </td>
             </tr>
         </table>

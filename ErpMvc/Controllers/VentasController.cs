@@ -11,6 +11,7 @@ using CompraVentaCore.Models;
 using ContabilidadBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
+using ErpMvc.Utiles;
 using ErpMvc.ViewModels;
 using HumanResourcesCore.Models;
 using Microsoft.Ajax.Utilities;
@@ -31,8 +32,9 @@ namespace ErpMvc.Controllers
             _ventasService = new VentasService(context);
             _periodoContableService = new PeriodoContableService(context);
         }
-        
+
         // GET: Ventas
+        [DiaContable]
         public ActionResult Index()
         {
             var diaContable = _periodoContableService.GetDiaContableActual();
@@ -89,7 +91,7 @@ namespace ErpMvc.Controllers
             });
             return PartialView("_ConsumoPartial", consumo);
         }
-
+        [DiaContable]
         public ActionResult NuevaVenta()
         {
             ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre");
@@ -110,6 +112,7 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
+        [DiaContable]
         public ActionResult NuevaVenta(Venta venta)
         {
             if (User.IsInRole(RolesMontin.Vendedor))
@@ -153,6 +156,7 @@ namespace ErpMvc.Controllers
 
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [DiaContable]
         public ActionResult Editar(int id)
         {
             var venta = _ventasService.Ventas().Find(id);
@@ -169,6 +173,7 @@ namespace ErpMvc.Controllers
 
         [HttpPost]
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [DiaContable]
         public ActionResult Editar(Venta venta)
         {
             if (!User.IsInRole(RolesMontin.Administrador) && (venta.EstadoDeVenta == EstadoDeVenta.Facturada || venta.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || venta.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta))
@@ -205,6 +210,7 @@ namespace ErpMvc.Controllers
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         [HttpPost]
         [ActionName("Eliminar")]
+        [DiaContable]
         public ActionResult EliminarConfirmado(int id)
         {
             if (id == 0)

@@ -7,11 +7,13 @@ using System.Web.Mvc;
 using AlmacenCore.Models;
 using CompraVentaBL;
 using ErpMvc.Models;
+using ErpMvc.Utiles;
 using Microsoft.AspNet.Identity;
 
 namespace ErpMvc.Controllers
 {
     [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+    [DiaContable]
     public class AlmacenController : Controller
     {
         private DbContext _db;

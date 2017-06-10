@@ -94,7 +94,7 @@
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
             <p>
-                Dia contable: @ViewBag.DiaContable.Fecha.ToShortDateString()
+                Dia contable: @(ViewBag.DiaContable == null? ViewBag.DiaContable.Fecha.ToShortDateString():"")
             </p>
 
         </div>
@@ -151,14 +151,14 @@
     <script>
         $(document).ready(function() {
             $("#cierreDia").click(function() {
-                $.get('@Url.Action("VentasPendientes","PeriodoContable")', function(result) {
+                $("#modal").modal();
+                @*$.get('@Url.Action("VentasPendientes","PeriodoContable")', function(result) {
                     if (!result) {
                         $('#btn-cierre').hide();
                         $('#mensaje-cierre').html("No se puede cerrar porque existen comandas sin pagar");
                     } 
                     $("#modal").modal();
-                });
-                
+                });*@
             });
 
             Morris.Area({

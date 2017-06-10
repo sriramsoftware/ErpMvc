@@ -6,7 +6,7 @@
 <div ng-show="cerrando" class="row" ng-controller="cierreController">
     @Html.Partial("_ResumenDeEfectivoPartial")
 
-    <h3 class="text-center">EFECTIVO RESTANTE EN CAJA</h3>
+    <h3 class="text-center">EFECTIVO ENTREGADO A LA CASA</h3>
 
     @Html.Partial("_DesgloseEfectivoPartial")
     <div class="row">
@@ -54,17 +54,20 @@
                         $scope.ventas = result.data.Ventas;
                         $scope.ventas_sin_porciento = result.data.VentasSinPorciento;
                         $scope.ventas_con_porciento = $scope.ventas - $scope.ventas_sin_porciento;
-                        $scope.porciento = $scope.ventas_con_porciento * 0.1;
+                        $scope.porciento = $scope.ventas_con_porciento * 0.10;
                         $scope.extracciones = result.data.Extracciones;
                         $scope.depositos = result.data.Depositos;
                         $scope.propinas = result.data.Propinas;
+                        $scope.pago_a_trabajadores = $scope.porciento;
+                        $scope.total_pago = $scope.porciento + $scope.propinas;
                         $scope.efectivo_antes_cierre = $scope.efectivo_inicial+ $scope.ventas + $scope.depositos - $scope.extracciones;
-                        $scope.efectivo_a_dejar_en_caja = 0;
-                        $scope.efectivo_a_extraer = $scope.efectivo_antes_cierre - $scope.efectivo_a_dejar_en_caja;
+                        $scope.efectivo_a_dejar_en_caja = 100.00;
+                        $scope.efectivo_a_extraer = $scope.efectivo_antes_cierre - $scope.efectivo_a_dejar_en_caja - $scope.porciento;
                         $scope.centrosDeCosto = result.data.CentrosDeCosto;
+                        $scope.desgloseEfectivo = 0;
                     });
                 }
-
+                
                 $scope.fetchResumen();
 
                 $scope.urlDenominaciones = '@Url.Action("DenominacionesData","PeriodoContable")';
@@ -92,28 +95,24 @@
                         valorEnMonedaCuc += value.CantidadCuc * value.Valor;
                     });
 
-                    $scope.efectivo_a_dejar_en_caja = valorEnBilleteCuc + valorEnMonedaCuc + (valorEnBilleteCup / 24) + (valorEnMonedaCup / 24);
-                    $scope.efectivo_a_extraer = $scope.efectivo_antes_cierre - $scope.efectivo_a_dejar_en_caja;
+                    $scope.desgloseEfectivo = valorEnBilleteCuc + valorEnMonedaCuc + (valorEnBilleteCup / 24) + (valorEnMonedaCup / 24);
                 };
 
                 $scope.realizarCierre = function () {
-                    if ($scope.efectivo_a_extraer < 0) {
+                    if ($scope.desgloseEfectivo - $scope.efectivo_a_extraer > 0.5 || $scope.desgloseEfectivo - $scope.efectivo_a_extraer < -0.5) {
                         toastr.options = { "positionClass": "toast-bottom-right" };
-                        window.setTimeout(function () { toastr.error("Efectivo a extraer negativo no se puede cerrar"); }, 1000);
+                        window.setTimeout(function () { toastr.error("Diferencia de efectivo a extraer, no se puede cerrar"); }, 1000);
                     } else {
                         var desgloceEfectivoViewModel = {};
                         desgloceEfectivoViewModel.Billetes = $scope.billetes;
                         desgloceEfectivoViewModel.Monedas = $scope.monedas;
-                        desgloceEfectivoViewModel.importeAExtraer = $scope.efectivo_a_extraer;
+                        desgloceEfectivoViewModel.pagoTrabajadores = $scope.efectivo_antes_cierre - $scope.efectivo_a_dejar_en_caja - $scope.desgloseEfectivo;
+                        desgloceEfectivoViewModel.importeAExtraer = $scope.desgloseEfectivo;
                         $scope.cerrando = false;
                         $http.post('@Url.Action("CerrarPeriodo","PeriodoContable")', desgloceEfectivoViewModel).then(function (result) {
                             if (result.data.result) {
                                 ImprimirCierre(result.data.cierreId);
-                                $http.post('@Url.Action("CerrarSesion", "Seguridad")').then(function(result) {
-                                    window.location = '/Inicio/Index';
-                                }
-                                    );
-
+                                window.location = '/Inicio/Index';
                             } else {
                                 toastr.options = { "positionClass": "toast-bottom-right" };
                                 window.setTimeout(function () { toastr.error(result.data.mensaje); }, 1000);

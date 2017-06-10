@@ -28,7 +28,7 @@ namespace ErpMvc.Controllers
             _db = context;
             _cuentasServices = new CuentasServices(context);
             _submayorService = new SubmayorService(context);
-            _periodoContableService = new PeriodoContableService(context);     
+            _periodoContableService = new PeriodoContableService(context);
         }
 
         static Dictionary<string, XtraReport> reports = new Dictionary<string, XtraReport>();
@@ -49,9 +49,9 @@ namespace ErpMvc.Controllers
         public ActionResult Inventario()
         {
             var lista = new List<dynamic>();
-            lista.Add(new {Nombre = "Almacen"});
-            lista.AddRange(_db.Set<CentroDeCosto>().Select(c => new { Nombre = c.Nombre}));
-            ViewBag.OrigenId = new SelectList(lista,"Nombre","Nombre");
+            lista.Add(new { Nombre = "Almacen" });
+            lista.AddRange(_db.Set<CentroDeCosto>().Select(c => new { Nombre = c.Nombre }));
+            ViewBag.OrigenId = new SelectList(lista, "Nombre", "Nombre");
             return View();
         }
 
@@ -84,7 +84,7 @@ namespace ErpMvc.Controllers
         {
             var report = new ValeDeVenta(id);
             string random = System.IO.Path.GetRandomFileName().Replace(".", string.Empty);
-            
+
             reports.Add(random, report);
             ViewData["ReporteId"] = random;
             return View("Plantilla");
@@ -110,7 +110,7 @@ namespace ErpMvc.Controllers
         [HttpPost]
         public ActionResult Operaciones(ParametrosViewModel parametros)
         {
-            var report = new Operaciones(parametros.FechaInicio,parametros.FechaFin);
+            var report = new Operaciones(parametros.FechaInicio, parametros.FechaFin);
             string random = System.IO.Path.GetRandomFileName().Replace(".", string.Empty);
             reports.Add(random, report);
             ViewData["ReporteId"] = random;
@@ -158,8 +158,8 @@ namespace ErpMvc.Controllers
 
         public ActionResult MovimientosDeProductos()
         {
-            ViewBag.ProductoId = new SelectList(_db.Set<ProductoConcreto>().ToList(),"Id","Producto.Nombre");
-            var lista = new List<string>() {"Almacen"};
+            ViewBag.ProductoId = new SelectList(_db.Set<ProductoConcreto>().ToList(), "Id", "Producto.Nombre");
+            var lista = new List<string>() { "Almacen" };
             lista.AddRange(_db.Set<CentroDeCosto>().Select(c => c.Nombre).ToList());
             ViewBag.Lugar = new SelectList(lista);
             return View();
@@ -173,11 +173,11 @@ namespace ErpMvc.Controllers
             if (parametros.Lugar == "Almacen")
             {
                 var entradas =
-                    _db.Set<EntradaAlmacen>().Where(e => e.DiaContable.Fecha >= fIni && 
+                    _db.Set<EntradaAlmacen>().Where(e => e.DiaContable.Fecha >= fIni &&
                     e.DiaContable.Fecha <= fFin && e.ProductoId == parametros.ProductoId).ToList();
                 var salidas =
                     _db.Set<DetalleSalidaAlmacen>()
-                        .Where(e => e.Vale.DiaContable.Fecha >= fIni && e.Vale.DiaContable.Fecha <= fFin && 
+                        .Where(e => e.Vale.DiaContable.Fecha >= fIni && e.Vale.DiaContable.Fecha <= fFin &&
                         e.Producto.ProductoId == parametros.ProductoId)
                         .ToList();
                 var mermas =
@@ -188,23 +188,38 @@ namespace ErpMvc.Controllers
 
                 var result = entradas.Select(ent => new DetalleMovimientoProductoViewModel()
                 {
-                    Fecha = ent.Fecha, Lugar = ent.Almacen.Descripcion, TipoDeMovimiento = "Entrada Almacen", Cantidad = ent.Cantidad, Unidad = ent.Producto.UnidadDeMedida.Siglas, Usuario = ent.Usuario.UserName,
+                    Fecha = ent.Fecha,
+                    Lugar = ent.Almacen.Descripcion,
+                    TipoDeMovimiento = "Entrada Almacen",
+                    Cantidad = ent.Cantidad,
+                    Unidad = ent.Producto.UnidadDeMedida.Siglas,
+                    Usuario = ent.Usuario.UserName,
                 }).ToList();
                 result.AddRange(salidas.Select(sal => new DetalleMovimientoProductoViewModel()
                 {
-                    Fecha = sal.Vale.Fecha, Lugar = sal.Vale.CentroDeCosto.Nombre, TipoDeMovimiento = "Salida", Cantidad = -sal.Cantidad, Unidad = sal.Producto.Producto.UnidadDeMedida.Siglas, Usuario = sal.Vale.Usuario.UserName,
+                    Fecha = sal.Vale.Fecha,
+                    Lugar = sal.Vale.CentroDeCosto.Nombre,
+                    TipoDeMovimiento = "Salida",
+                    Cantidad = -sal.Cantidad,
+                    Unidad = sal.Producto.Producto.UnidadDeMedida.Siglas,
+                    Usuario = sal.Vale.Usuario.UserName,
                 }));
                 result.AddRange(mermas.Select(merma => new DetalleMovimientoProductoViewModel()
                 {
-                    Fecha = merma.Fecha, Lugar = "Almacen", TipoDeMovimiento = "Merma", Cantidad = -merma.Cantidad, Unidad = merma.ExistenciaAlmacen.Producto.UnidadDeMedida.Siglas, Usuario = merma.Usuario.UserName,
+                    Fecha = merma.Fecha,
+                    Lugar = "Almacen",
+                    TipoDeMovimiento = "Merma",
+                    Cantidad = -merma.Cantidad,
+                    Unidad = merma.ExistenciaAlmacen.Producto.UnidadDeMedida.Siglas,
+                    Usuario = merma.Usuario.UserName,
                 }));
-                ViewBag.SaldoAnterior = (_db.Set<EntradaAlmacen>().Any(e => e.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId)?
-                    _db.Set<EntradaAlmacen>().Where(e => e.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad):0m) -
-                    (_db.Set<DetalleSalidaAlmacen>().Any(e => e.Vale.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId)?
-                    _db.Set<DetalleSalidaAlmacen>().Where(e => e.Vale.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad):0m) -
+                ViewBag.SaldoAnterior = (_db.Set<EntradaAlmacen>().Any(e => e.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId) ?
+                    _db.Set<EntradaAlmacen>().Where(e => e.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad) : 0m) -
+                    (_db.Set<DetalleSalidaAlmacen>().Any(e => e.Vale.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId) ?
+                    _db.Set<DetalleSalidaAlmacen>().Where(e => e.Vale.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad) : 0m) -
                     (_db.Set<SalidaPorMerma>().Any(e => e.DiaContable.Fecha < fIni && e.ExistenciaAlmacen.ProductoId == parametros.ProductoId) ?
                     _db.Set<SalidaPorMerma>().Where(e => e.DiaContable.Fecha < fIni && e.ExistenciaAlmacen.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad) : 0m);
-                return PartialView("_MovDeProductosPartial",result.OrderBy(r => r.Fecha));
+                return PartialView("_MovDeProductosPartial", result.OrderBy(r => r.Fecha));
             }
             else
             {
@@ -221,7 +236,7 @@ namespace ErpMvc.Controllers
                     Unidad = m.Producto.UnidadDeMedida.Siglas,
                     Usuario = m.Usuario.UserName,
                 }).ToList();
-                
+
                 ViewBag.SaldoAnterior = (_db.Set<MovimientoDeProducto>().Any(e => e.DiaContable.Fecha < fIni &&
                 e.ProductoId == parametros.ProductoId && e.CentroDeCosto.Nombre == parametros.Lugar) ?
                     _db.Set<MovimientoDeProducto>().Where(e => e.DiaContable.Fecha < fIni &&
@@ -261,7 +276,11 @@ namespace ErpMvc.Controllers
 
             var extraccionCierre =
                 _cuentasServices.GetMovimientosDeCuenta("Caja")
-                .Where(m => m.Asiento.DiaContableId == dia.Id && (m.Asiento.Detalle.StartsWith("Cierre") )).Sum(m => m.Importe);
+                .Where(m => m.Asiento.DiaContableId == dia.Id && (m.Asiento.Detalle.StartsWith("Cierre"))).Sum(m => m.Importe);
+
+            var pagoTrabajadores =
+                            _cuentasServices.GetMovimientosDeCuenta("Caja")
+                            .Where(m => m.Asiento.DiaContableId == dia.Id && (m.Asiento.Detalle.StartsWith("Trabajadores"))).Sum(m => m.Importe);
 
             var depositos =
                 _cuentasServices.GetMovimientosDeCuenta("Caja")
@@ -282,13 +301,14 @@ namespace ErpMvc.Controllers
             var resumen = new CierreViewModel()
             {
                 Fecha = cierre.DiaContable.Fecha,
-                EfectivoAnterior = efectivoAnterior,
+                EfectivoAnterior = 100,
                 Ventas = totalVentas,
                 VentasSinPorciento = ventasSinPorciento,
                 Depositos = depositos,
                 Extracciones = extracciones,
                 Propinas = propinas,
                 ExtraccionCierre = extraccionCierre,
+                PagoTrabajadores = pagoTrabajadores,
                 Desgloce = cierre.Desglose.ToList()
                 //CentrosDeCosto = centrosDeCosto
             };

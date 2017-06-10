@@ -71,7 +71,7 @@
                     <div id="alert-vuelto" class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12 text-center alert alert-info">
                             El vuelto a devolverle al cliente es de <b id="vueltoCuc">{{ aDevolver | currency}} CUC</b>
-                            o de <b id="vueltoCup">{{ aDevolver * 24 | currency}} CUP</b>
+                            o de <b id="vueltoCup">{{ aDevolver * 25 | currency}} CUP</b>
                         </div>
                     </div>
                     <div class="row">
@@ -377,7 +377,7 @@
                 };
 
                 $scope.efectivoTotalUpdate = function () {
-                    $scope.efectivoTotal = ($scope.efectivoCuc * 1) + ($scope.efectivoCup / 24);
+                    $scope.efectivoTotal = ($scope.efectivoCuc * 1) + ($scope.efectivoCup / 25);
                     $scope.aDevolver = $scope.efectivoTotal - $scope.aCobrar;
                     if ($scope.aDevolver < 0) {
                         $scope.aDevolver = 0;
@@ -409,7 +409,7 @@
                 };
 
                 $scope.efectivoTotalUpdate = function () {
-                    $scope.efectivoTotal = ($scope.efectivoCuc * 1) + ($scope.efectivoCup / 24);
+                    $scope.efectivoTotal = ($scope.efectivoCuc * 1) + ($scope.efectivoCup / 25);
                     if ($scope.efectivoTotal > 0) {
                         $scope.propinaDisabled = false;
                     } else {

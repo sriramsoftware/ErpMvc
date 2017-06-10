@@ -8,11 +8,13 @@ using System.Web.Mvc;
 using ContabilidadBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
+using ErpMvc.Utiles;
 using Microsoft.AspNet.Identity;
 
 namespace ErpMvc.Controllers
 {
     [Authorize]
+    [DiaContable]
     public class OtrosGastosController : Controller
     {
         private DbContext _db;

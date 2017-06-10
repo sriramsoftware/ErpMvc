@@ -7,12 +7,14 @@ using System.Web.Mvc;
 using ContabilidadBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
+using ErpMvc.Utiles;
 using ErpMvc.ViewModels;
 using Microsoft.AspNet.Identity;
 
 namespace ErpMvc.Controllers
 {
     [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+    [DiaContable]
     public class CajaController : Controller
     {
         private DbContext _db;

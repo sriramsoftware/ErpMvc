@@ -91,20 +91,34 @@ namespace ErpMvc.Controllers
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        public ActionResult ResumenDeOperacionesContablesPorFecha(DateTime fecha)
+        {
+            var fIni = fecha.Date;
+            var fFin = fecha.Date.AddHours(23).AddMinutes(59);
+            var dia = _db.Set<DiaContable>().FirstOrDefault(d => d.Fecha >= fIni && d.Fecha <= fFin);
+            if (dia == null)
+            {
+                return PartialView("_ResumenDeOperacionesConteblesPartial");
+            }
+            return RedirectToAction("ResumenDeOperacionesContables", "Operaciones", new {Id = dia.Id});
+        }
+
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public PartialViewResult ResumenDeOperacionesContables(int id)
         {
             var operaciones = ResumenDeOperaciones(id, "Caja");
             var diaAnterior = _db.Set<DiaContable>().Find(id - 1);
-            if (diaAnterior == null)
-            {
-                ViewBag.ImporteAnterior = 0;
-            }
-            else
-            {
-                var cierre = _db.Set<CierreDeCaja>().SingleOrDefault(c => c.DiaContableId == diaAnterior.Id);
-                ViewBag.ImporteAnterior = CalculoImporte(cierre.Desglose);
+            //if (diaAnterior == null)
+            //{
+            //    ViewBag.ImporteAnterior = 0;
+            //}
+            //else
+            //{
+            //    var cierre = _db.Set<CierreDeCaja>().SingleOrDefault(c => c.DiaContableId == diaAnterior.Id);
+            //    ViewBag.ImporteAnterior = CalculoImporte(cierre.Desglose);
 
-            }
+            //}
+            ViewBag.ImporteAnterior = 100;
             return PartialView("_ResumenDeOperacionesConteblesPartial", operaciones);
         }
 

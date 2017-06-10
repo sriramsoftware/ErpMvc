@@ -8,6 +8,7 @@ using AlmacenCore.Models;
 using CompraVentaBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
+using ErpMvc.Utiles;
 using ErpMvc.ViewModels;
 using Microsoft.AspNet.Identity;
 
@@ -67,7 +68,7 @@ namespace ErpMvc.Controllers
 
             return PartialView("_ListaProductosPartial", existencias);
         }
-
+        [DiaContable]
         public ActionResult MoverEntreCentrosDeCosto()
         {
             ViewBag.OrigenId = new SelectList(_db.Set<CentroDeCosto>(), "Id","Nombre");
@@ -75,6 +76,7 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
+        [DiaContable]
         public ActionResult MoverEntreCentrosDeCosto(MovimientoProductosViewModel movimiento)
         {
             if (ModelState.IsValid)

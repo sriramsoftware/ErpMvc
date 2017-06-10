@@ -26,7 +26,8 @@ namespace ErpMvc.Reportes
             depositos.Text = String.Format("{0:C}", cierre.Depositos);
             extracciones.Text = String.Format("{0:C}", cierre.Extracciones);
             extraccionCierre.Text = String.Format("{0:C}", cierre.ExtraccionCierre);
-            efectivoCaja.Text = efectivoEnCaja;
+            pagoTrab.Text = String.Format("{0:C}", cierre.PagoTrabajadores);
+            efectivoCaja.Text = String.Format("{0:C}", 100);
 
             ventasTotales.Text = String.Format("{0:C}", cierre.Ventas);
             excentasPorciento.Text = String.Format("{0:C}", cierre.VentasSinPorciento);

@@ -10,11 +10,13 @@ using CompraVentaCore.Models;
 using ContabilidadBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
+using ErpMvc.Utiles;
 using Microsoft.AspNet.Identity;
 
 namespace ErpMvc.Controllers
 {
     [Authorize]
+    [DiaContable]
     public class ComprasController : Controller
     {
         private ComprasService _comprasService;

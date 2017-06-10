@@ -11,6 +11,7 @@ using AlmacenCore.Models;
 using CompraVentaCore.Models;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
+using ErpMvc.Utiles;
 using ErpMvc.ViewModels;
 using Microsoft.AspNet.Identity;
 
@@ -282,6 +283,7 @@ namespace ErpMvc.Controllers
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [DiaContable]
         public ActionResult TramitarSalida()
         {
             ViewBag.CentroDeCostoId = new SelectList(_centroCostoService.CentrosDeCosto(),"Id","Nombre");
@@ -290,6 +292,7 @@ namespace ErpMvc.Controllers
 
         [HttpPost]
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [DiaContable]
         public ActionResult TramitarSalida(Compra compra,int centroDeCostoId)
         {
             var usuario = User.Identity.GetUserId();
@@ -320,6 +323,7 @@ namespace ErpMvc.Controllers
 
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [DiaContable]
         public ActionResult MoverDeAlmacenACentroDeCosto()
         {
             return View();
@@ -327,6 +331,7 @@ namespace ErpMvc.Controllers
 
         [HttpPost]
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [DiaContable]
         public ActionResult MoverDeAlmacenACentroDeCosto(MovimientoProductosViewModel movimiento)
         {
             var usuario = User.Identity.GetUserId();
