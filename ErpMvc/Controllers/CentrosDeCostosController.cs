@@ -33,7 +33,7 @@ namespace ErpMvc.Controllers
         {
             return Json(_db.Set<ExistenciaCentroDeCosto>().Where(e => e.CentroDeCostoId == id).Select(e => new
             {
-                Id = e.ProductoId,
+                Id = e.Producto.ProductoId,
                 Nombre = e.Producto.Producto.Nombre,
                 Cantidad = e.Cantidad,
                 UnidadId = e.Producto.UnidadDeMedidaId,
