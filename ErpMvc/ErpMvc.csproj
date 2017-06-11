@@ -557,7 +557,6 @@
     <Content Include="Scripts\erp\menu.js" />
     <Content Include="Scripts\datatables.min.js" />
     <Content Include="Scripts\erp\movimientoProductoController.js" />
-    <Content Include="Scripts\erp\ventaAlCostoController.js" />
     <Content Include="Scripts\erp\ventasController.js" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular.min.js.map" />

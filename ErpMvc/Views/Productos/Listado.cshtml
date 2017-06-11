@@ -22,24 +22,24 @@
         {
             <tr>
                 <td class="col-md-5">
-                    
-                        <h4 class="title_insight">@String.Format("{0} ({1} {2})", item.Producto.Producto.Nombre, item.Producto.Cantidad, item.Producto.UnidadDeMedida.Siglas)</h4>
-                        <br />
-                        Grupo: @item.Producto.Producto.Grupo.Descripcion
-                        <br />
-                        Precio de Compra: @String.Format("{0:C}", item.Producto.PrecioDeVenta)
-                        <br />
-                        Precio promedio: @String.Format("{0:C}", item.Producto.PrecioUnitario * item.Producto.Cantidad)
-                        <br />
-                        @if (item.Producto.Producto.EsInventariable)
-                        {
-                            @:Este producto es inventariable
+
+                    <h4 class="title_insight">@String.Format("{0} ({1} {2})", item.Producto.Producto.Nombre, item.Producto.Cantidad, item.Producto.UnidadDeMedida.Siglas)</h4>
+                    <br />
+                    Grupo: @item.Producto.Producto.Grupo.Descripcion
+                    <br />
+                    Precio de Compra: @String.Format("{0:C}", item.Producto.PrecioDeVenta)
+                    <br />
+                    Precio promedio: @String.Format("{0:C}", item.Producto.PrecioUnitario * item.Producto.Cantidad)
+                    <br />
+                    @if (item.Producto.Producto.EsInventariable)
+                    {
+                        @:Este producto es inventariable
                     }
-                        else
-                        {
-                            @:Este producto no es inventariable
+                    else
+                    {
+                        @:Este producto no es inventariable
                     }
-                    
+
                 </td>
                 <td class="col-md-4 text-center">
                     <div class="row">
@@ -50,7 +50,7 @@
                             }
                             else
                             {
-                                @String.Format("{0} {1}, en {2} envases", item.Existencias.Sum(e => e.Cantidad), item.Producto.UnidadDeMedida.Siglas, Math.Round(item.Existencias.Sum(e => e.Cantidad)/item.Producto.Cantidad, 2))
+                                @String.Format("{0:0.###} {1}, en {2} envases", item.Existencias.Sum(e => e.Cantidad), item.Producto.UnidadDeMedida.Siglas, Math.Round(item.Existencias.Sum(e => e.Cantidad) / item.Producto.Cantidad, 2))
                             }
                         </label>
                     </div>
@@ -131,7 +131,7 @@
     <script>
         $(document).ready(function () {
             $('btn').tooltip();
-            
+
             $(document).on('shown.bs.modal', function (e) {
                 //$(e.target, '[autofocus]').focus();
                 $('#Nombre').focus();
