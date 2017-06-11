@@ -37,6 +37,23 @@ namespace ErpMvc.Controllers
             }), JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult ValesDeSalida()
+        {
+            return View(_db.Set<ValeSalidaDeAlmacen>().ToList().GroupBy(v => v.DiaContable).Select(v => 
+            new ValeSalidaDeAlmacen()
+            {
+                DiaContable = v.Key,
+                Productos = v.SelectMany(p => p.Productos).ToList()
+            })
+            .OrderByDescending(v => v.DiaContable.Fecha).ToList());
+        }
+
+        public ActionResult DetalleDeVale(int id)
+        {
+            return View(_db.Set<DetalleSalidaAlmacen>().Where(d => d.Vale.DiaContableId == id).OrderByDescending(v => v.Producto.Producto.Producto.Nombre).ToList());
+        }
+
+
         public ActionResult Mermas()
         {
             return View(_db.Set<SalidaPorMerma>().ToList());
@@ -71,7 +88,7 @@ namespace ErpMvc.Controllers
         public ActionResult DarSalidaPorMerma()
         {
             ViewBag.AlmacenId = _db.Set<Almacen>().FirstOrDefault().Id;
-            
+
             return View();
         }
 
