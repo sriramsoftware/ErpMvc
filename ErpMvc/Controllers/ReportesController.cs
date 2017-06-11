@@ -55,17 +55,34 @@ namespace ErpMvc.Controllers
             return View();
         }
 
-        public ActionResult ComprasPersonalizado()
+        public ActionResult ComprasConComprobante()
         {
+            ViewBag.Mes = new SelectList(new List<dynamic>()
+            {
+                new {Id = 1, Mes = "Enero"},
+                new {Id = 2, Mes = "Febrero"},
+                new {Id = 3, Mes = "Marzo"},
+                new {Id = 4, Mes = "Abril"},
+                new {Id = 5, Mes = "Mayo"},
+                new {Id = 6, Mes = "Junio"},
+                new {Id = 7, Mes = "Julio"},
+                new {Id = 8, Mes = "Agosto"},
+                new {Id = 9, Mes = "Septiembre"},
+                new {Id = 10, Mes = "Octubre"},
+                new {Id = 11, Mes = "Noviembre"},
+                new {Id = 12, Mes = "Diciembre"},
+            },"Id","Mes");
             return View();
         }
 
         [HttpPost]
-        public PartialViewResult ComprasPersonalizado(ParametrosViewModel parametros)
+        public ActionResult ComprasConComprobante(int mes)
         {
-            var compras =
-                _db.Set<Compra>().Where(c => c.Fecha >= parametros.FechaInicio && c.Fecha <= parametros.FechaFin);
-            return PartialView("_ListaDeComprasPartial", compras.ToList());
+            var report = new ComprasConComprobantes(mes, NombreMeses(mes));
+            string random = System.IO.Path.GetRandomFileName().Replace(".", string.Empty);
+            reports.Add(random, report);
+            ViewData["ReporteId"] = random;
+            return View("Plantilla");
         }
 
         [HttpPost]
@@ -313,6 +330,39 @@ namespace ErpMvc.Controllers
                 //CentrosDeCosto = centrosDeCosto
             };
             return resumen;
+        }
+
+        private string NombreMeses(int mes)
+        {
+            switch (mes)
+            {
+                case 1:
+                    return "Enero";
+                case 2:
+                    return "Febrero";
+                case 3:
+                    return "Marzo";
+                case 4:
+                    return "Abril";
+                case 5:
+                    return "Mayo";
+                case 6:
+                    return "Junio";
+                case 7:
+                    return "Julio";
+                case 8:
+                    return "Agosto";
+                case 9:
+                    return "Septiembre";
+                case 10:
+                    return "Octubre";
+                case 11:
+                    return "Noviembre";
+                case 12:
+                    return "Diciembre";
+
+            }
+            return "";
         }
 
     }
