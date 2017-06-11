@@ -370,7 +370,7 @@
                 };
 
                 $scope.efectivoTotalUpdate = function () {
-                    $scope.efectivoTotal = ($scope.efectivoCuc * 1) + ($scope.efectivoCup / 24);
+                    $scope.efectivoTotal = ($scope.efectivoCuc * 1) + ($scope.efectivoCup / 25);
                     $scope.aDevolver = $scope.efectivoTotal - $scope.aCobrar;
                     if ($scope.aDevolver < 0) {
                         $scope.aDevolver = 0;
@@ -402,7 +402,7 @@
                 };
 
                 $scope.efectivoTotalUpdate = function () {
-                    $scope.efectivoTotal = ($scope.efectivoCuc * 1) + ($scope.efectivoCup / 24);
+                    $scope.efectivoTotal = ($scope.efectivoCuc * 1) + ($scope.efectivoCup / 25);
                     if ($scope.efectivoTotal > 0) {
                         $scope.propinaDisabled = false;
                     } else {
