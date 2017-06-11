@@ -88,13 +88,13 @@
                         agregado.Cantidad = 1;
                         var precio = agregado.Precio * $scope.detalleActual.Cantidad;
                         $scope.importeTotal += precio;
-                        $scope.detalleActual.ImporteTotal += precio;
+                        $scope.detalleActual.ImporteTotal = ($scope.detalleActual.ImporteTotal * 1) +(precio * 1);
                         ag = agregado;
                         $scope.detalleActual.Agregados.push(agregado);
                     } else {
                         var precio = ag.Precio * $scope.detalleActual.Cantidad;
                         $scope.importeTotal += precio;
-                        $scope.detalleActual.ImporteTotal += precio;
+                        $scope.detalleActual.ImporteTotal = ($scope.detalleActual.ImporteTotal * 1) + (precio * 1);
                         ag.Cantidad++;
                     }
                     if ($scope.detalleActual.Id != undefined) {
@@ -105,7 +105,7 @@
                                 $scope.error = "Error al aumentar la cantidad del menu.";
                                 var precio = ag.Precio * $scope.detalleActual.Cantidad;
                                 $scope.importeTotal -= precio;
-                                $scope.detalleActual.ImporteTotal -= precio;
+                                $scope.detalleActual.ImporteTotal -= (precio * 1);
                                 ag.Cantidad--;
                                 $scope.tieneError = true;
                             }
@@ -123,7 +123,7 @@
                                 $scope.error = "No hay la cantidad de producto requerido para la cantidad seleccionada del menu.";
                                 var precio = ag.Precio * $scope.detalleActual.Cantidad;
                                 $scope.importeTotal -= precio;
-                                $scope.detalleActual.ImporteTotal -= precio;
+                                $scope.detalleActual.ImporteTotal -= (precio * 1);
                                 ag.Cantidad--;
                                 $scope.tieneError = true;
                             }
@@ -315,6 +315,13 @@
                         $scope.importeTotal -= detalle.ImporteTotal;
                         detalle.ImporteTotal = 0;
                     }
+                }
+
+                $scope.calculaImporteTotal = function () {
+                    $scope.importeTotal = 0.00;
+                    $scope.detallesVenta.forEach(function(a) {
+                        $scope.importeTotal += (a.ImporteTotal * 1);
+                    });
                 }
             }
 ]);

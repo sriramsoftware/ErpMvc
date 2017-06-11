@@ -99,6 +99,14 @@ namespace ErpMvc.Controllers
             return View();
         }
 
+        [DiaContable]
+        public ActionResult VentaAlCosto()
+        {
+            ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre");
+            ViewBag.VendedorId = new SelectList(_ventasService.Vendedores().Where(v => v.Estado == EstadoTrabajador.Activo), "Id", "NombreCompleto");
+            return View();
+        }
+
         [HttpPost]
         public ActionResult BuscarVentas(DateTime fecha)
         {
@@ -141,6 +149,11 @@ namespace ErpMvc.Controllers
             ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre");
             ViewBag.VendedorId = new SelectList(_ventasService.Vendedores(), "Id", "NombreCompleto");
             return View();
+        }
+
+        public PartialViewResult DetalleDeVentaAlCostoPartial()
+        {
+            return PartialView("_DetalleDeVentaAlCostoPartial");
         }
 
         public PartialViewResult DetalleDeVentaPartial()

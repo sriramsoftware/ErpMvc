@@ -557,6 +557,7 @@
     <Content Include="Scripts\erp\menu.js" />
     <Content Include="Scripts\datatables.min.js" />
     <Content Include="Scripts\erp\movimientoProductoController.js" />
+    <Content Include="Scripts\erp\ventaAlCostoController.js" />
     <Content Include="Scripts\erp\ventasController.js" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular.min.js.map" />
@@ -1569,6 +1570,8 @@
     <Content Include="Views\Reportes\ComprasConComprobante.cshtml" />
     <Content Include="Views\Almacen\ValesDeSalida.cshtml" />
     <Content Include="Views\Almacen\DetalleDeVale.cshtml" />
+    <Content Include="Views\Ventas\VentaAlCosto.cshtml" />
+    <Content Include="Views\Ventas\_DetalleDeVentaAlCostoPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />
