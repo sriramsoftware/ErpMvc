@@ -94,7 +94,7 @@
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
             <p>
-                Dia contable: @(ViewBag.DiaContable == null? ViewBag.DiaContable.Fecha.ToShortDateString():"")
+                Dia contable: @(ViewBag.DiaContable != null? ViewBag.DiaContable.Fecha.ToShortDateString():"")
             </p>
 
         </div>

@@ -30,7 +30,7 @@ namespace ErpMvc.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                ViewBag.DiaContable = _periodoContableService.GetDiaContableActual() != null? _periodoContableService.GetDiaContableActual():new DiaContable();
+                ViewBag.DiaContable = _periodoContableService.GetDiaContableActual() != null? _periodoContableService.GetDiaContableActual():null;
                 ViewBag.VentasDiarias = 0;
                 ViewBag.ImporteVentasDiarias = 0;
 
@@ -53,7 +53,7 @@ namespace ErpMvc.Controllers
                 var finanzas = new List<dynamic>();
                 var movimientos = _cuentasService.GetMovimientosDeCuenta("Gastos").Where(g => g.TipoDeOperacion == TipoDeOperacion.Debito).ToList();
                 movimientos.AddRange(_cuentasService.GetMovimientosDeCuenta("Caja").Where(g => g.TipoDeOperacion == TipoDeOperacion.Debito));
-
+                //todo: arreglar grafica que no funciona bien
                 finanzas.AddRange(movimientos.GroupBy(m => m.Asiento.DiaContable.Fecha.Date).Select(m => new
                 {
                     period = String.Format("{0:yyyy-MM-dd}", m.Key),

@@ -9,6 +9,8 @@ using CompraVentaCore.Models;
 using ContabilidadBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
+using ErpMvc.Reportes;
+using ErpMvc.Utiles;
 using ErpMvc.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -64,61 +66,8 @@ namespace ErpMvc.Controllers
         
         public JsonResult ResumenEfectivoData(int diaId)
         {
-            var dia = _service.BuscarDiaContable(diaId);
-            var cierreAnterior = _db.Set<CierreDeCaja>().OrderByDescending(d => d.DiaContable.Fecha).FirstOrDefault(d => d.DiaContable.Fecha < dia.Fecha);
-
-            var porcientos = _db.Set<PorcientoMenu>().ToList();
-            var efectivoAnterior = cierreAnterior != null ? cierreAnterior.Desglose.Sum(e => e.DenominacionDeMoneda.Valor * e.Cantidad) : 0;
-            var totalVentas = 0m;
-            var ventasSinPorciento = 0m;
-            dynamic centrosDeCosto = 0;
-            if (_db.Set<Venta>().Any(v => v.DiaContableId == dia.Id && (v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)))
-            {
-                var ventas = _db.Set<Venta>()
-                    .Where(
-                        v =>
-                            v.DiaContableId == dia.Id &&
-                            (v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo ||
-                             v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)).ToList();
-                totalVentas = ventas.Sum(v => v.Importe);
-                ventasSinPorciento = ventas.Sum(v => v.Elaboraciones.Where(e => porcientos.Any(p => p.ElaboracioId == e.ElaboracionId && !p.SeCalcula)).Sum(s => s.ImporteTotal)) + ventas.Where(v => v.Observaciones == "Venta al costo").Sum(v => v.Importe);
-                centrosDeCosto = ventas.GroupBy(v => v.PuntoDeVenta.CentroDeCosto).Select(v => new { v.Key.Nombre, Importe = v.Sum(s => s.Importe) }).ToList();
-            }
-
-            var extracciones =
-                _cuentasServices.GetMovimientosDeCuenta("Caja")
-                .Where(m => m.Asiento.DiaContableId == dia.Id && m.TipoDeOperacion == TipoDeOperacion.Credito && (m.Asiento.Detalle.StartsWith("Extracción") ||m.Asiento.Detalle.StartsWith("Pago") ||m.Asiento.Detalle.StartsWith("Compra"))).Sum(m => m.Importe);
-
-            var extraccionCierre =
-                _cuentasServices.GetMovimientosDeCuenta("Caja")
-                .Where(m => m.Asiento.DiaContableId == dia.Id && m.TipoDeOperacion == TipoDeOperacion.Credito && (m.Asiento.Detalle.StartsWith("Cierre"))).Sum(m => m.Importe);
-
-            var depositos =
-                _cuentasServices.GetMovimientosDeCuenta("Caja")
-                .Where(m => m.Asiento.DiaContableId == dia.Id && m.TipoDeOperacion == TipoDeOperacion.Debito && m.Asiento.Detalle.StartsWith("Deposito")).Sum(m => m.Importe);
-
-            //var compras = _db.Set<Compra>().Any(v => v.DiaContableId == dia.Id)
-            //    ? _db.Set<Compra>()
-            //        .Where(v => v.DiaContableId == dia.Id)
-            //        .Sum(c => c.Productos.Any() ? c.Productos.Sum(p => p.ImporteTotal) : 0.0m)
-            //    : 0;
-            //var gastos = _db.Set<OtrosGastos>().Any(v => v.DiaContableId == dia.Id)
-            //    ? _db.Set<OtrosGastos>().Where(v => v.DiaContableId == dia.Id).Sum(c => c.Importe)
-            //    : 0;
-
-            var propinas = _db.Set<Propina>().Any(v => v.Venta.DiaContableId == dia.Id)
-                ? _db.Set<Propina>().Where(v => v.Venta.DiaContableId == dia.Id).Sum(c => c.Importe)
-                : 0;
-            var resumen = new
-            {
-                EfectivoAnterior = 100,
-                Ventas = totalVentas,
-                VentasSinPorciento = ventasSinPorciento,
-                Depositos = depositos,
-                Extracciones = extracciones,
-                Propinas = propinas,
-                CentrosDeCosto = centrosDeCosto
-            };
+            var resumenCierre = new ResumenCierre(_db);
+            var resumen = resumenCierre.VerResumen(diaId);
             return Json(resumen, JsonRequestBehavior.AllowGet);
         }
 
@@ -228,7 +177,7 @@ namespace ErpMvc.Controllers
                     }
                     _service.CerrarDiaContable(cierre);
                     //HttpContext.GetOwinContext().Authentication.SignOut();
-                    return Json(new { result = true, cierreId = cierre.Id, mensaje = "Cierre correcto" }, JsonRequestBehavior.AllowGet);
+                    return Json(new { result = true, cierreId = cierre.DiaContableId, mensaje = "Cierre correcto" }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {

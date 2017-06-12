@@ -431,6 +431,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utiles\DiaContableAttribute.cs" />
     <Compile Include="Utiles\LicenciaAttribute.cs" />
+    <Compile Include="Utiles\ResumenCierre.cs" />
     <Compile Include="ViewModels\AsientoContableViewModel.cs" />
     <Compile Include="ViewModels\CierreViewModel.cs" />
     <Compile Include="ViewModels\ConsumoViewModel.cs" />
