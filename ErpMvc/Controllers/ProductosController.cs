@@ -75,19 +75,10 @@ namespace ErpMvc.Controllers
             var producto = _db.Set<ProductoConcreto>().Find(id);
             var entradasAlmacen = _db.Set<EntradaAlmacen>().Where(e => e.ProductoId == id);
             var salidasDeAlmacen = _db.Set<DetalleSalidaAlmacen>().Where(d => d.Producto.ProductoId == id);
+            var mermasDeAlmacen = _db.Set<SalidaPorMerma>().Where(d => d.ExistenciaAlmacen.Producto.ProductoId == id);
             var movimientos = _db.Set<MovimientoDeProducto>().Include(m => m.Tipo).Include(m => m.Usuario).Include(m => m.Producto).Where(m => m.ProductoId == id).ToList();
 
             var resumenMov = new List<DetalleMovimientoProductoViewModel>();
-            resumenMov.AddRange(entradasAlmacen.Select(e => new DetalleMovimientoProductoViewModel()
-            {
-                Fecha = e.DiaContable.Fecha,
-                Cantidad = e.Cantidad,
-                Usuario = e.Usuario.UserName,
-                Lugar = "Almacen",
-                TipoDeMovimiento = "Entrada",
-                Unidad = e.Producto.UnidadDeMedida.Siglas,
-                Detalle = ""
-            }));
 
             resumenMov.AddRange(salidasDeAlmacen.Select(s => new DetalleMovimientoProductoViewModel()
             {
@@ -100,6 +91,17 @@ namespace ErpMvc.Controllers
                 Detalle = "entrada a " + s.Vale.CentroDeCosto.Nombre
             }));
 
+            resumenMov.AddRange(entradasAlmacen.Select(e => new DetalleMovimientoProductoViewModel()
+            {
+                Fecha = e.DiaContable.Fecha,
+                Cantidad = e.Cantidad,
+                Usuario = e.Usuario.UserName,
+                Lugar = "Almacen",
+                TipoDeMovimiento = "Entrada",
+                Unidad = e.Producto.UnidadDeMedida.Siglas,
+                Detalle = ""
+            }));
+
             resumenMov.AddRange(movimientos.Select(s => new DetalleMovimientoProductoViewModel()
             {
                 Fecha = s.Fecha,
@@ -108,6 +110,17 @@ namespace ErpMvc.Controllers
                 Lugar = s.CentroDeCosto.Nombre,
                 TipoDeMovimiento = s.Tipo.Descripcion == TipoDeMovimientoConstantes.SalidaAProduccion?"Venta":s.Tipo.Descripcion,
                 Unidad = s.Producto.UnidadDeMedida.Siglas,
+                Detalle = ""
+            }));
+
+            resumenMov.AddRange(mermasDeAlmacen.Select(s => new DetalleMovimientoProductoViewModel()
+            {
+                Fecha = s.Fecha,
+                Cantidad = s.Cantidad,
+                Usuario = s.Usuario.UserName,
+                Lugar = "Almacen",
+                TipoDeMovimiento = "Merma",
+                Unidad = s.UnidadDeMedida.Siglas,
                 Detalle = ""
             }));
 
