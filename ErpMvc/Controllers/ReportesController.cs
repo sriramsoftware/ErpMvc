@@ -87,10 +87,9 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
-        public ActionResult Inventario(string origenId)
+        public ActionResult Inventario(string origenId,DateTime? fecha)
         {
-
-            var report = new Inventario(origenId);
+            var report = new Inventario(origenId, fecha);
             string random = System.IO.Path.GetRandomFileName().Replace(".", string.Empty);
             reports.Add(random, report);
             ViewData["ReporteId"] = random;
@@ -234,10 +233,10 @@ namespace ErpMvc.Controllers
                 }));
                 ViewBag.SaldoAnterior = (_db.Set<EntradaAlmacen>().Any(e => e.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId) ?
                     _db.Set<EntradaAlmacen>().Where(e => e.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad) : 0m) -
-                    (_db.Set<DetalleSalidaAlmacen>().Any(e => e.Vale.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId) ?
-                    _db.Set<DetalleSalidaAlmacen>().Where(e => e.Vale.DiaContable.Fecha < fIni && e.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad) : 0m) -
+                    (_db.Set<DetalleSalidaAlmacen>().Any(e => e.Vale.DiaContable.Fecha < fIni && e.Producto.ProductoId == parametros.ProductoId) ?
+                    _db.Set<DetalleSalidaAlmacen>().Where(e => e.Vale.DiaContable.Fecha < fIni && e.Producto.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad) : 0m) -
                     (_db.Set<SalidaPorMerma>().Any(e => e.DiaContable.Fecha < fIni && e.ExistenciaAlmacen.ProductoId == parametros.ProductoId) ?
-                    _db.Set<SalidaPorMerma>().Where(e => e.DiaContable.Fecha < fIni && e.ExistenciaAlmacen.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad) : 0m);
+                    _db.Set<SalidaPorMerma>().Where(e => e.DiaContable.Fecha < fIni && e.ExistenciaAlmacen.ProductoId == parametros.ProductoId).Sum(e => e.Cantidad * (e.ExistenciaAlmacen.Producto.UnidadDeMedida.FactorDeConversion / e.UnidadDeMedida.FactorDeConversion)) : 0m);
                 return PartialView("_MovDeProductosPartial", result.OrderBy(r => r.Fecha));
             }
             else

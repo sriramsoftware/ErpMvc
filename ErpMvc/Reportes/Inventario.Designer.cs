@@ -39,7 +39,6 @@
             this.BottomMargin = new DevExpress.XtraReports.UI.BottomMarginBand();
             this.ReportHeader = new DevExpress.XtraReports.UI.ReportHeaderBand();
             this.titulo_reporte = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrPictureBox1 = new DevExpress.XtraReports.UI.XRPictureBox();
             this.fecha_reporte = new DevExpress.XtraReports.UI.XRLabel();
             this.PageHeader = new DevExpress.XtraReports.UI.PageHeaderBand();
             this.xrTable1 = new DevExpress.XtraReports.UI.XRTable();
@@ -129,34 +128,25 @@
             // 
             this.ReportHeader.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.titulo_reporte,
-            this.xrPictureBox1,
             this.fecha_reporte});
-            this.ReportHeader.HeightF = 129.3333F;
+            this.ReportHeader.HeightF = 76.83329F;
             this.ReportHeader.Name = "ReportHeader";
             // 
             // titulo_reporte
             // 
             this.titulo_reporte.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold);
-            this.titulo_reporte.LocationFloat = new DevExpress.Utils.PointFloat(134.1667F, 77.99997F);
+            this.titulo_reporte.LocationFloat = new DevExpress.Utils.PointFloat(10F, 36.33331F);
             this.titulo_reporte.Name = "titulo_reporte";
             this.titulo_reporte.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.titulo_reporte.SizeF = new System.Drawing.SizeF(505.8333F, 23F);
+            this.titulo_reporte.SizeF = new System.Drawing.SizeF(630F, 23F);
             this.titulo_reporte.StylePriority.UseFont = false;
             this.titulo_reporte.StylePriority.UseTextAlignment = false;
             this.titulo_reporte.Text = "Listado de inventario";
             this.titulo_reporte.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
-            // xrPictureBox1
-            // 
-            this.xrPictureBox1.ImageUrl = "D:\\proyectos\\NET\\ErpMvc\\ErpMvc\\Content\\images\\logo.jpg";
-            this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(10F, 39.33331F);
-            this.xrPictureBox1.Name = "xrPictureBox1";
-            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(91.66666F, 71.66666F);
-            this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.StretchImage;
-            // 
             // fecha_reporte
             // 
-            this.fecha_reporte.LocationFloat = new DevExpress.Utils.PointFloat(445.0001F, 39.33331F);
+            this.fecha_reporte.LocationFloat = new DevExpress.Utils.PointFloat(445.0001F, 0F);
             this.fecha_reporte.Name = "fecha_reporte";
             this.fecha_reporte.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.fecha_reporte.SizeF = new System.Drawing.SizeF(194.9999F, 23F);
@@ -250,7 +240,6 @@
         private DevExpress.XtraReports.UI.XRTableCell valorCell;
         private DevExpress.XtraReports.UI.ReportHeaderBand ReportHeader;
         private DevExpress.XtraReports.UI.XRLabel titulo_reporte;
-        private DevExpress.XtraReports.UI.XRPictureBox xrPictureBox1;
         private DevExpress.XtraReports.UI.XRLabel fecha_reporte;
         private DevExpress.XtraReports.UI.PageHeaderBand PageHeader;
         private DevExpress.XtraReports.UI.XRTable xrTable1;

@@ -16,6 +16,14 @@
             @Html.ValidationMessage("OrigenId")
         </div>
     </div>
+
+    <div class="form-group">
+        @Html.Label("Fecha", "Fecha", new { @class = "col-md-4 control-label" })
+        <div class="col-md-8">
+            @Html.TextBox("Fecha", null, new { @class = "form-control datepicker" })
+            @Html.ValidationMessage("Fecha")
+        </div>
+    </div>
     <div class="form-group">
         <div class="col-md-offset-4 col-md-8">
            <input type="submit" class="btn btn-success" value="Ver reporte" />
