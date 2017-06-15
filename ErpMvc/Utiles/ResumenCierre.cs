@@ -53,7 +53,7 @@ namespace ErpMvc.Utiles
                         .Sum(
                             v =>
                                 v.Importe);
-                centrosDeCosto = ventas.GroupBy(v => v.PuntoDeVenta.CentroDeCosto).Select(v => new ResumenCentroCosto(){Nombre= v.Key.Nombre, Importe = v.Sum(s => s.Importe) }).ToList();
+                centrosDeCosto = ventas.SelectMany(vw => vw.Elaboraciones.GroupBy(e => e.Elaboracion.CentroDeCosto).Select(v => new ResumenCentroCosto() { Nombre = v.Key.Nombre, Importe = v.Sum(ve => ve.ImporteTotal) })).GroupBy(e => e.Nombre).Select(e => new ResumenCentroCosto() { Nombre = e.Key, Importe = e.Sum(s => s.Importe) }).ToList();
             }
 
             var extracciones =
