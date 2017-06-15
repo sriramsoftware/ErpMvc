@@ -325,10 +325,10 @@ namespace ErpMvc.Controllers
                 if (_centroCostoService.GuardarCambios())
                 {
                     TempData["exito"] = "Salida registrada correctamente";
-                    return RedirectToAction("Listado", "Productos");
+                    return RedirectToAction("CentroDeCosto", "Inventario");
                 }
                 TempData["error"] = "No se pudo registrar la salida correctamente";
-                return RedirectToAction("Listado", "Productos");
+                return RedirectToAction("CentroDeCosto", "Inventario");
             }
             ViewBag.CentroDeCostoId = new SelectList(_centroCostoService.CentrosDeCosto(), "Id", "Nombre",centroDeCostoId);
             return View(compra);

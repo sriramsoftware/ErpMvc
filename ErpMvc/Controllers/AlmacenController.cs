@@ -109,7 +109,7 @@ namespace ErpMvc.Controllers
             {
                 TempData["exito"] = "Salida efectuada correctamente";
             }
-            return RedirectToAction("Almacen", "Inventario");
+            return RedirectToAction("Mermas", "Almacen");
         }
 
         [HttpPost]
