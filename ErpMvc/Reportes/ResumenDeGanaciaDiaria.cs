@@ -50,6 +50,10 @@ namespace ErpMvc.Reportes
                         Costos = m.Sum(c => c.Costo)
                     });
 
+            //todo: incluir mermas de almacen como costos
+            var mermasAlmacen =
+                db.SalidasPorMermas.Where(c => c.DiaContable.Fecha >= fechaInicio && c.DiaContable.Fecha <= fechaFin);
+
             var data = ventas.SelectMany(v => v.Elaboraciones.GroupBy(e => e.Elaboracion.CentroDeCosto).Select(e => new
             {
                 CentroDeCosto = e.Key,
@@ -89,7 +93,7 @@ namespace ErpMvc.Reportes
             });
 
             var sumaVentas = data.Sum(d => d.Ventas);
-            var sumaCostos = data.Sum(d => d.Costo);
+            var sumaCostos = data.Sum(d => d.Costo);//+ mermasAlmacen.Sum(m => m.);
             var sumaGastos = otrosGastosData.Sum(d => d.Importe);
 
             totalVentas.Text = String.Format("{0:C}",sumaVentas);
