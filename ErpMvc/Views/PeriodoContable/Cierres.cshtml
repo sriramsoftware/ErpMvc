@@ -22,9 +22,13 @@
                 <td>
                     @{
                         var importe = 0m;
-                        foreach (var d in item.Desglose)
+                        foreach (var d in item.Desglose.Where(d => d.DenominacionDeMoneda.Moneda.Sigla == "CUC"))
                         {
                             importe += (d.Cantidad * d.DenominacionDeMoneda.Valor);
+                        }
+                        foreach (var d in item.Desglose.Where(d => d.DenominacionDeMoneda.Moneda.Sigla == "CUP"))
+                        {
+                            importe += (d.Cantidad * d.DenominacionDeMoneda.Valor) / 25;
                         }
                     }
                     @importe

@@ -19,8 +19,6 @@ namespace ErpMvc.Reportes
 
             titulo_reporte.Text = "Cierre        " + cierre.Fecha.ToShortDateString();
 
-            var efectivoEnCaja = String.Format("{0:C}", cierre.Desgloce.Sum(d => d.Cantidad * d.DenominacionDeMoneda.Valor));
-
             efectivoInicial.Text = String.Format("{0:C}", cierre.EfectivoAnterior);
             ventas.Text = String.Format("{0:C}", cierre.Ventas);
             depositos.Text = String.Format("{0:C}", cierre.Depositos);
@@ -38,24 +36,51 @@ namespace ErpMvc.Reportes
             propina.Text = String.Format("{0:C}", cierre.Propinas);
             totalPropinaPorciento.Text = String.Format("{0:C}", porCiento + cierre.Propinas);
 
+            var cuc =
+                cierre.Desgloce.Where(d => d.DenominacionDeMoneda.Moneda.Sigla == "CUC")
+                    .Sum(d => d.Cantidad*d.DenominacionDeMoneda.Valor);
 
-            DataSource = cierre.Desgloce.Select(d => new 
+            var cup =
+                cierre.Desgloce.Where(d => d.DenominacionDeMoneda.Moneda.Sigla == "CUP")
+                    .Sum(d => d.Cantidad * d.DenominacionDeMoneda.Valor);
+
+            CUCReport.DataSource = cierre.Desgloce.Where(d => d.DenominacionDeMoneda.Moneda.Sigla == "CUC").Select(d => new 
             {
                 Valor = d.DenominacionDeMoneda.Valor,
                 Cantidad = d.Cantidad,
                 Importe = d.Cantidad * d.DenominacionDeMoneda.Valor
             }).OrderByDescending(d => d.Valor);
 
-            this.denominacionCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
+            this.denominacionCuc.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
             new DevExpress.XtraReports.UI.XRBinding("Text", null, "Valor")});
 
-            this.cantidadCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
+            this.cantidadCuc.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
             new DevExpress.XtraReports.UI.XRBinding("Text", null, "Cantidad")});
 
-            this.importeCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
+            this.valorCuc.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
             new DevExpress.XtraReports.UI.XRBinding("Text", null, "Importe","{0:C}")});
 
-            totalCuc.Text = efectivoEnCaja;
+            totalCuc.Text = String.Format("{0:C}", cuc);
+
+            CUPReport.DataSource = cierre.Desgloce.Where(d => d.DenominacionDeMoneda.Moneda.Sigla == "CUP").Select(d => new
+            {
+                Valor = d.DenominacionDeMoneda.Valor,
+                Cantidad = d.Cantidad,
+                Importe = d.Cantidad * d.DenominacionDeMoneda.Valor
+            }).OrderByDescending(d => d.Valor);
+
+            this.denominacionCup.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
+            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Valor")});
+
+            this.cantidadCup.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
+            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Cantidad")});
+
+            this.valorCup.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
+            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Importe","{0:C}")});
+
+            totalCup.Text = String.Format("{0:C}", cup);
+            cupEnCucTotal.Text = String.Format("{0:C}", cup / 25);
+            totalConvertidoCuc.Text = String.Format("{0:C}", cuc +(cup / 25));
         }
 
     }

@@ -36,7 +36,7 @@ namespace ErpMvc.Controllers
 
         public ActionResult Cierres()
         {
-            var cierres = _db.Set<CierreDeCaja>().ToList();
+            var cierres = _db.Set<CierreDeCaja>().Include(c => c.Desglose).ToList();
             return View(cierres);
         }
         // GET: PeriodoContable

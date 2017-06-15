@@ -41,7 +41,7 @@ namespace ErpMvc.Utiles
                             (v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo ||
                              v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)).ToList();
                 totalVentas = ventas.Sum(v => v.Importe);
-                ventasSinPorciento = ventas.Sum(v => v.Elaboraciones.Where(e => porcientos.Any(p => p.ElaboracioId == e.ElaboracionId && !p.SeCalcula)).Sum(s => s.ImporteTotal)) + ventas.Where(v => v.Observaciones == "Venta al costo").Sum(v => v.Importe);
+                ventasSinPorciento = ventas.Sum(v => v.Elaboraciones.Where(e => porcientos.Any(p => p.ElaboracioId == e.ElaboracionId && !p.SeCalcula)).Sum(s => s.ImporteTotal)) + ventas.Where(v => v.Observaciones == "Venta al costo").Sum(v => v.Elaboraciones.Where(e => porcientos.Any(p => p.ElaboracioId == e.ElaboracionId && p.SeCalcula)).Sum(s => s.ImporteTotal));
                 centrosDeCosto = ventas.GroupBy(v => v.PuntoDeVenta.CentroDeCosto).Select(v => new { v.Key.Nombre, Importe = v.Sum(s => s.Importe) }).ToList();
             }
 
