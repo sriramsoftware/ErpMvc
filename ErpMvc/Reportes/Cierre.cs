@@ -21,6 +21,8 @@ namespace ErpMvc.Reportes
 
             efectivoInicial.Text = String.Format("{0:C}", cierre.EfectivoAnterior);
             ventas.Text = String.Format("{0:C}", cierre.Ventas);
+            barVentas.Text = String.Format("{0:C}", cierre.CentrosDeCosto.SingleOrDefault(d => d.Nombre == "Bar").Importe);
+            restaurantVentas.Text = String.Format("{0:C}", cierre.CentrosDeCosto.SingleOrDefault(d => d.Nombre == "Restaurant").Importe);
             depositos.Text = String.Format("{0:C}", cierre.Depositos);
             extracciones.Text = String.Format("{0:C}", cierre.Extracciones);
             extraccionCierre.Text = String.Format("{0:C}", cierre.ExtraccionCierre);
@@ -29,8 +31,9 @@ namespace ErpMvc.Reportes
 
             ventasTotales.Text = String.Format("{0:C}", cierre.Ventas);
             excentasPorciento.Text = String.Format("{0:C}", cierre.VentasSinPorciento);
-            calculaPorciento.Text = String.Format("{0:C}", cierre.Ventas - cierre.VentasSinPorciento);
-            var porCiento = (cierre.Ventas - cierre.VentasSinPorciento) * 0.1m;
+            ventasAlCosto.Text = String.Format("{0:C}", cierre.VentasAlCosto);
+            calculaPorciento.Text = String.Format("{0:C}", cierre.SeLeCalculaPorciento);
+            var porCiento = cierre.Porciento;
             porciento.Text = String.Format("{0:C}", porCiento);
 
             propina.Text = String.Format("{0:C}", cierre.Propinas);

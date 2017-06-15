@@ -53,8 +53,9 @@
                         $scope.efectivo_inicial = result.data.EfectivoAnterior;
                         $scope.ventas = result.data.Ventas;
                         $scope.ventas_sin_porciento = result.data.VentasSinPorciento;
-                        $scope.ventas_con_porciento = $scope.ventas - $scope.ventas_sin_porciento;
-                        $scope.porciento = $scope.ventas_con_porciento * 0.10;
+                        $scope.ventas_al_costo = result.data.VentasAlCosto;
+                        $scope.ventas_con_porciento = result.data.SeLeCalculaPorciento;
+                        $scope.porciento = result.data.Porciento;
                         $scope.extracciones = result.data.Extracciones;
                         $scope.depositos = result.data.Depositos;
                         $scope.propinas = result.data.Propinas;

@@ -31,6 +31,7 @@ namespace ErpMvc.Utiles
             
             var totalVentas = 0m;
             var ventasSinPorciento = 0m;
+            var ventasAlCosto = 0m;
             dynamic centrosDeCosto = 0;
             if (_db.Set<Venta>().Any(v => v.DiaContableId == dia.Id && (v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)))
             {
@@ -41,8 +42,18 @@ namespace ErpMvc.Utiles
                             (v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo ||
                              v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)).ToList();
                 totalVentas = ventas.Sum(v => v.Importe);
-                ventasSinPorciento = ventas.Sum(v => v.Elaboraciones.Where(e => porcientos.Any(p => p.ElaboracioId == e.ElaboracionId && !p.SeCalcula)).Sum(s => s.ImporteTotal)) + ventas.Where(v => v.Observaciones == "Venta al costo").Sum(v => v.Elaboraciones.Where(e => porcientos.Any(p => p.ElaboracioId == e.ElaboracionId && p.SeCalcula)).Sum(s => s.ImporteTotal));
-                centrosDeCosto = ventas.GroupBy(v => v.PuntoDeVenta.CentroDeCosto).Select(v => new { v.Key.Nombre, Importe = v.Sum(s => s.Importe) }).ToList();
+                ventasSinPorciento =
+                    ventas.Sum(
+                        v =>
+                            v.Elaboraciones.Where(
+                                e => porcientos.Any(p => p.ElaboracioId == e.ElaboracionId && !p.SeCalcula) && e.Venta.Observaciones != "Venta al costo")
+                                .Sum(s => s.ImporteTotal));
+                ventasAlCosto =
+                    ventas.Where(v => v.Observaciones == "Venta al costo")
+                        .Sum(
+                            v =>
+                                v.Importe);
+                centrosDeCosto = ventas.GroupBy(v => v.PuntoDeVenta.CentroDeCosto).Select(v => new ResumenCentroCosto(){Nombre= v.Key.Nombre, Importe = v.Sum(s => s.Importe) }).ToList();
             }
 
             var extracciones =
@@ -70,13 +81,14 @@ namespace ErpMvc.Utiles
                 EfectivoAnterior = 100,
                 Ventas = totalVentas,
                 VentasSinPorciento = ventasSinPorciento,
+                VentasAlCosto = ventasAlCosto,
                 Depositos = depositos,
                 Extracciones = extracciones,
                 Propinas = propinas,
                 ExtraccionCierre = extraccionCierre,
                 PagoTrabajadores = pagoTrabajadores,
-                Desgloce = cierre != null? cierre.Desglose.ToList() : null
-                //CentrosDeCosto = centrosDeCosto
+                Desgloce = cierre != null? cierre.Desglose.ToList() : null,
+                CentrosDeCosto = centrosDeCosto
             };
             return resumen;
         }
