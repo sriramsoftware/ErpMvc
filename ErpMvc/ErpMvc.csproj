@@ -60,8 +60,8 @@
       <HintPath>..\packages\CompraVentaBL.1.23.13\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaCore, Version=1.12.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaCore.1.12.1\lib\net45\CompraVentaCore.dll</HintPath>
+    <Reference Include="CompraVentaCore, Version=1.12.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaCore.1.12.2\lib\net45\CompraVentaCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ContabilidadBL, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -1572,6 +1572,9 @@
     <Content Include="Views\Almacen\DetalleDeVale.cshtml" />
     <Content Include="Views\Ventas\VentaAlCosto.cshtml" />
     <Content Include="Views\Ventas\_DetalleDeVentaAlCostoPartial.cshtml" />
+    <Content Include="Views\Reportes\VentasCuentaCasa.cshtml" />
+    <Content Include="Views\Reportes\VentasAlCosto.cshtml" />
+    <Content Include="Views\Ventas\_MenusCuentaCasaPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />

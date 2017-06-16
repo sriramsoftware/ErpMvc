@@ -2,7 +2,7 @@
 @model IEnumerable<CompraVentaCore.Models.Venta>
 
 @{
-    ViewBag.Title = "Ventas";
+    ViewBag.Title = "Ventas por cuenta casa";
 }
 
 <div class="row">
@@ -25,7 +25,7 @@
 
 <div id="ventas-div">
     @{
-        Html.RenderAction("ListaDeVentasPorFechaPartial", "Ventas", new { Fecha = DateTime.Now });
+        Html.RenderAction("ListaDeVentasCuentaCasaPartial", "Ventas", new { Fecha = DateTime.Now });
     }
 </div>
 
@@ -35,25 +35,24 @@
 {
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 text-left">
-            <p class="parrafo_derecha"><i class="glyphicon glyphicon-usd icono_derecha"></i>&nbsp;Ventas</p>
+            <p class="parrafo_derecha"><i class="glyphicon glyphicon-usd icono_derecha"></i>&nbsp;@ViewBag.Title</p>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
-            <p>Observe las ventas registradas en la fecha contable actual y sus menús asociados</p>
-            <p>En esta fecha se han registrado un total de @ViewBag.CantidadDeVentas ventas.</p>
+            <p>Menus cuenta casa</p>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-            <a href="@Url.Action("VentasAlCosto")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Ventas al costo</a>
-        </div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+        <a href="@Url.Action("Ventas")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Ventas</a>
     </div>
-    <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-            <a href="@Url.Action("VentasCuentaCasa")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Ventas cuenta casa</a>
-        </div>
-    </div>    
+</div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+        <a href="@Url.Action("VentasAlCosto")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Ventas al costo</a>
+    </div>
+</div>
 }
 
 <!-- MODAL AGREGAR MENU -->
@@ -116,7 +115,7 @@
                 console.log("cambio de fecha");
                 var fecha = $("#date").val();
                 $.ajax({
-                    url: "@Url.Action("BuscarVentas", "Ventas")",
+                    url: "@Url.Action("BuscarVentasCuentaCasa", "Ventas")",
                     type: "POST",
                     data: { fecha: fecha },
                     dataType: "html",
@@ -127,21 +126,7 @@
                     error: function (data) { }
                 });
             });
-
-            $(document).on('click', ".print-vale-btn", function () {
-                var id = $(this).attr("data-id");
-                ImprimirVenta(id);
-            });
+     
         });
-
-        function mostrarModal() {
-            $("#modal").modal('show');
-        }
-
-        function ImprimirVenta(id) {
-            var w = window.open("/Reportes/ValeDeVenta/" + id);
-            $("#modalImprimirVenta").modal('hide');
-        }
-
     </script>
 }

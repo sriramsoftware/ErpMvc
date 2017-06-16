@@ -77,6 +77,24 @@ namespace ErpMvc.Controllers
             return PartialView("_ListaDeVentasSoloVerPartial", ventas);
         }
 
+        public PartialViewResult ListaDeVentasCuentaCasaPartial(DateTime fecha)
+        {
+            var fIni = fecha.Date;
+            var fFin = fecha.Date.AddHours(23).AddMinutes(59);
+            var cuentaCasa = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin).SelectMany(v => v.Elaboraciones.Where(e => e.ImporteTotal == 0)).OrderByDescending(v => v.VentaId).ToList();
+            return PartialView("_MenusCuentaCasaPartial", cuentaCasa);
+        }
+
+        public PartialViewResult ListaDeVentasAlCostoPartial(DateTime fecha)
+        {
+            var fIni = fecha.Date;
+            var fFin = fecha.Date.AddHours(23).AddMinutes(59);
+            ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContable.Fecha >= fIni && p.Venta.DiaContable.Fecha <= fFin).ToList();
+            var ventas = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin && v.Observaciones == "Venta al costo").OrderByDescending(v => v.Fecha).ToList();
+            ViewBag.CantidadDeVentas = ventas.Count();
+            return PartialView("_ListaDeVentasSoloVerPartial", ventas);
+        }
+
         public PartialViewResult ConsumoPorFechaPartial(DateTime fecha)
         {
             var fIni = fecha.Date;
@@ -110,13 +128,19 @@ namespace ErpMvc.Controllers
         [HttpPost]
         public ActionResult BuscarVentas(DateTime fecha)
         {
-            //var diaContable = _periodoContableService.BuscarDiaContable(fecha);
-            //if (diaContable == null)
-            //{
-            //    return RedirectToAction("ListaDeVentasPartial", new { Id = -1 });
-            //}
-            //return RedirectToAction("ListaDeVentasPartial", new { Id = diaContable.Id });
             return RedirectToAction("ListaDeVentasPorFechaPartial", new {Fecha = fecha});
+        }
+
+        [HttpPost]
+        public ActionResult BuscarVentasAlCosto(DateTime fecha)
+        {
+            return RedirectToAction("ListaDeVentasAlCostoPartial", new { Fecha = fecha });
+        }
+
+        [HttpPost]
+        public ActionResult BuscarVentasCuentaCasa(DateTime fecha)
+        {
+            return RedirectToAction("ListaDeVentasCuentaCasaPartial", new { Fecha = fecha });
         }
 
         [HttpPost]

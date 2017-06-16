@@ -155,6 +155,16 @@ namespace ErpMvc.Controllers
             return View();
         }
 
+        public ActionResult VentasAlCosto()
+        {
+            return View();
+        }
+
+        public ActionResult VentasCuentaCasa()
+        {
+            return View();
+        }
+
         public ActionResult Consumo()
         {
             return View();
