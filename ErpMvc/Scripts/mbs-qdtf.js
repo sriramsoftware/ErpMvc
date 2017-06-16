@@ -21,10 +21,15 @@
  * For details please refer to: http://www.datatables.net
  */
 
-var colums = $('.dynamic thead th').length;
+
 $(document).ready(function () {
-    var dynamicTable = $(".dynamic").DataTable({
-        "lengthMenu": [ [20, 25, 30, 50, 100, -1], [20, 25, 30, 50, 100, "Todos"] ],
+    declareDatatable('.dynamic');
+});
+
+function declareDatatable(tableclass) {
+    var colums = $(tableclass + ' thead th').length;
+    var dynamicTable = $(tableclass).DataTable({
+        "lengthMenu": [[20, 25, 30, 50, 100, -1], [20, 25, 30, 50, 100, "Todos"]],
         "language": {
             "paginate": {
                 "first": "Primera",
@@ -43,7 +48,7 @@ $(document).ready(function () {
         "columnDefs": [
             { "orderable": false, "targets": colums - 1 }
         ],
-        "order": [[ 0, "desc" ]],
+        "order": [[0, "desc"]],
         dom: 'Bfrtip',
         buttons: [
             {
@@ -52,10 +57,10 @@ $(document).ready(function () {
             }
         ]
     });
-    dynamicTable.on('draw', function() {
+    dynamicTable.on('draw', function () {
         var body = $(dynamicTable.table().body());
 
         body.unhighlight();
         body.highlight(dynamicTable.search());
     });
-});
+}

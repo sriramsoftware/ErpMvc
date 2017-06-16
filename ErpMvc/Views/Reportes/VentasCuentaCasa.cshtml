@@ -121,7 +121,7 @@
                     dataType: "html",
                     success: function (data) {
                         $("#ventas-div").html(data);
-                        funcionesMenu();
+                        declareDatatable('.dynamic');
                     },
                     error: function (data) { }
                 });
