@@ -36,6 +36,17 @@
             DevExpress.DataAccess.Sql.TableInfo tableInfo2 = new DevExpress.DataAccess.Sql.TableInfo();
             DevExpress.DataAccess.Sql.ColumnInfo columnInfo2 = new DevExpress.DataAccess.Sql.ColumnInfo();
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
+            this.centroDeCosto = new DevExpress.XtraReports.UI.XRLabel();
+            this.xrTable4 = new DevExpress.XtraReports.UI.XRTable();
+            this.xrTableRow7 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell7 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.ventasCc = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableRow1 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell1 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.gastoConsumoCc = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableRow2 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell2 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.ganacia = new DevExpress.XtraReports.UI.XRTableCell();
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
             this.BottomMargin = new DevExpress.XtraReports.UI.BottomMarginBand();
             this.ReportHeader = new DevExpress.XtraReports.UI.ReportHeaderBand();
@@ -44,18 +55,6 @@
             this.titulo_reporte = new DevExpress.XtraReports.UI.XRLabel();
             this.PageHeader = new DevExpress.XtraReports.UI.PageHeaderBand();
             this.ReportFooter = new DevExpress.XtraReports.UI.ReportFooterBand();
-            this.sqlDataSource1 = new DevExpress.DataAccess.Sql.SqlDataSource("DefaultConnection");
-            this.centroDeCosto = new DevExpress.XtraReports.UI.XRLabel();
-            this.ventasCc = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCell7 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableRow7 = new DevExpress.XtraReports.UI.XRTableRow();
-            this.xrTable4 = new DevExpress.XtraReports.UI.XRTable();
-            this.xrTableRow1 = new DevExpress.XtraReports.UI.XRTableRow();
-            this.xrTableCell1 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.gastoConsumoCc = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableRow2 = new DevExpress.XtraReports.UI.XRTableRow();
-            this.xrTableCell2 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.ganacia = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTable1 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow3 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell3 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -69,6 +68,10 @@
             this.xrTableRow6 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell10 = new DevExpress.XtraReports.UI.XRTableCell();
             this.totalGanancias = new DevExpress.XtraReports.UI.XRTableCell();
+            this.sqlDataSource1 = new DevExpress.DataAccess.Sql.SqlDataSource("DefaultConnection");
+            this.xrTableRow8 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell4 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.pagoTrabajadores = new DevExpress.XtraReports.UI.XRTableCell();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
@@ -82,6 +85,104 @@
             this.Detail.Name = "Detail";
             this.Detail.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.Detail.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
+            // 
+            // centroDeCosto
+            // 
+            this.centroDeCosto.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.centroDeCosto.Font = new System.Drawing.Font("Times New Roman", 18F, System.Drawing.FontStyle.Bold);
+            this.centroDeCosto.ForeColor = System.Drawing.Color.DimGray;
+            this.centroDeCosto.LocationFloat = new DevExpress.Utils.PointFloat(12.50004F, 12.49997F);
+            this.centroDeCosto.Name = "centroDeCosto";
+            this.centroDeCosto.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.centroDeCosto.SizeF = new System.Drawing.SizeF(629.9999F, 23F);
+            this.centroDeCosto.StylePriority.UseBackColor = false;
+            this.centroDeCosto.StylePriority.UseFont = false;
+            this.centroDeCosto.StylePriority.UseForeColor = false;
+            this.centroDeCosto.StylePriority.UseTextAlignment = false;
+            this.centroDeCosto.Text = "Centro de costo";
+            this.centroDeCosto.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            // 
+            // xrTable4
+            // 
+            this.xrTable4.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
+            this.xrTable4.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold);
+            this.xrTable4.ForeColor = System.Drawing.Color.DimGray;
+            this.xrTable4.LocationFloat = new DevExpress.Utils.PointFloat(12.49994F, 35.49998F);
+            this.xrTable4.Name = "xrTable4";
+            this.xrTable4.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
+            this.xrTableRow7,
+            this.xrTableRow1,
+            this.xrTableRow2});
+            this.xrTable4.SizeF = new System.Drawing.SizeF(630F, 75F);
+            this.xrTable4.StylePriority.UseBorders = false;
+            this.xrTable4.StylePriority.UseFont = false;
+            this.xrTable4.StylePriority.UseForeColor = false;
+            this.xrTable4.StylePriority.UseTextAlignment = false;
+            this.xrTable4.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            // 
+            // xrTableRow7
+            // 
+            this.xrTableRow7.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.xrTableCell7,
+            this.ventasCc});
+            this.xrTableRow7.Name = "xrTableRow7";
+            this.xrTableRow7.Weight = 1D;
+            // 
+            // xrTableCell7
+            // 
+            this.xrTableCell7.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
+            this.xrTableCell7.Name = "xrTableCell7";
+            this.xrTableCell7.StylePriority.UseBorders = false;
+            this.xrTableCell7.Text = "Ventas";
+            this.xrTableCell7.Weight = 1.9404761768812995D;
+            // 
+            // ventasCc
+            // 
+            this.ventasCc.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
+            this.ventasCc.Name = "ventasCc";
+            this.ventasCc.StylePriority.UseBorders = false;
+            this.ventasCc.Text = "Importe";
+            this.ventasCc.Weight = 1.0595238231187025D;
+            // 
+            // xrTableRow1
+            // 
+            this.xrTableRow1.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.xrTableCell1,
+            this.gastoConsumoCc});
+            this.xrTableRow1.Name = "xrTableRow1";
+            this.xrTableRow1.Weight = 1D;
+            // 
+            // xrTableCell1
+            // 
+            this.xrTableCell1.Name = "xrTableCell1";
+            this.xrTableCell1.Text = "Gasto por consumo";
+            this.xrTableCell1.Weight = 1.9404761768812995D;
+            // 
+            // gastoConsumoCc
+            // 
+            this.gastoConsumoCc.Name = "gastoConsumoCc";
+            this.gastoConsumoCc.Text = "gastoConsumoCc";
+            this.gastoConsumoCc.Weight = 1.0595238231187025D;
+            // 
+            // xrTableRow2
+            // 
+            this.xrTableRow2.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.xrTableCell2,
+            this.ganacia});
+            this.xrTableRow2.Name = "xrTableRow2";
+            this.xrTableRow2.Weight = 1D;
+            // 
+            // xrTableCell2
+            // 
+            this.xrTableCell2.Name = "xrTableCell2";
+            this.xrTableCell2.Text = "Ganancia";
+            this.xrTableCell2.Weight = 1.9404761768812995D;
+            // 
+            // ganacia
+            // 
+            this.ganacia.Name = "ganacia";
+            this.ganacia.Text = "ganacia";
+            this.ganacia.Weight = 1.0595238231187025D;
             // 
             // TopMargin
             // 
@@ -151,129 +252,8 @@
             // 
             this.ReportFooter.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable1});
-            this.ReportFooter.HeightF = 155.8333F;
+            this.ReportFooter.HeightF = 180.8333F;
             this.ReportFooter.Name = "ReportFooter";
-            // 
-            // sqlDataSource1
-            // 
-            tableQuery1.Name = "Ventas";
-            relationColumnInfo1.NestedKeyColumn = "Id";
-            relationColumnInfo1.ParentKeyColumn = "DiaContableId";
-            relationInfo1.KeyColumns.Add(relationColumnInfo1);
-            relationInfo1.NestedTable = "contb_dia_contable";
-            relationInfo1.ParentTable = "Ventas";
-            tableQuery1.Relations.Add(relationInfo1);
-            tableInfo1.Name = "Ventas";
-            columnInfo1.Name = "Importe";
-            tableInfo1.SelectedColumns.Add(columnInfo1);
-            tableInfo2.Name = "contb_dia_contable";
-            columnInfo2.Name = "Fecha";
-            tableInfo2.SelectedColumns.Add(columnInfo2);
-            tableQuery1.Tables.Add(tableInfo1);
-            tableQuery1.Tables.Add(tableInfo2);
-            this.sqlDataSource1.Queries.AddRange(new DevExpress.DataAccess.Sql.SqlQuery[] {
-            tableQuery1});
-            this.sqlDataSource1.ResultSchemaSerializable = "PERhdGFTZXQ+PFZpZXcgTmFtZT0iVmVudGFzIj48RmllbGQgTmFtZT0iSW1wb3J0ZSIgVHlwZT0iRGVja" +
-    "W1hbCIgLz48RmllbGQgTmFtZT0iRmVjaGEiIFR5cGU9IkRhdGVUaW1lIiAvPjwvVmlldz48L0RhdGFTZ" +
-    "XQ+";
-            // 
-            // centroDeCosto
-            // 
-            this.centroDeCosto.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.centroDeCosto.Font = new System.Drawing.Font("Times New Roman", 18F, System.Drawing.FontStyle.Bold);
-            this.centroDeCosto.ForeColor = System.Drawing.Color.DimGray;
-            this.centroDeCosto.LocationFloat = new DevExpress.Utils.PointFloat(12.50004F, 12.49997F);
-            this.centroDeCosto.Name = "centroDeCosto";
-            this.centroDeCosto.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.centroDeCosto.SizeF = new System.Drawing.SizeF(629.9999F, 23F);
-            this.centroDeCosto.StylePriority.UseBackColor = false;
-            this.centroDeCosto.StylePriority.UseFont = false;
-            this.centroDeCosto.StylePriority.UseForeColor = false;
-            this.centroDeCosto.StylePriority.UseTextAlignment = false;
-            this.centroDeCosto.Text = "Centro de costo";
-            this.centroDeCosto.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
-            // 
-            // ventasCc
-            // 
-            this.ventasCc.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.ventasCc.Name = "ventasCc";
-            this.ventasCc.StylePriority.UseBorders = false;
-            this.ventasCc.Text = "Importe";
-            this.ventasCc.Weight = 1.0595238231187025D;
-            // 
-            // xrTableCell7
-            // 
-            this.xrTableCell7.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell7.Name = "xrTableCell7";
-            this.xrTableCell7.StylePriority.UseBorders = false;
-            this.xrTableCell7.Text = "Ventas";
-            this.xrTableCell7.Weight = 1.9404761768812995D;
-            // 
-            // xrTableRow7
-            // 
-            this.xrTableRow7.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.xrTableCell7,
-            this.ventasCc});
-            this.xrTableRow7.Name = "xrTableRow7";
-            this.xrTableRow7.Weight = 1D;
-            // 
-            // xrTable4
-            // 
-            this.xrTable4.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTable4.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold);
-            this.xrTable4.ForeColor = System.Drawing.Color.DimGray;
-            this.xrTable4.LocationFloat = new DevExpress.Utils.PointFloat(12.49994F, 35.49998F);
-            this.xrTable4.Name = "xrTable4";
-            this.xrTable4.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
-            this.xrTableRow7,
-            this.xrTableRow1,
-            this.xrTableRow2});
-            this.xrTable4.SizeF = new System.Drawing.SizeF(630F, 75F);
-            this.xrTable4.StylePriority.UseBorders = false;
-            this.xrTable4.StylePriority.UseFont = false;
-            this.xrTable4.StylePriority.UseForeColor = false;
-            this.xrTable4.StylePriority.UseTextAlignment = false;
-            this.xrTable4.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
-            // 
-            // xrTableRow1
-            // 
-            this.xrTableRow1.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.xrTableCell1,
-            this.gastoConsumoCc});
-            this.xrTableRow1.Name = "xrTableRow1";
-            this.xrTableRow1.Weight = 1D;
-            // 
-            // xrTableCell1
-            // 
-            this.xrTableCell1.Name = "xrTableCell1";
-            this.xrTableCell1.Text = "Gasto por consumo";
-            this.xrTableCell1.Weight = 1.9404761768812995D;
-            // 
-            // gastoConsumoCc
-            // 
-            this.gastoConsumoCc.Name = "gastoConsumoCc";
-            this.gastoConsumoCc.Text = "gastoConsumoCc";
-            this.gastoConsumoCc.Weight = 1.0595238231187025D;
-            // 
-            // xrTableRow2
-            // 
-            this.xrTableRow2.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.xrTableCell2,
-            this.ganacia});
-            this.xrTableRow2.Name = "xrTableRow2";
-            this.xrTableRow2.Weight = 1D;
-            // 
-            // xrTableCell2
-            // 
-            this.xrTableCell2.Name = "xrTableCell2";
-            this.xrTableCell2.Text = "Ganancia";
-            this.xrTableCell2.Weight = 1.9404761768812995D;
-            // 
-            // ganacia
-            // 
-            this.ganacia.Name = "ganacia";
-            this.ganacia.Text = "ganacia";
-            this.ganacia.Weight = 1.0595238231187025D;
             // 
             // xrTable1
             // 
@@ -286,8 +266,9 @@
             this.xrTableRow3,
             this.xrTableRow4,
             this.xrTableRow5,
+            this.xrTableRow8,
             this.xrTableRow6});
-            this.xrTable1.SizeF = new System.Drawing.SizeF(630F, 100F);
+            this.xrTable1.SizeF = new System.Drawing.SizeF(630F, 125F);
             this.xrTable1.StylePriority.UseBorders = false;
             this.xrTable1.StylePriority.UseFont = false;
             this.xrTable1.StylePriority.UseForeColor = false;
@@ -378,6 +359,49 @@
             this.totalGanancias.Text = "totalGanancias";
             this.totalGanancias.Weight = 1.0595238231187025D;
             // 
+            // sqlDataSource1
+            // 
+            tableQuery1.Name = "Ventas";
+            relationColumnInfo1.NestedKeyColumn = "Id";
+            relationColumnInfo1.ParentKeyColumn = "DiaContableId";
+            relationInfo1.KeyColumns.Add(relationColumnInfo1);
+            relationInfo1.NestedTable = "contb_dia_contable";
+            relationInfo1.ParentTable = "Ventas";
+            tableQuery1.Relations.Add(relationInfo1);
+            tableInfo1.Name = "Ventas";
+            columnInfo1.Name = "Importe";
+            tableInfo1.SelectedColumns.Add(columnInfo1);
+            tableInfo2.Name = "contb_dia_contable";
+            columnInfo2.Name = "Fecha";
+            tableInfo2.SelectedColumns.Add(columnInfo2);
+            tableQuery1.Tables.Add(tableInfo1);
+            tableQuery1.Tables.Add(tableInfo2);
+            this.sqlDataSource1.Queries.AddRange(new DevExpress.DataAccess.Sql.SqlQuery[] {
+            tableQuery1});
+            this.sqlDataSource1.ResultSchemaSerializable = "PERhdGFTZXQ+PFZpZXcgTmFtZT0iVmVudGFzIj48RmllbGQgTmFtZT0iSW1wb3J0ZSIgVHlwZT0iRGVja" +
+    "W1hbCIgLz48RmllbGQgTmFtZT0iRmVjaGEiIFR5cGU9IkRhdGVUaW1lIiAvPjwvVmlldz48L0RhdGFTZ" +
+    "XQ+";
+            // 
+            // xrTableRow8
+            // 
+            this.xrTableRow8.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.xrTableCell4,
+            this.pagoTrabajadores});
+            this.xrTableRow8.Name = "xrTableRow8";
+            this.xrTableRow8.Weight = 1D;
+            // 
+            // xrTableCell4
+            // 
+            this.xrTableCell4.Name = "xrTableCell4";
+            this.xrTableCell4.Text = "Pago trabajadores";
+            this.xrTableCell4.Weight = 1.9404761768812995D;
+            // 
+            // pagoTrabajadores
+            // 
+            this.pagoTrabajadores.Name = "pagoTrabajadores";
+            this.pagoTrabajadores.Text = "pagoTrabajadores";
+            this.pagoTrabajadores.Weight = 1.0595238231187025D;
+            // 
             // ResumenDeGanaciaDiaria
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -432,5 +456,8 @@
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow6;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell10;
         private DevExpress.XtraReports.UI.XRTableCell totalGanancias;
+        private DevExpress.XtraReports.UI.XRTableRow xrTableRow8;
+        private DevExpress.XtraReports.UI.XRTableCell xrTableCell4;
+        private DevExpress.XtraReports.UI.XRTableCell pagoTrabajadores;
     }
 }

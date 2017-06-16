@@ -52,7 +52,7 @@ namespace ErpMvc.Reportes
 
             //todo: incluir mermas de almacen como costos
             var mermasAlmacen =
-                db.SalidasPorMermas.Where(c => c.DiaContable.Fecha >= fechaInicio && c.DiaContable.Fecha <= fechaFin);
+                db.SalidasPorMermas.Where(c => c.DiaContable.Fecha >= fechaInicio && c.DiaContable.Fecha <= fechaFin).ToList();
 
             var data = ventas.SelectMany(v => v.Elaboraciones.GroupBy(e => e.Elaboracion.CentroDeCosto).Select(e => new
             {
@@ -93,14 +93,22 @@ namespace ErpMvc.Reportes
             });
 
             var sumaVentas = data.Sum(d => d.Ventas);
-            var sumaCostos = data.Sum(d => d.Costo);//+ mermasAlmacen.Sum(m => m.);
+            var sumaCostos = data.Sum(d => d.Costo) + mermasAlmacen.Sum(m => m.Costo);
             var sumaGastos = otrosGastosData.Sum(d => d.Importe);
+            var pagoATrabajadores =
+                db.Asientos.SingleOrDefault(
+                    c =>
+                        c.DiaContable.Fecha >= fechaInicio && c.DiaContable.Fecha <= fechaFin &&
+                        c.Detalle == "Trabajadores : Pago al cierre")
+                    .Movimientos.SingleOrDefault(m => m.Cuenta.Nombre == "Caja")
+                    .Importe;
 
             totalVentas.Text = String.Format("{0:C}",sumaVentas);
             totalGastosporConsumo.Text = String.Format("{0:C}",sumaCostos);
             otrosGastos.Text = String.Format("{0:C}",sumaGastos);
+            pagoTrabajadores.Text = String.Format("{0:C}",pagoATrabajadores);
 
-            totalGanancias.Text = String.Format("{0:C}",sumaVentas - sumaGastos - sumaCostos);
+            totalGanancias.Text = String.Format("{0:C}",sumaVentas - sumaGastos - sumaCostos -pagoATrabajadores);
         }
     }
 }
