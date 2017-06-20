@@ -26,6 +26,8 @@ namespace ErpMvc.ViewModels
 
         public decimal PrecioUnitario { get; set; }
 
+        public decimal ProporcionDeMerma { get; set; }
+
         public bool EsInventariable { get; set; }
 
         public ProductoViewModel()
@@ -44,6 +46,7 @@ namespace ErpMvc.ViewModels
             Cantidad = producto.Cantidad;
             PrecioUnitario = producto.PrecioDeVenta;
             EsInventariable = producto.Producto.EsInventariable;
+            ProporcionDeMerma = producto.ProporcionDeMerma;
         }
     }
 }

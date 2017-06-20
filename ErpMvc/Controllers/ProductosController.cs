@@ -194,6 +194,7 @@ namespace ErpMvc.Controllers
                 //productoConcreto.Cantidad = productoViewModel.Cantidad;
                 //productoConcreto.UnidadDeMedidaId = productoViewModel.UnidadDeMedidaId;
                 productoConcreto.PrecioDeVenta = productoViewModel.PrecioUnitario;
+                productoConcreto.ProporcionDeMerma = productoViewModel.ProporcionDeMerma;
                 producto.Descripcion = productoViewModel.Descripcion;
                 producto.EsInventariable = productoViewModel.EsInventariable;
                 _db.Entry(producto).State = EntityState.Modified;
