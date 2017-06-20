@@ -70,7 +70,7 @@ namespace ErpMvc.Reportes
                 else
                 {
                     var movimientos =
-                        db.MovimientosDeProductos.Where(m => m.Fecha >= fecha).Include(m => m.Tipo).ToList().GroupBy(m => m.Producto).Select(m => new {Producto=m.Key,
+                        db.MovimientosDeProductos.Where(m => m.DiaContable.Fecha >= fecha).Include(m => m.Tipo).ToList().GroupBy(m => m.Producto).Select(m => new {Producto=m.Key,
                             Cantidad = m.Sum(d => d.Cantidad * d.Tipo.Factor)}).ToList();
                     var cc = db.CentrosDeCostos.SingleOrDefault(c => c.Nombre == lugar);
                     DataSource = db.ExistenciasEnCentroDeCostos.Where(e => e.Producto.Producto.Activo && e.CentroDeCostoId == cc.Id).ToList().Select(e => new
