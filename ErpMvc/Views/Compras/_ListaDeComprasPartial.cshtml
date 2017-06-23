@@ -20,6 +20,7 @@
             <td>@compra.Entidad.Nombre</td>
             <td>
                 <a class="btn btn-info prod-comprados-btn" data-id="@compra.Id">Productos comprados</a>
+                <a class="btn btn-default" href="@Url.Action("Editar","Compras", new {Id = compra.Id})">Editar</a>
             </td>
         </tr>
     }

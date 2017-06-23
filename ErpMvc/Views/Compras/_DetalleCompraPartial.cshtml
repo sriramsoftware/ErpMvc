@@ -61,7 +61,8 @@
                 <input name="Productos[{{ $index }}].MonedaId" type="hidden" value="1" />
             </td>
             <td>
-                <a class="btn btn-danger" data-ng-click="borrarCarga($index)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                <a class="btn btn-info" ng-show="detalle.editMode" ng-click="guardarCarga($index)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                <a class="btn btn-danger" ng-click="borrarCarga($index)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
             </td>
         </tr>
     </tbody>

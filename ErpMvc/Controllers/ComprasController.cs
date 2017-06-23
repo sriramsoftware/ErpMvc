@@ -137,8 +137,8 @@ namespace ErpMvc.Controllers
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Editar(int id)
         {
-            //var centro = _centroDeCostoService.CentrosDeCosto().Find(id);
-            return View();
+            var compra = _db.Set<Compra>().Find(id);
+            return View(compra);
         }
 
         [HttpPost]
@@ -151,6 +151,25 @@ namespace ErpMvc.Controllers
             //    return RedirectToAction("Index");
             //}
             return View(compra);
+        }
+
+        [HttpPost]
+        public JsonResult AgregarDetalle(DetalleDeCompra detalle)
+        {
+            if (_comprasService.AgregarDetalleACompra(detalle))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            return Json(false, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult EliminarDetalle(int id)
+        {
+            if (_comprasService.EliminarDetalleDeCompra(id))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            return Json(false, JsonRequestBehavior.AllowGet);
         }
 
 
