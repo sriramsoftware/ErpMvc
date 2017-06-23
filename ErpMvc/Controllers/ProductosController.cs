@@ -335,6 +335,49 @@ namespace ErpMvc.Controllers
             return View(compra);
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [DiaContable]
+        public ActionResult EntradaPorAjuste()
+        {
+            ViewBag.CentroDeCostoId = new SelectList(_centroCostoService.CentrosDeCosto(), "Id", "Nombre");
+            return View();
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [DiaContable]
+        public ActionResult EntradaPorAjuste(Compra compra, int centroDeCostoId)
+        {
+            var usuario = User.Identity.GetUserId();
+            compra.UsuarioId = usuario;
+            if (ModelState.IsValid)
+            {
+                if (!compra.Productos.Any())
+                {
+                    TempData["error"] = "No se puede efectuar una entrada vacia";
+                    return View();
+                }
+                var tipoDeMovimiento =
+                    _db.Set<TipoDeMovimiento>()
+                        .SingleOrDefault(t => t.Descripcion == TipoDeMovimientoConstantes.EntradaPorAjuste);
+                foreach (var prod in compra.Productos)
+                {
+                    _centroCostoService.DarEntrada(prod.ProductoId, centroDeCostoId,tipoDeMovimiento.Id, prod.Cantidad, prod.UnidadDeMedidaId, User.Identity.GetUserId());
+                }
+
+                if (_centroCostoService.GuardarCambios())
+                {
+                    TempData["exito"] = "Salida registrada correctamente";
+                    return RedirectToAction("CentroDeCosto", "Inventario");
+                }
+                TempData["error"] = "No se pudo registrar la salida correctamente";
+                return RedirectToAction("CentroDeCosto", "Inventario");
+            }
+            ViewBag.CentroDeCostoId = new SelectList(_centroCostoService.CentrosDeCosto(), "Id", "Nombre", centroDeCostoId);
+            return View(compra);
+        }
+
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         [DiaContable]

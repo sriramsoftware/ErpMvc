@@ -63,6 +63,8 @@ namespace ErpMvc.Migrations
             //    new TipoDeMovimiento() { Descripcion = TipoDeMovimientoConstantes.VentaIndependiente, Factor = -1, Id = 6 },
             //    new TipoDeMovimiento() { Descripcion = TipoDeMovimientoConstantes.EntradaPorErrorDeSalida, Factor = 1, Id = 7 },
             //    new TipoDeMovimiento() { Descripcion = TipoDeMovimientoConstantes.SalidaPorErrorDeEntrada, Factor = -1, Id = 8 }
+            //    new TipoDeMovimiento() { Descripcion = TipoDeMovimientoConstantes.EntradaPorAjuste, Factor = 1, Id = 9 },
+            //    new TipoDeMovimiento() { Descripcion = TipoDeMovimientoConstantes.SalidaPorAjuste, Factor = -1, Id = 10 }
             //    );
 
             //context.Monedas.AddOrUpdate(m => m.Id,

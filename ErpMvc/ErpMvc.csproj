@@ -40,8 +40,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AlmacenCore, Version=1.3.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AlmacenCore.1.3.10\lib\net45\AlmacenCore.dll</HintPath>
+    <Reference Include="AlmacenCore, Version=1.3.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AlmacenCore.1.3.11\lib\net45\AlmacenCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
@@ -557,6 +557,7 @@
     <Content Include="Scripts\chosen.jquery.min.js" />
     <Content Include="Scripts\erp\menu.js" />
     <Content Include="Scripts\datatables.min.js" />
+    <Content Include="Scripts\erp\entradaProductoController.js" />
     <Content Include="Scripts\erp\movimientoProductoController.js" />
     <Content Include="Scripts\erp\ventasController.js" />
     <Content Include="Scripts\errors.json" />
@@ -1576,6 +1577,7 @@
     <Content Include="Views\Reportes\VentasAlCosto.cshtml" />
     <Content Include="Views\Ventas\_MenusCuentaCasaPartial.cshtml" />
     <Content Include="Views\Compras\Editar.cshtml" />
+    <Content Include="Views\Productos\EntradaPorAjuste.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />
