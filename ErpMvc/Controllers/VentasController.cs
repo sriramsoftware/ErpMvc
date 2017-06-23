@@ -100,11 +100,11 @@ namespace ErpMvc.Controllers
             var fIni = fecha.Date;
             var fFin = fecha.Date.AddHours(23).AddMinutes(59);
 
-            var consumo = _db.Set<MovimientoDeProducto>().Where(m => m.DiaContable.Fecha >= fIni && m.DiaContable.Fecha <= fFin  && m.Tipo.Descripcion == TipoDeMovimientoConstantes.SalidaAProduccion).GroupBy(m => m.Producto).Select(m => new ConsumoViewModel()
+            var consumo = _db.Set<MovimientoDeProducto>().Where(m => m.DiaContable.Fecha >= fIni && m.DiaContable.Fecha <= fFin  && (m.Tipo.Descripcion == TipoDeMovimientoConstantes.SalidaAProduccion || m.Tipo.Descripcion == TipoDeMovimientoConstantes.EntradaPorErrorDeSalida)).GroupBy(m => m.Producto).Select(m => new ConsumoViewModel()
             {
                 ProductoId = m.Key.Id,
                 Producto = m.Key.Producto.Nombre,
-                Cantidad = m.Sum(p => p.Cantidad) + " " + m.Key.UnidadDeMedida.Siglas,
+                Cantidad = (m.Where(p => p.Tipo.Descripcion == TipoDeMovimientoConstantes.SalidaAProduccion).Sum(p => p.Cantidad) - m.Where(p => p.Tipo.Descripcion == TipoDeMovimientoConstantes.EntradaPorErrorDeSalida).Sum(p => p.Cantidad)) + " " + m.Key.UnidadDeMedida.Siglas,
                 Fecha = fecha
             });
             return PartialView("_ConsumoPartial", consumo);
