@@ -6,7 +6,9 @@ namespace ErpMvc.ViewModels
     {
         public int ProductoId { get; set; }
 
-        public string Cantidad { get; set; }
+        public decimal Cantidad { get; set; }
+
+        public string Unidad { get; set; }
 
         public string Producto { get; set; }
 

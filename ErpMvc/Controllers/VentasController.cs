@@ -95,18 +95,34 @@ namespace ErpMvc.Controllers
             return PartialView("_ListaDeVentasSoloVerPartial", ventas);
         }
 
-        public PartialViewResult ConsumoPorFechaPartial(DateTime fecha)
+        public PartialViewResult ConsumoPorFechaPartial(DateTime fechaInicio, DateTime fechaFin)
         {
-            var fIni = fecha.Date;
-            var fFin = fecha.Date.AddHours(23).AddMinutes(59);
+            var fIni = fechaInicio.Date;
+            var fFin = fechaFin.Date.AddHours(23).AddMinutes(59);
 
-            var consumo = _db.Set<MovimientoDeProducto>().Where(m => m.DiaContable.Fecha >= fIni && m.DiaContable.Fecha <= fFin  && (m.Tipo.Descripcion == TipoDeMovimientoConstantes.SalidaAProduccion || m.Tipo.Descripcion == TipoDeMovimientoConstantes.EntradaPorErrorDeSalida)).GroupBy(m => m.Producto).Select(m => new ConsumoViewModel()
+            var consumo = _db.Set<MovimientoDeProducto>().Where(m => m.DiaContable.Fecha >= fIni && m.DiaContable.Fecha <= fFin  && m.Tipo.Descripcion == TipoDeMovimientoConstantes.SalidaAProduccion).GroupBy(m => m.Producto).Select(m => new ConsumoViewModel()
             {
                 ProductoId = m.Key.Id,
                 Producto = m.Key.Producto.Nombre,
-                Cantidad = (m.Where(p => p.Tipo.Descripcion == TipoDeMovimientoConstantes.SalidaAProduccion).Sum(p => p.Cantidad) - m.Where(p => p.Tipo.Descripcion == TipoDeMovimientoConstantes.EntradaPorErrorDeSalida).Sum(p => p.Cantidad)) + " " + m.Key.UnidadDeMedida.Siglas,
-                Fecha = fecha
-            });
+                Cantidad = m.Sum(p => p.Cantidad),
+                Unidad = m.Key.UnidadDeMedida.Siglas,
+                Fecha = m.FirstOrDefault().Fecha
+            }).ToList();
+            var errores = _db.Set<MovimientoDeProducto>().Where(m => m.DiaContable.Fecha >= fIni && m.DiaContable.Fecha <= fFin && m.Tipo.Descripcion == TipoDeMovimientoConstantes.EntradaPorErrorDeSalida).GroupBy(m => m.Producto).Select(m => new ConsumoViewModel()
+            {
+                ProductoId = m.Key.Id,
+                Producto = m.Key.Producto.Nombre,
+                Cantidad = m.Sum(p => p.Cantidad),
+                Unidad = m.Key.UnidadDeMedida.Siglas,
+                Fecha = m.FirstOrDefault().Fecha
+            }).ToList();
+            foreach (var error in errores)
+            {
+                if (consumo.Any(c => c.ProductoId == error.ProductoId))
+                {
+                    consumo.SingleOrDefault(c => c.ProductoId == error.ProductoId).Cantidad -= error.Cantidad;
+                }
+            }
             return PartialView("_ConsumoPartial", consumo);
         }
         [DiaContable]

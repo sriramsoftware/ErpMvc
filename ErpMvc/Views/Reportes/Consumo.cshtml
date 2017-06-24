@@ -9,10 +9,21 @@
     <div class="col-md-12 col-sm-12 col-xs-12">
         <form class="form-horizontal" role="form" accept-charset="utf-8">
             <div class="form-group">
-                <label class="col-md-6 col-sm-6  col-xs-12 control-label">Buscar consumo del Día</label>
+                <label class="col-md-6 col-sm-6  col-xs-12 control-label">Fecha de inicio</label>
                 <div class="col-md-6 col-sm-6 col-xs-12 " style="padding: 0px;">
                     <div class="input-group input-append date col-md-6 col-sm-6" data-date="" data-date-format="dd-mm-yyyy" id="datepicker" data-date="">
-                        <input class="input-small form-control  datepicker" type="text" id="date" name="date" value='@DateTime.Now.ToShortDateString()'>
+                        <input class="input-small form-control  datepicker" type="text" id="fechaInicio" name="fechaInicio" value='@DateTime.Now.ToShortDateString()'>
+                        <span class="input-group-addon add-on">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-6 col-sm-6  col-xs-12 control-label">Fecha de fin</label>
+                <div class="col-md-6 col-sm-6 col-xs-12 " style="padding: 0px;">
+                    <div class="input-group input-append date col-md-6 col-sm-6" data-date="" data-date-format="dd-mm-yyyy" id="datepicker" data-date="">
+                        <input class="input-small form-control  datepicker" type="text" id="fechaFin" name="fechaFin" value='@DateTime.Now.ToShortDateString()'>
                         <span class="input-group-addon add-on">
                             <i class="glyphicon glyphicon-calendar"></i>
                         </span>
@@ -25,7 +36,7 @@
 
 <div id="ventas-div">
     @{
-        Html.RenderAction("ConsumoPorFechaPartial", "Ventas", new { Fecha = DateTime.Now });
+        Html.RenderAction("ConsumoPorFechaPartial", "Ventas", new { FechaInicio = DateTime.Now, FechaFin = DateTime.Now });
     }
 </div>
 
@@ -50,13 +61,16 @@
         $(document).ready(function () {
             $('btn').tooltip();
             declareDatatable("#tabla");
-            $('#date').change(function () {
-                console.log("cambio de fecha");
-                var fecha = $("#date").val();
+            $('#fechaInicio').change(function () {
+                var fechaInicio = $("#fechaInicio").val();
+                var fechaFin = $("#fechaFin").val();
                 $.ajax({
                     url: "@Url.Action("ConsumoPorFechaPartial", "Ventas")",
                     type: "POST",
-                    data: { fecha: fecha },
+                    data: {
+                        fechaInicio: fechaInicio,
+                        fechaFin: fechaFin
+                    },
                     dataType: "html",
                     success: function (data) {
                         $("#ventas-div").html(data);
@@ -65,28 +79,24 @@
                     error: function (data) { }
                 });
             });
-
-            $(document).on('click', "#imprimir-btn", function () {
-                var w = window.open();
-                var div = $("<div></div>");
-                var div2 = $("<div></div>");
-                var id = $(this).attr("data-id");
-                $(div).append("<p>Comanda # " + id + "</p>");
-                $(div).append(div2);
-                $(div2).load('@Url.Action("MenusEnVentaPartial","Ventas")' + '/' + id, function() {
-                    w.document.write($(div).html());
-                    w.print();
-                    w.close();
-                });
-
+            $('#fechaFin').change(function () {
+                var fechaInicio = $("#fechaInicio").val();
+                var fechaFin = $("#fechaFin").val();
+                $.ajax({
+                    url: "@Url.Action("ConsumoPorFechaPartial", "Ventas")",
+                    type: "POST",
+                data: {
+                    fechaInicio: fechaInicio,
+                    fechaFin: fechaFin
+                },
+                dataType: "html",
+                success: function (data) {
+                    $("#ventas-div").html(data);
+                    declareDatatable("#tabla");
+                },
+                error: function (data) { }
             });
-            
-            $(document).on('click', ".print-vale-btn", function () {
-                var id = $(this).attr("data-id");
-                $("#imprimir-btn").attr("data-id",id);
-                $("#numero-comanda-imprimir").html("comanda " + id);
-                $("#modalImprimirVenta").modal('show');
-            });
+        });
         });
 
         function mostrarModal() {
