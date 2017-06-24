@@ -30,6 +30,7 @@ namespace ErpMvc.Reportes
             efectivoCaja.Text = String.Format("{0:C}", 100);
 
             ventasTotales.Text = String.Format("{0:C}", cierre.Ventas);
+            pagoPorFactura.Text = String.Format("{0:C}", cierre.VentasPorFactura);
             excentasPorciento.Text = String.Format("{0:C}", cierre.VentasSinPorciento);
             ventasAlCosto.Text = String.Format("{0:C}", cierre.VentasAlCosto);
             calculaPorciento.Text = String.Format("{0:C}", cierre.SeLeCalculaPorciento);

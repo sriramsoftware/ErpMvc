@@ -52,6 +52,7 @@
                     $http.get($scope.urlResumen).then(function (result) {
                         $scope.efectivo_inicial = result.data.EfectivoAnterior;
                         $scope.ventas = result.data.Ventas;
+                        $scope.ventasPorFactura = result.data.VentasPorFactura;
                         $scope.ventas_sin_porciento = result.data.VentasSinPorciento;
                         $scope.ventas_al_costo = result.data.VentasAlCosto;
                         $scope.ventas_con_porciento = result.data.SeLeCalculaPorciento;

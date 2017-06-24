@@ -12,6 +12,8 @@ namespace ErpMvc.ViewModels
 
         public decimal Ventas { get; set; }
 
+        public decimal VentasPorFactura { get; set; }
+
         public decimal VentasSinPorciento { get; set; }
 
         public decimal VentasAlCosto { get; set; }
@@ -28,7 +30,7 @@ namespace ErpMvc.ViewModels
 
         public decimal SeLeCalculaPorciento
         {
-            get { return Ventas - VentasSinPorciento - VentasAlCosto; }
+            get { return Ventas + VentasPorFactura - VentasSinPorciento - VentasAlCosto; }
         }
 
         public decimal Porciento { get { return SeLeCalculaPorciento*0.1m; } }

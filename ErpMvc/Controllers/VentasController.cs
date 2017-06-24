@@ -141,6 +141,14 @@ namespace ErpMvc.Controllers
             return View();
         }
 
+        [DiaContable]
+        public ActionResult VentaPorFactura()
+        {
+            ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre");
+            ViewBag.VendedorId = new SelectList(_ventasService.Vendedores().Where(v => v.Estado == EstadoTrabajador.Activo), "Id", "NombreCompleto");
+            return View();
+        }
+
         [HttpPost]
         public ActionResult BuscarVentas(DateTime fecha)
         {
@@ -162,6 +170,38 @@ namespace ErpMvc.Controllers
         [HttpPost]
         [DiaContable]
         public ActionResult NuevaVenta(Venta venta)
+        {
+            if (User.IsInRole(RolesMontin.Vendedor))
+            {
+                var usuarioId = User.Identity.GetUserId();
+                var vendedor = _ventasService.Vendedores().SingleOrDefault(v => v.UsuarioId == usuarioId);
+                if (vendedor == null)
+                {
+                    TempData["error"] = "No existe vendedor asociado a la cuenta, consulte al administrador";
+                    return RedirectToAction("Index");
+                }
+                venta.VendedorId = vendedor.Id;
+            }
+            if (!venta.Elaboraciones.Any())
+            {
+                TempData["error"] = "No se puede efectuar una venta vacia";
+                ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre");
+                ViewBag.VendedorId = new SelectList(_ventasService.Vendedores(), "Id", "NombreCompleto");
+                return View();
+            }
+            if (_ventasService.Vender(venta, User.Identity.GetUserId()))
+            {
+                TempData["exito"] = "Venta agregada correctamente";
+                return RedirectToAction("Index");
+            }
+            ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre");
+            ViewBag.VendedorId = new SelectList(_ventasService.Vendedores(), "Id", "NombreCompleto");
+            return View();
+        }
+
+        [HttpPost]
+        [DiaContable]
+        public ActionResult VentaPorFactura(Venta venta)
         {
             if (User.IsInRole(RolesMontin.Vendedor))
             {

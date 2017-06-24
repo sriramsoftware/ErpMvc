@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using CajaCore.Models;
 using CompraVentaCore.Models;
@@ -32,16 +33,20 @@ namespace ErpMvc.Utiles
             var totalVentas = 0m;
             var ventasSinPorciento = 0m;
             var ventasAlCosto = 0m;
-            dynamic centrosDeCosto = 0;
-            if (_db.Set<Venta>().Any(v => v.DiaContableId == dia.Id && (v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)))
+            var ventasPorFacturas = 0m;
+            var centrosDeCosto = new List<ResumenCentroCosto>();
+            if (_db.Set<Venta>().Any(v => v.DiaContableId == dia.Id && (v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta|| v.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura)))
             {
                 var ventas = _db.Set<Venta>()
                     .Where(
                         v =>
                             v.DiaContableId == dia.Id &&
                             (v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo ||
-                             v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)).ToList();
-                totalVentas = ventas.Sum(v => v.Importe);
+                             v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta||
+                             v.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura)).ToList();
+                totalVentas = ventas.Where(v => v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo ||
+                             v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta).Sum(v => v.Importe);
+                ventasPorFacturas = ventas.Where(v => v.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura).Sum(v => v.Importe);
                 ventasSinPorciento =
                     ventas.Sum(
                         v =>
@@ -53,7 +58,8 @@ namespace ErpMvc.Utiles
                         .Sum(
                             v =>
                                 v.Importe);
-                centrosDeCosto = ventas.SelectMany(vw => vw.Elaboraciones.GroupBy(e => e.Elaboracion.CentroDeCosto).Select(v => new ResumenCentroCosto() { Nombre = v.Key.Nombre, Importe = v.Sum(ve => ve.ImporteTotal) })).GroupBy(e => e.Nombre).Select(e => new ResumenCentroCosto() { Nombre = e.Key, Importe = e.Sum(s => s.Importe) }).ToList();
+                centrosDeCosto = ventas.Where(v => v.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo ||
+                             v.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta).SelectMany(vw => vw.Elaboraciones.GroupBy(e => e.Elaboracion.CentroDeCosto).Select(v => new ResumenCentroCosto() { Nombre = v.Key.Nombre, Importe = v.Sum(ve => ve.ImporteTotal) })).GroupBy(e => e.Nombre).Select(e => new ResumenCentroCosto() { Nombre = e.Key, Importe = e.Sum(s => s.Importe) }).ToList();
             }
 
             var extracciones =
@@ -80,6 +86,7 @@ namespace ErpMvc.Utiles
                 Fecha = dia.Fecha,
                 EfectivoAnterior = 100,
                 Ventas = totalVentas,
+                VentasPorFactura = ventasPorFacturas,
                 VentasSinPorciento = ventasSinPorciento,
                 VentasAlCosto = ventasAlCosto,
                 Depositos = depositos,

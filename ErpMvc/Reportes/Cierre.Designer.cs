@@ -41,6 +41,12 @@
             this.xrTableRow5 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell7 = new DevExpress.XtraReports.UI.XRTableCell();
             this.ventas = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableRow24 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell5 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.barVentas = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableRow2 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell3 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.restaurantVentas = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableRow6 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell11 = new DevExpress.XtraReports.UI.XRTableCell();
             this.depositos = new DevExpress.XtraReports.UI.XRTableCell();
@@ -63,6 +69,9 @@
             this.xrTableRow13 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell25 = new DevExpress.XtraReports.UI.XRTableCell();
             this.excentasPorciento = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableRow1 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell1 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.ventasAlCosto = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableRow14 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell27 = new DevExpress.XtraReports.UI.XRTableCell();
             this.calculaPorciento = new DevExpress.XtraReports.UI.XRTableCell();
@@ -127,15 +136,9 @@
             this.xrTableRow23 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell40 = new DevExpress.XtraReports.UI.XRTableCell();
             this.cupEnCucTotal = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableRow1 = new DevExpress.XtraReports.UI.XRTableRow();
-            this.xrTableCell1 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.ventasAlCosto = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableRow2 = new DevExpress.XtraReports.UI.XRTableRow();
-            this.xrTableCell3 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.restaurantVentas = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableRow24 = new DevExpress.XtraReports.UI.XRTableRow();
-            this.xrTableCell5 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.barVentas = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableRow25 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell4 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.pagoPorFactura = new DevExpress.XtraReports.UI.XRTableCell();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable6)).BeginInit();
@@ -178,7 +181,7 @@
             this.xrTable5,
             this.xrTable6,
             this.xrLabel1});
-            this.ReportHeader.HeightF = 884.1667F;
+            this.ReportHeader.HeightF = 929.1667F;
             this.ReportHeader.Name = "ReportHeader";
             // 
             // e
@@ -274,6 +277,54 @@
             this.ventas.Text = "ventas";
             this.ventas.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             this.ventas.Weight = 0.9464861362222825D;
+            // 
+            // xrTableRow24
+            // 
+            this.xrTableRow24.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.xrTableCell5,
+            this.barVentas});
+            this.xrTableRow24.Name = "xrTableRow24";
+            this.xrTableRow24.Weight = 1D;
+            // 
+            // xrTableCell5
+            // 
+            this.xrTableCell5.Name = "xrTableCell5";
+            this.xrTableCell5.StylePriority.UseTextAlignment = false;
+            this.xrTableCell5.Text = "   Bar";
+            this.xrTableCell5.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.xrTableCell5.Weight = 1.5413902474502308D;
+            // 
+            // barVentas
+            // 
+            this.barVentas.Name = "barVentas";
+            this.barVentas.StylePriority.UseTextAlignment = false;
+            this.barVentas.Text = "barVentas";
+            this.barVentas.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
+            this.barVentas.Weight = 0.9464861362222825D;
+            // 
+            // xrTableRow2
+            // 
+            this.xrTableRow2.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.xrTableCell3,
+            this.restaurantVentas});
+            this.xrTableRow2.Name = "xrTableRow2";
+            this.xrTableRow2.Weight = 1D;
+            // 
+            // xrTableCell3
+            // 
+            this.xrTableCell3.Name = "xrTableCell3";
+            this.xrTableCell3.StylePriority.UseTextAlignment = false;
+            this.xrTableCell3.Text = "   Restaurant";
+            this.xrTableCell3.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.xrTableCell3.Weight = 1.5413902474502308D;
+            // 
+            // restaurantVentas
+            // 
+            this.restaurantVentas.Name = "restaurantVentas";
+            this.restaurantVentas.StylePriority.UseTextAlignment = false;
+            this.restaurantVentas.Text = "restaurantVentas";
+            this.restaurantVentas.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
+            this.restaurantVentas.Weight = 0.9464861362222825D;
             // 
             // xrTableRow6
             // 
@@ -403,11 +454,12 @@
             this.xrTable5.Name = "xrTable5";
             this.xrTable5.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow12,
+            this.xrTableRow25,
             this.xrTableRow13,
             this.xrTableRow1,
             this.xrTableRow14,
             this.xrTableRow15});
-            this.xrTable5.SizeF = new System.Drawing.SizeF(580.8337F, 191.6667F);
+            this.xrTable5.SizeF = new System.Drawing.SizeF(580.8337F, 230F);
             this.xrTable5.StylePriority.UseBorders = false;
             this.xrTable5.StylePriority.UseFont = false;
             this.xrTable5.StylePriority.UseTextAlignment = false;
@@ -461,6 +513,30 @@
             this.excentasPorciento.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             this.excentasPorciento.Weight = 0.94648686122565584D;
             // 
+            // xrTableRow1
+            // 
+            this.xrTableRow1.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.xrTableCell1,
+            this.ventasAlCosto});
+            this.xrTableRow1.Name = "xrTableRow1";
+            this.xrTableRow1.Weight = 1D;
+            // 
+            // xrTableCell1
+            // 
+            this.xrTableCell1.Name = "xrTableCell1";
+            this.xrTableCell1.StylePriority.UseTextAlignment = false;
+            this.xrTableCell1.Text = "Ventas al costo (-)";
+            this.xrTableCell1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.xrTableCell1.Weight = 1.5413895224468577D;
+            // 
+            // ventasAlCosto
+            // 
+            this.ventasAlCosto.Name = "ventasAlCosto";
+            this.ventasAlCosto.StylePriority.UseTextAlignment = false;
+            this.ventasAlCosto.Text = "ventasAlCosto";
+            this.ventasAlCosto.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
+            this.ventasAlCosto.Weight = 0.94648686122565584D;
+            // 
             // xrTableRow14
             // 
             this.xrTableRow14.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
@@ -513,7 +589,7 @@
             // 
             this.xrTable6.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
             this.xrTable6.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrTable6.LocationFloat = new DevExpress.Utils.PointFloat(0F, 722.8334F);
+            this.xrTable6.LocationFloat = new DevExpress.Utils.PointFloat(0F, 769.5F);
             this.xrTable6.Name = "xrTable6";
             this.xrTable6.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow11,
@@ -575,7 +651,7 @@
             // xrLabel1
             // 
             this.xrLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 28.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 820.3334F);
+            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 878.6667F);
             this.xrLabel1.Name = "xrLabel1";
             this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabel1.SizeF = new System.Drawing.SizeF(628.3334F, 50.5F);
@@ -1012,77 +1088,29 @@
             this.cupEnCucTotal.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             this.cupEnCucTotal.Weight = 0.4179241237327902D;
             // 
-            // xrTableRow1
+            // xrTableRow25
             // 
-            this.xrTableRow1.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.xrTableCell1,
-            this.ventasAlCosto});
-            this.xrTableRow1.Name = "xrTableRow1";
-            this.xrTableRow1.Weight = 1D;
+            this.xrTableRow25.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.xrTableCell4,
+            this.pagoPorFactura});
+            this.xrTableRow25.Name = "xrTableRow25";
+            this.xrTableRow25.Weight = 1D;
             // 
-            // xrTableCell1
+            // xrTableCell4
             // 
-            this.xrTableCell1.Name = "xrTableCell1";
-            this.xrTableCell1.StylePriority.UseTextAlignment = false;
-            this.xrTableCell1.Text = "Ventas al costo (-)";
-            this.xrTableCell1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell1.Weight = 1.5413895224468577D;
+            this.xrTableCell4.Name = "xrTableCell4";
+            this.xrTableCell4.StylePriority.UseTextAlignment = false;
+            this.xrTableCell4.Text = "Ventas por factura";
+            this.xrTableCell4.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.xrTableCell4.Weight = 1.5413896432807532D;
             // 
-            // ventasAlCosto
+            // pagoPorFactura
             // 
-            this.ventasAlCosto.Name = "ventasAlCosto";
-            this.ventasAlCosto.StylePriority.UseTextAlignment = false;
-            this.ventasAlCosto.Text = "ventasAlCosto";
-            this.ventasAlCosto.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
-            this.ventasAlCosto.Weight = 0.94648686122565584D;
-            // 
-            // xrTableRow2
-            // 
-            this.xrTableRow2.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.xrTableCell3,
-            this.restaurantVentas});
-            this.xrTableRow2.Name = "xrTableRow2";
-            this.xrTableRow2.Weight = 1D;
-            // 
-            // xrTableCell3
-            // 
-            this.xrTableCell3.Name = "xrTableCell3";
-            this.xrTableCell3.StylePriority.UseTextAlignment = false;
-            this.xrTableCell3.Text = "   Restaurant";
-            this.xrTableCell3.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell3.Weight = 1.5413902474502308D;
-            // 
-            // restaurantVentas
-            // 
-            this.restaurantVentas.Name = "restaurantVentas";
-            this.restaurantVentas.StylePriority.UseTextAlignment = false;
-            this.restaurantVentas.Text = "restaurantVentas";
-            this.restaurantVentas.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
-            this.restaurantVentas.Weight = 0.9464861362222825D;
-            // 
-            // xrTableRow24
-            // 
-            this.xrTableRow24.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.xrTableCell5,
-            this.barVentas});
-            this.xrTableRow24.Name = "xrTableRow24";
-            this.xrTableRow24.Weight = 1D;
-            // 
-            // xrTableCell5
-            // 
-            this.xrTableCell5.Name = "xrTableCell5";
-            this.xrTableCell5.StylePriority.UseTextAlignment = false;
-            this.xrTableCell5.Text = "   Bar";
-            this.xrTableCell5.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell5.Weight = 1.5413902474502308D;
-            // 
-            // barVentas
-            // 
-            this.barVentas.Name = "barVentas";
-            this.barVentas.StylePriority.UseTextAlignment = false;
-            this.barVentas.Text = "barVentas";
-            this.barVentas.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
-            this.barVentas.Weight = 0.9464861362222825D;
+            this.pagoPorFactura.Name = "pagoPorFactura";
+            this.pagoPorFactura.StylePriority.UseTextAlignment = false;
+            this.pagoPorFactura.Text = "pagoPorFactura";
+            this.pagoPorFactura.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
+            this.pagoPorFactura.Weight = 0.94648674039176028D;
             // 
             // Cierre
             // 
@@ -1220,5 +1248,8 @@
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow2;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell3;
         private DevExpress.XtraReports.UI.XRTableCell restaurantVentas;
+        private DevExpress.XtraReports.UI.XRTableRow xrTableRow25;
+        private DevExpress.XtraReports.UI.XRTableCell xrTableCell4;
+        private DevExpress.XtraReports.UI.XRTableCell pagoPorFactura;
     }
 }
