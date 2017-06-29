@@ -43,38 +43,40 @@
 @foreach (var venta in Model)
 {
     <div class="row">
-        <div class="col-md-4 col-sm-8 col-xs-12">
+        <div class="col-md-5 col-sm-8 col-xs-12">
             <h4 class="title_insight">Comanda # @venta.Id</h4>
             <br />
             @venta.Fecha.ToShortDateString() @venta.Fecha.ToShortTimeString()
             <br />
-            Posición en el Local:&nbsp; @venta.PuntoDeVenta.Nombre
+            <strong>Posición : </strong>&nbsp; @venta.PuntoDeVenta.Nombre - <strong> Pax:</strong> @venta.CantidadPersonas
             <br />
-            Dependiente: @venta.Vendedor.NombreCompleto
+            <strong> Dependiente:</strong> @venta.Vendedor.NombreCompleto
             <br />
-            Usuario: @venta.Usuario.UserName
+            <strong>
+                Usuario:
+            </strong> @venta.Usuario.UserName
             <br />
-            Estado: @switch (venta.EstadoDeVenta)
-            {
-                case EstadoDeVenta.Pendiente:
+            <strong>Estado: </strong>@switch (venta.EstadoDeVenta)
+                {
+                    case EstadoDeVenta.Pendiente:
                     @:<strong>En espera de pago por el cliente</strong>
                             break;
-                case EstadoDeVenta.PendienteParaOtroDia:
+                    case EstadoDeVenta.PendienteParaOtroDia:
                     @:<strong>A pagar otro dia</strong>
                             break;
-                case EstadoDeVenta.PagadaEnEfectivo:
+                    case EstadoDeVenta.PagadaEnEfectivo:
                     @:<strong>Pagada en efectivo</strong>
                             break;
-                case EstadoDeVenta.NoCobrada:
+                    case EstadoDeVenta.NoCobrada:
                     @:<strong>Por cuenta de la casa</strong>
                             break;
-                case EstadoDeVenta.PagadaPorTarjeta:
+                    case EstadoDeVenta.PagadaPorTarjeta:
                     @:<strong>Pagado con tarjeta de cliente</strong>
                             break;
                     case EstadoDeVenta.PagadaPorFactura:
                     @:<strong>Pago por factura</strong>
                             break;
-            }
+                }
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12 text-center">
             <label class="badge badge-title">
@@ -83,7 +85,7 @@
             <br />
             <p>@venta.Observaciones</p>
         </div>
-        <div class="col-md-4 col-sm-4 col-xs-12 botones">
+        <div class="col-md-3 col-sm-4 col-xs-12 botones">
             @Ajax.ActionLink("Ver Menus Consumidos", "MenusEnVentaPartial", "Ventas", new { Id = venta.Id }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, HttpMethod = "Get", UpdateTargetId = "modal-detalle", OnComplete = "mostrarModal" }, new { @class = "btn btn-primary btn-sm col-md-12" })
             <br />
             <a class="btn btn-primary btn-sm col-md-12 print-vale-btn" href="javascript:;" data-id="@venta.Id" data-estado="@venta.EstadoDeVenta">
