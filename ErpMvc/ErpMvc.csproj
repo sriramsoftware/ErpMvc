@@ -56,8 +56,8 @@
       <HintPath>..\packages\ComercialCore.1.5.0\lib\net45\ComercialCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaBL, Version=1.24.17.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaBL.1.24.17\lib\net45\CompraVentaBL.dll</HintPath>
+    <Reference Include="CompraVentaBL, Version=1.24.27.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaBL.1.24.27\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CompraVentaCore, Version=1.12.5.0, Culture=neutral, processorArchitecture=MSIL">

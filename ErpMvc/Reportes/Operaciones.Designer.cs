@@ -50,7 +50,6 @@
             this.fecha_fin = new DevExpress.XtraReports.UI.XRLabel();
             this.titulo_reporte = new DevExpress.XtraReports.UI.XRLabel();
             this.fecha_inicio = new DevExpress.XtraReports.UI.XRLabel();
-            this.PageHeader = new DevExpress.XtraReports.UI.PageHeaderBand();
             this.xrTable3 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow3 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell5 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -94,16 +93,12 @@
             this.Detail2 = new DevExpress.XtraReports.UI.DetailBand();
             this.xrTable2 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow2 = new DevExpress.XtraReports.UI.XRTableRow();
-            this.ventaFechaCell = new DevExpress.XtraReports.UI.XRTableCell();
-            this.ventaPosicionCell = new DevExpress.XtraReports.UI.XRTableCell();
             this.ventaMenusCell = new DevExpress.XtraReports.UI.XRTableCell();
             this.ventaCantidadCell = new DevExpress.XtraReports.UI.XRTableCell();
             this.ventaImporteCell = new DevExpress.XtraReports.UI.XRTableCell();
             this.ReportHeader2 = new DevExpress.XtraReports.UI.ReportHeaderBand();
             this.xrTable1 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow1 = new DevExpress.XtraReports.UI.XRTableRow();
-            this.xrTableCell2 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCell3 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell4 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell13 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell14 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -178,8 +173,9 @@
             this.xrLabel4,
             this.fecha_fin,
             this.titulo_reporte,
-            this.fecha_inicio});
-            this.ReportHeader.HeightF = 160.1666F;
+            this.fecha_inicio,
+            this.xrTable3});
+            this.ReportHeader.HeightF = 267.6666F;
             this.ReportHeader.Name = "ReportHeader";
             // 
             // xrLabel4
@@ -230,20 +226,13 @@
             this.fecha_inicio.Text = "fecha_inicio";
             this.fecha_inicio.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             // 
-            // PageHeader
-            // 
-            this.PageHeader.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
-            this.xrTable3});
-            this.PageHeader.HeightF = 113.3333F;
-            this.PageHeader.Name = "PageHeader";
-            // 
             // xrTable3
             // 
             this.xrTable3.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrTable3.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold);
-            this.xrTable3.LocationFloat = new DevExpress.Utils.PointFloat(12.5F, 0F);
+            this.xrTable3.LocationFloat = new DevExpress.Utils.PointFloat(20F, 167.6666F);
             this.xrTable3.Name = "xrTable3";
             this.xrTable3.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow3,
@@ -644,32 +633,18 @@
             // xrTableRow2
             // 
             this.xrTableRow2.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.ventaFechaCell,
-            this.ventaPosicionCell,
             this.ventaMenusCell,
             this.ventaCantidadCell,
             this.ventaImporteCell});
             this.xrTableRow2.Name = "xrTableRow2";
             this.xrTableRow2.Weight = 1D;
             // 
-            // ventaFechaCell
-            // 
-            this.ventaFechaCell.Name = "ventaFechaCell";
-            this.ventaFechaCell.Text = "Fecha";
-            this.ventaFechaCell.Weight = 0.43650787447244438D;
-            // 
-            // ventaPosicionCell
-            // 
-            this.ventaPosicionCell.Name = "ventaPosicionCell";
-            this.ventaPosicionCell.Text = "Posicion";
-            this.ventaPosicionCell.Weight = 0.53366909255616279D;
-            // 
             // ventaMenusCell
             // 
             this.ventaMenusCell.Multiline = true;
             this.ventaMenusCell.Name = "ventaMenusCell";
             this.ventaMenusCell.Text = "Menus";
-            this.ventaMenusCell.Weight = 1.0853780769311632D;
+            this.ventaMenusCell.Weight = 2.05555504395977D;
             // 
             // ventaCantidadCell
             // 
@@ -711,31 +686,17 @@
             // xrTableRow1
             // 
             this.xrTableRow1.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.xrTableCell2,
-            this.xrTableCell3,
             this.xrTableCell4,
             this.xrTableCell13,
             this.xrTableCell14});
             this.xrTableRow1.Name = "xrTableRow1";
             this.xrTableRow1.Weight = 1D;
             // 
-            // xrTableCell2
-            // 
-            this.xrTableCell2.Name = "xrTableCell2";
-            this.xrTableCell2.Text = "Fecha";
-            this.xrTableCell2.Weight = 0.43650787447244438D;
-            // 
-            // xrTableCell3
-            // 
-            this.xrTableCell3.Name = "xrTableCell3";
-            this.xrTableCell3.Text = "Posicion";
-            this.xrTableCell3.Weight = 0.53366909255616279D;
-            // 
             // xrTableCell4
             // 
             this.xrTableCell4.Name = "xrTableCell4";
             this.xrTableCell4.Text = "Menus";
-            this.xrTableCell4.Weight = 1.0853780769311632D;
+            this.xrTableCell4.Weight = 2.05555504395977D;
             // 
             // xrTableCell13
             // 
@@ -982,7 +943,6 @@
             this.TopMargin,
             this.BottomMargin,
             this.ReportHeader,
-            this.PageHeader,
             this.ReportFooter,
             this.ComprasReport,
             this.VentasReport,
@@ -1019,7 +979,6 @@
         private DevExpress.XtraReports.UI.ReportHeaderBand ReportHeader;
         private DevExpress.XtraReports.UI.XRLabel titulo_reporte;
         private DevExpress.XtraReports.UI.XRLabel fecha_inicio;
-        private DevExpress.XtraReports.UI.PageHeaderBand PageHeader;
         private DevExpress.XtraReports.UI.XRLabel fecha_fin;
         private DevExpress.XtraReports.UI.XRChart grafico;
         private DevExpress.XtraReports.UI.ReportFooterBand ReportFooter;
@@ -1070,15 +1029,11 @@
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell1;
         private DevExpress.XtraReports.UI.XRTable xrTable1;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow1;
-        private DevExpress.XtraReports.UI.XRTableCell xrTableCell2;
-        private DevExpress.XtraReports.UI.XRTableCell xrTableCell3;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell4;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell13;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell14;
         private DevExpress.XtraReports.UI.XRTable xrTable2;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow2;
-        private DevExpress.XtraReports.UI.XRTableCell ventaFechaCell;
-        private DevExpress.XtraReports.UI.XRTableCell ventaPosicionCell;
         private DevExpress.XtraReports.UI.XRTableCell ventaMenusCell;
         private DevExpress.XtraReports.UI.XRTableCell ventaCantidadCell;
         private DevExpress.XtraReports.UI.XRTableCell ventaImporteCell;

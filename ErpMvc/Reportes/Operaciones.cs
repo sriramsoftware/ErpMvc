@@ -58,25 +58,15 @@ namespace ErpMvc.Reportes
             totalComprasCell.Text = String.Format("{0:C}", comprasData.Sum(c => c.Importe));
 
             //ventas
-            var ventas = db.Ventas.Where(c => c.DiaContable.Fecha >= FechaInicio && c.DiaContable.Fecha <= FechaFin && (c.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || c.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta)).ToList();
-            var ventasData = ventas.Select(v => new
+            var ventas = db.Ventas.Where(c => c.DiaContable.Fecha >= FechaInicio && c.DiaContable.Fecha <= FechaFin && (c.EstadoDeVenta == EstadoDeVenta.PagadaEnEfectivo || c.EstadoDeVenta == EstadoDeVenta.PagadaPorTarjeta|| c.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura)).ToList();
+            var ventasData = ventas.SelectMany(v => v.Elaboraciones).GroupBy(e => e.Detalle).Select(v => new
             {
-                Fecha = v.Fecha,
-                Posicion = v.PuntoDeVenta.Nombre,
-                Menus = String.Join("\n\r",v.Elaboraciones
-                .Select(e => e.Elaboracion.Nombre + (e.Agregados.Any()?
-                " con "+ String.Join(", ", e.Agregados.Select(a => a.Agregado.Producto.Nombre + (a.Cantidad > 1? "(" + a.Cantidad + ")": ""))):""))),
-                Cantidad = String.Join("\n\r", v.Elaboraciones.Select(e => e.Cantidad)),
-                Importe = v.Importe
+                Menus = v.Key,
+                Cantidad = v.Sum(c => c.Cantidad),
+                Importe = v.Sum(c => c.ImporteTotal)
             }).ToList();
 
-            VentasReport.DataSource = ventasData;
-
-            this.ventaFechaCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Fecha","{0:d}"), });
-
-            this.ventaPosicionCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Posicion")});
+            VentasReport.DataSource = ventasData.OrderBy(v => v.Menus);
 
             this.ventaMenusCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
             new DevExpress.XtraReports.UI.XRBinding("Text", null, "Menus")});
@@ -143,7 +133,7 @@ namespace ErpMvc.Reportes
 
             var data = new List<ResumenOperaciones>();
             data.AddRange(resumenGastos);
-            foreach (var v in ventasData)
+            foreach (var v in ventas)
             {
                 if (data.Any(d => d.Fecha.Date == v.Fecha.Date))
                 {
@@ -156,7 +146,7 @@ namespace ErpMvc.Reportes
             }
 
             datosGrafico.Add("Gastos", resumenGastos.Select(g => new { Fecha = g.Fecha, Importe = g.Gastos }));
-            datosGrafico.Add("Ingresos", ventasData.Select(g => new { Fecha = g.Fecha, Importe = g.Importe }));
+            datosGrafico.Add("Ingresos", ventas.Select(g => new { Fecha = g.Fecha, Importe = g.Importe }));
 
             //var data = operaciones.GroupBy(o => o.Fecha).Select(o => new { Fecha = o.Key, Ingresos = o.Where(op => op.Importe > 0).Sum(op => op.Importe), Gastos = -o.Where(op => op.Importe < 0).Sum(op => op.Importe) }).ToList();
 
