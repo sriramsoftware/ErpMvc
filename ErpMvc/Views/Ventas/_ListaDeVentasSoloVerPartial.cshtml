@@ -45,33 +45,36 @@
     <div class="row">
         <div class="col-md-4 col-sm-8 col-xs-12">
             <h4 class="title_insight">Comanda # @venta.Id</h4>
-            <br/>
+            <br />
             @venta.Fecha.ToShortDateString() @venta.Fecha.ToShortTimeString()
-            <br/>
+            <br />
             Posición en el Local:&nbsp; @venta.PuntoDeVenta.Nombre
-            <br/>
+            <br />
             Dependiente: @venta.Vendedor.NombreCompleto
-            <br/>
+            <br />
             Usuario: @venta.Usuario.UserName
-            <br/>
+            <br />
             Estado: @switch (venta.EstadoDeVenta)
-                    {
-                        case EstadoDeVenta.Pendiente:
-                            @:<strong>En espera de pago por el cliente</strong>
+            {
+                case EstadoDeVenta.Pendiente:
+                    @:<strong>En espera de pago por el cliente</strong>
                             break;
-                        case EstadoDeVenta.PendienteParaOtroDia:
-                            @:<strong>A pagar otro dia</strong>
+                case EstadoDeVenta.PendienteParaOtroDia:
+                    @:<strong>A pagar otro dia</strong>
                             break;
-                        case EstadoDeVenta.PagadaEnEfectivo:
-                            @:<strong>Pagada en efectivo</strong>
+                case EstadoDeVenta.PagadaEnEfectivo:
+                    @:<strong>Pagada en efectivo</strong>
                             break;
-                        case EstadoDeVenta.NoCobrada:
-                            @:<strong>Por cuenta de la casa</strong>
+                case EstadoDeVenta.NoCobrada:
+                    @:<strong>Por cuenta de la casa</strong>
                             break;
-                        case EstadoDeVenta.PagadaPorTarjeta:
-                            @:<strong>Pagado con tarjeta de cliente</strong>
+                case EstadoDeVenta.PagadaPorTarjeta:
+                    @:<strong>Pagado con tarjeta de cliente</strong>
                             break;
-                    }
+                    case EstadoDeVenta.PagadaPorFactura:
+                    @:<strong>Pago por factura</strong>
+                            break;
+            }
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12 text-center">
             <label class="badge badge-title">

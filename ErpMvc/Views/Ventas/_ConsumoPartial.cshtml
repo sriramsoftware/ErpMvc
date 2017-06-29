@@ -20,7 +20,7 @@
                     @Html.DisplayFor(m => item.Cantidad) @Html.DisplayFor(m => item.Unidad) 
                 </td>
                 <td>
-                    <a class="btn btn-info" href="@Url.Action("VentasPorProducto","Reportes", new {id = item.ProductoId, fecha = item.Fecha})">Menus</a>
+                    <a class="btn btn-info" href="@Url.Action("VentasPorProducto","Reportes", new {id = item.ProductoId, fechaInicio = item.FechaInicio,fechaFin = item.FechaFin})">Menus</a>
                 </td>
             </tr>
         }

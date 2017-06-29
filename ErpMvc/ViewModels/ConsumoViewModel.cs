@@ -12,6 +12,8 @@ namespace ErpMvc.ViewModels
 
         public string Producto { get; set; }
 
-        public DateTime Fecha { get; set; }
+        public DateTime FechaInicio { get; set; }
+
+        public DateTime FechaFin { get; set; }
     }
 }

@@ -165,18 +165,22 @@ namespace ErpMvc.Controllers
             return View();
         }
 
+        public ActionResult VentasPorFactura()
+        {
+            return View();
+        }
+
         public ActionResult Consumo()
         {
             return View();
         }
 
-        public ActionResult VentasPorProducto(int id, DateTime fecha)
+        public ActionResult VentasPorProducto(int id, DateTime fechaInicio,DateTime fechaFin)
         {
-            var fIni = fecha.Date;
-            var fFin = fecha.Date.AddHours(23).AddMinutes(59);
-            ViewBag.Producto = _db.Set<ProductoConcreto>().SingleOrDefault(p => p.Id == id).Producto.Nombre;
+            var productoConcreto = _db.Set<ProductoConcreto>().SingleOrDefault(p => p.Id == id);
+            ViewBag.Producto = productoConcreto.Producto.Nombre;
 
-            var menus = _db.Set<DetalleDeVenta>().Where(m => m.Venta.DiaContable.Fecha >= fIni && m.Venta.DiaContable.Fecha <= fFin && (m.Elaboracion.Productos.Any(p => p.ProductoId == id) || m.Agregados.Any(p => p.Agregado.ProductoId == id))).GroupBy(m => m.Elaboracion).Select(m => new MenusPorProductoViewModel()
+            var menus = _db.Set<DetalleDeVenta>().Where(m => m.Venta.DiaContable.Fecha >= fechaInicio && m.Venta.DiaContable.Fecha <= fechaFin && (m.Elaboracion.Productos.Any(p => p.ProductoId == productoConcreto.ProductoId) || m.Agregados.Any(p => p.Agregado.ProductoId == id))).GroupBy(m => m.Elaboracion).Select(m => new MenusPorProductoViewModel()
             {
                 Menu = m.Key.Nombre,
                 CantidadVendida = (int)m.Sum(e => e.Cantidad),

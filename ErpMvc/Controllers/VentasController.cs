@@ -106,7 +106,8 @@ namespace ErpMvc.Controllers
                 Producto = m.Key.Producto.Nombre,
                 Cantidad = m.Sum(p => p.Cantidad),
                 Unidad = m.Key.UnidadDeMedida.Siglas,
-                Fecha = m.FirstOrDefault().Fecha
+                FechaInicio = fIni,
+                FechaFin = fFin
             }).ToList();
             var errores = _db.Set<MovimientoDeProducto>().Where(m => m.DiaContable.Fecha >= fIni && m.DiaContable.Fecha <= fFin && m.Tipo.Descripcion == TipoDeMovimientoConstantes.EntradaPorErrorDeSalida).GroupBy(m => m.Producto).Select(m => new ConsumoViewModel()
             {
@@ -114,7 +115,8 @@ namespace ErpMvc.Controllers
                 Producto = m.Key.Producto.Nombre,
                 Cantidad = m.Sum(p => p.Cantidad),
                 Unidad = m.Key.UnidadDeMedida.Siglas,
-                Fecha = m.FirstOrDefault().Fecha
+                FechaInicio = fIni,
+                FechaFin = fFin
             }).ToList();
             foreach (var error in errores)
             {
