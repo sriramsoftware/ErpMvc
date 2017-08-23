@@ -94,7 +94,7 @@ namespace ErpMvc.Controllers
                 }
                 if (centroCostoService.GuardarCambios())
                 {
-                    TempData["exito"] = "Movimiento realizado correctmente";
+                    TempData["exito"] = "Movimiento realizado correctamente";
                 }
                 else
                 {
@@ -105,28 +105,6 @@ namespace ErpMvc.Controllers
             return View();
         }
 
-        //public ActionResult MermaDeAlmacen()
-        //{
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //public ActionResult MermaDeAlmacen(ValeSalidaDeAlmacen vale)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        vale.UsuarioId = User.Identity.GetUserId();
-        //        if (!_almacenService.DarSalidaDeAlmacen(vale))
-        //        {
-        //            TempData["error"] = "Error al dar salida";
-        //        }
-        //        else
-        //        {
-        //            TempData["exito"] = "Salida efectuada correctamente";
-        //        }
-        //        return RedirectToAction("Almacen", "Inventario");
-        //    }
-        //    return View();
-        //}
+        
     }
 }

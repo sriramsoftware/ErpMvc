@@ -14,7 +14,6 @@ using Microsoft.AspNet.Identity;
 namespace ErpMvc.Controllers
 {
     [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-    [DiaContable]
     public class CajaController : Controller
     {
         private DbContext _db;
@@ -57,7 +56,7 @@ namespace ErpMvc.Controllers
             return operaciones;
         }
 
-        
+        [DiaContable]
         public ActionResult Extraccion()
         {
             return View();
@@ -65,6 +64,7 @@ namespace ErpMvc.Controllers
 
         
         [HttpPost]
+        [DiaContable]
         public ActionResult Extraccion(OperacionCajaViewModel extraccion)
         {
             if (ModelState.IsValid)
@@ -87,7 +87,7 @@ namespace ErpMvc.Controllers
             return View(extraccion);
         }
 
-        
+        [DiaContable]
         public ActionResult Deposito()
         {
             return View();
@@ -95,6 +95,7 @@ namespace ErpMvc.Controllers
 
         
         [HttpPost]
+        [DiaContable]
         public ActionResult Deposito(OperacionCajaViewModel deposito)
         {
             if (ModelState.IsValid)

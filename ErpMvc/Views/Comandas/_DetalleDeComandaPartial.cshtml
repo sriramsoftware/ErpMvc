@@ -1,0 +1,69 @@
+﻿@model CompraVentaCore.Models.DetalleDeVenta
+
+
+
+<div class="alert alert-danger" ng-show="tieneError" ng-cloak>
+    <button type="button" class="close" aria-hidden="true" ng-click="closeAlert()">&times;</button>
+    <p>{{ error }}</p>
+</div>
+
+
+<div id="form-detalle-compra" class="row">
+    <div class="col-sm-8 col-xs-8 padding3px">
+        <select id="ElaboracionId" name="ElaboracionId" class="form-control" chosen ng-model="newDetalle.Elaboracion" ng-options="menu.Nombre for menu in menus track by menu.Id">
+            <option></option>
+        </select>
+        @Html.ValidationMessageFor(model => model.ElaboracionId)
+    </div>
+    <div class="col-sm-2 col-xs-2 padding3px">
+        @Html.TextBoxFor(model => model.Cantidad, new { @class = "form-control", @style = "max-width: 100px !important", @ng_model = "newDetalle.Cantidad" })
+        @Html.ValidationMessageFor(model => model.Cantidad)
+    </div>
+    <div class="col-sm-2 col-xs-2 padding3px">
+        <a id="add_aprob" ng-click="agregarDetalle()" ng-disabled="ocupado" class="btn btn-success nuevo" title="Agregar Detalle" data-placement="top" data-togle="tooltip" href="javascript:;"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+<div class="row padding0px" ng-repeat="detalle in detalles" ng-cloak>
+    <div class="col-sm-1 col-xs-1">
+        <a class="btn btn-sm btn-default" title="Agregados" ng-click="mostrarAgregados(detalle)"><i class="glyphicon glyphicon-bell"></i></a>
+        <a class="btn btn-sm btn-default" title="Orden" ng-click="mostrarOrdenes(detalle)"><i class="glyphicon glyphicon-list"></i></a>
+    </div>
+    <div class="col-sm-6 col-xs-6">
+
+        <strong data-ng-hide="detalle.editMode">{{ detalle.Elaboracion.Nombre }}</strong><span ng-if="detalle.Agregados.length > 0"> con :</span>
+        <span ng-repeat-start="agregado in detalle.Agregados">{{agregado.Nombre}} ({{agregado.Cantidad}})</span><span ng-if="$index < detalle.Agregados.length -1">,</span>
+        <input name="Detalles[{{ $parent.$index }}].Agregados[{{$index}}].AgregadoId" type="hidden" value="{{agregado.Id}}" />
+        <input ng-repeat-end name="Detalles[{{ $parent.$index }}].Agregados[{{$index}}].Cantidad" type="hidden" value="{{agregado.Cantidad}}" />
+        <input name="Detalles[{{ $index }}].ElaboracionId" ng-show="detalle.editMode" type="text" ng-model="detalle.Elaboracion.Id" class="form-control" />
+        <input name="Detalles[{{ $index }}].ComandaId" ng-show="detalle.editMode" type="text" ng-model="detalle.ComandaId" class="form-control"/>
+        <hr/>
+        <span ng-repeat-start="orden in detalle.Ordenes">{{orden.Orden.Numero + '   ' + orden.Orden.Comensal.Nombre }}</span>
+        <input name="Detalles[{{ $parent.$index }}].Ordenes[{{$index}}].Orden.Numero" type="hidden" value="{{orden.Orden.Numero}}"/>
+        <input name="Detalles[{{ $parent.$index }}].Ordenes[{{$index}}].Orden.Comensal" type="hidden" value="{{orden.Orden.Comensal.Id}}"/>
+        <span ng-if="detalle.Anotaciones.length > 0">Anotaciones:</span>
+        <span ng-repeat-start="anotacion in orden.Anotaciones">{{anotacion.Abreviatura}}</span><span ng-if="$index < orden.Anotaciones.length -1">,</span>
+        <input ng-repeat-end name="Detalles[{{ $parent.$parent.$index }}].Ordenes[{{$parent.$index}}].Anotaciones[{{$index}}].Id" type="hidden" value="{{anotacion.Id}}"/>
+
+        <hr ng-repeat-end/>
+    </div>
+    <div class="col-sm-3 col-xs-3">
+        <div class="col-sm-6 col-xs-6">
+            <label class="cantidad-menu">{{ detalle.Cantidad }}</label>
+        </div>
+        <div class="col-sm-6 col-xs-6">
+            <a class="btn btn-primary btn-xs add-menu" ng-click="aumentarCantidad(detalle)">
+                <i class="glyphicon glyphicon-plus-sign"></i>
+            </a>
+
+            <a class="btn btn-primary btn-xs rest-menu" ng-click="disminuirCantidad(detalle)">
+                <i class="glyphicon glyphicon-minus-sign"></i>
+            </a>
+        </div>
+
+        <input name="Detalles[{{ $index }}].Cantidad" ng-show="detalle.editMode" type="text" ng-model="detalle.Cantidad" class="form-control" />
+    </div>
+    <div class="col-sm-2 col-xs-2">
+        <a class="btn btn-danger" ng-click="borrarDetalle($index)" href="javascript:;"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+    </div>
+</div>

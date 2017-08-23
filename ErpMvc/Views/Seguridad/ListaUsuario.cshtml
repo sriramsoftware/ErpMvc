@@ -31,13 +31,14 @@
                         @String.Join(",", item.Roles.Select(r => r.Role.Name))
                     </td>
                     <td>
+                        @Html.ActionLink("Restablecer contraseña","ResetearContraseña",new {usuarioId=item.Id},new {@class="btn btn-info"})
                         @if (item.Activo)
                         {
-                            @Ajax.ActionLink("Eliminar", "Eliminar", new { id = item.Id }, new AjaxOptions { OnComplete = "complete", UpdateTargetId = "inactivarUser_form" }, new { @class = "btn btn-danger" })
+                            @Ajax.ActionLink("Eliminar", "Eliminar", new {id = item.Id}, new AjaxOptions {OnComplete = "complete", UpdateTargetId = "inactivarUser_form"}, new {@class = "btn btn-danger"})
                         }
                         else
                         {
-                            @Ajax.ActionLink("Activar", "Eliminar", new { id = item.Id }, new AjaxOptions { OnComplete = "complete", UpdateTargetId = "inactivarUser_form" }, new { @class = "btn btn-success" })
+                            @Ajax.ActionLink("Activar", "Eliminar", new {id = item.Id}, new AjaxOptions {OnComplete = "complete", UpdateTargetId = "inactivarUser_form"}, new {@class = "btn btn-success"})
                         }
                     </td>
                 </tr>

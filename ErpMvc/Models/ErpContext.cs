@@ -80,6 +80,14 @@ namespace ErpMvc.Models
                 .HasRequired(p => p.Venta)
                 .WithOptional();
 
+            modelBuilder.Entity<Comanda>()
+                .HasMany(a => a.Comensales)
+                .WithRequired(e => e.Comanda).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<OrdenPorDetalle>()
+                            .HasMany(a => a.Anotaciones)
+                            .WithMany(a => a.OrdenPorDetalles).Map(a => a.ToTable("rst_anotaciones_orden_detalles"));
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -136,5 +144,13 @@ namespace ErpMvc.Models
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<PersonaCliente> PersonasClientes { get; set; }
         public DbSet<EntidadCliente> EntidadesClientes { get; set; }
+
+        //comandas
+        public DbSet<Comanda> Comandas { get; set; }
+        public DbSet<DetalleDeComanda> DetallesDeComandas { get; set; }
+        public DbSet<AgregadoDeComanda> AgregadosDeComandas { get; set; }
+        public DbSet<Anotacion> Anotaciones { get; set; }
+        public DbSet<Orden> Ordenes { get; set; }
+        public DbSet<OrdenPorDetalle> OrdenesPorDetalles { get; set; }
     }
 }

@@ -91,6 +91,11 @@
             </label>
             <br />
             <p>@venta.Observaciones</p>
+            @if ((ViewBag.Propinas as ICollection<Propina>).Any(p => p.VentaId == venta.Id))
+            {
+                <br />
+                <strong> Propina:</strong> @String.Format("{0:C}", (ViewBag.Propinas as ICollection<Propina>).SingleOrDefault(p => p.VentaId == venta.Id).Importe)
+            }
         </div>
         <div class="col-md-3 col-sm-4 col-xs-12 botones">
             @Ajax.ActionLink("Ver Menus Consumidos", "MenusEnVentaPartial", "Ventas", new { Id = venta.Id }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, HttpMethod = "Get", UpdateTargetId = "modal-detalle", OnComplete = "mostrarModal" }, new { @class = "btn btn-primary btn-sm col-md-12" })

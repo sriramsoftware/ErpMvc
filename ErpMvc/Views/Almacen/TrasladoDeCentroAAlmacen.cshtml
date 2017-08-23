@@ -1,0 +1,61 @@
+﻿@model CompraVentaCore.Models.Compra
+
+@{
+    ViewBag.Title = "Traslado de centro de costo a almacen";
+}
+
+<h1 class="message-body">@ViewBag.Title.</h1>
+
+@using (Html.BeginForm("TrasladoDeCentroAAlmacen", "Almacen", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    <div class="col-md-12" id="movimientoProductoController"  ng-controller="movimientoProductoController">
+        <div class="form-group">
+            @{
+                Html.RenderAction("DiaContable", "PeriodoContable");
+            }
+        </div>
+        <div class="form-group">
+            @Html.Label("CentroDeCostoId", "Centro de costo", new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.DropDownList("CentroDeCostoId", null, new { @class = "form-control", @ng_model = "origenId", @chosen = "", @ng_change = "cambiarOrigen()" })
+                @Html.ValidationMessage("CentroDeCostoId")
+            </div>
+        </div>
+        <div class="form-group">
+            @{
+                Html.RenderPartial("_DetalleSalidaPartial", ViewData);
+            }
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                @Html.ActionLink("Atrás", "CentroDeCosto", "Inventario", null, new { @class = "btn btn-default" })
+                <input id="comprar-btn" type="submit" class="btn btn-success" value="Dar salida" />
+            </div>
+        </div>
+    </div>
+                }
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/erp/movimientoProductoController.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".select").chosen();
+
+            $('.nuevo').tooltip();
+
+            $('#comprar-btn').click(function () {
+                $('#form-detalle-compra').remove();
+            });
+
+            //$("#ProductoId").change(function() {
+            //    var msg = $("#ProductoId option:selected").val();
+            //    angular.element('#compraController').scope().fetchUnidades(msg);
+            //    angular.element('#compraController').scope().$apply();
+            //});
+        });
+    </script>
+}

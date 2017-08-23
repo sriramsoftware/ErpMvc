@@ -56,8 +56,8 @@
       <HintPath>..\packages\ComercialCore.1.5.0\lib\net45\ComercialCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaBL, Version=1.24.27.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaBL.1.24.27\lib\net45\CompraVentaBL.dll</HintPath>
+    <Reference Include="CompraVentaBL, Version=1.24.30.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaBL.1.24.30\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CompraVentaCore, Version=1.12.5.0, Culture=neutral, processorArchitecture=MSIL">
@@ -187,6 +187,10 @@
     </Reference>
     <Reference Include="LicenciaCore, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LicenciaCore.2.0.0\lib\net45\LicenciaCore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -347,7 +351,9 @@
     <Compile Include="Controllers\CajaController.cs" />
     <Compile Include="Controllers\CentrosDeCostosController.cs" />
     <Compile Include="Controllers\ClasificacionesDeProductosController.cs" />
+    <Compile Include="Controllers\ComandasController.cs" />
     <Compile Include="Controllers\ComprasController.cs" />
+    <Compile Include="Controllers\AnotacionesController.cs" />
     <Compile Include="Controllers\ConceptosDeGastosController.cs" />
     <Compile Include="Controllers\ControlDeAsistenciaController.cs" />
     <Compile Include="Controllers\GruposDeProductosController.cs" />
@@ -369,11 +375,22 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708091753188_CambiosDeComanda.cs" />
+    <Compile Include="Migrations\201708091753188_CambiosDeComanda.Designer.cs">
+      <DependentUpon>201708091753188_CambiosDeComanda.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AgregadoDeComanda.cs" />
+    <Compile Include="Models\Anotacion.cs" />
     <Compile Include="Models\Asistencia.cs" />
+    <Compile Include="Models\Comanda.cs" />
+    <Compile Include="Models\Comensal.cs" />
     <Compile Include="Models\ConceptoDeGasto.cs" />
+    <Compile Include="Models\DetalleDeComanda.cs" />
     <Compile Include="Models\ErpContext.cs" />
     <Compile Include="Models\LicenciaInfo.cs" />
+    <Compile Include="Models\Orden.cs" />
+    <Compile Include="Models\OrdenPorDetalle.cs" />
     <Compile Include="Models\OtrosGastos.cs" />
     <Compile Include="Models\PorcientoMenu.cs" />
     <Compile Include="Models\Propina.cs" />
@@ -410,6 +427,12 @@
     <Compile Include="Reportes\Cierre.Designer.cs">
       <DependentUpon>Cierre.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reportes\ComandaReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\ComandaReport.Designer.cs">
+      <DependentUpon>ComandaReport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Reportes\ValeDeVenta.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -429,6 +452,7 @@
       <DependentUpon>Inventario.cs</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="Utiles\CustomErrorHandlerAttribute.cs" />
     <Compile Include="Utiles\DiaContableAttribute.cs" />
     <Compile Include="Utiles\LicenciaAttribute.cs" />
     <Compile Include="Utiles\ResumenCierre.cs" />
@@ -441,6 +465,7 @@
     <Compile Include="ViewModels\DetalleProductoViewModel.cs" />
     <Compile Include="ViewModels\ExistenciaViewModel.cs" />
     <Compile Include="ViewModels\MenusPorProductoViewModel.cs" />
+    <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\MovimientoProductosViewModel.cs" />
     <Compile Include="ViewModels\ExtraccionDeCajaViewModel.cs" />
     <Compile Include="ViewModels\OperacionCajaViewModel.cs" />
@@ -449,6 +474,7 @@
     <Compile Include="ViewModels\ProductoConcretoViewModel.cs" />
     <Compile Include="ViewModels\ProductoViewModel.cs" />
     <Compile Include="ViewModels\ResumenDeOperaciones.cs" />
+    <Compile Include="ViewModels\ResumenProductoVM.cs" />
     <Compile Include="ViewModels\VendedorViewModel.cs" />
     <Compile Include="ViewModels\VerificarVentaViewModel.cs" />
   </ItemGroup>
@@ -559,6 +585,7 @@
     <Content Include="Scripts\datatables.min.js" />
     <Content Include="Scripts\erp\entradaProductoController.js" />
     <Content Include="Scripts\erp\movimientoProductoController.js" />
+    <Content Include="Scripts\erp\comandasController.js" />
     <Content Include="Scripts\erp\ventasController.js" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular.min.js.map" />
@@ -1579,6 +1606,21 @@
     <Content Include="Views\Compras\Editar.cshtml" />
     <Content Include="Views\Productos\EntradaPorAjuste.cshtml" />
     <Content Include="Views\Ventas\VentaPorFactura.cshtml" />
+    <Content Include="Views\Almacen\TrasladoDeCentroAAlmacen.cshtml" />
+    <Content Include="Views\Almacen\_DetalleSalidaPartial.cshtml" />
+    <Content Include="Views\Reportes\VentasPorFacturas.cshtml" />
+    <Content Include="Views\Comandas\NuevaComanda.cshtml" />
+    <Content Include="Views\Comandas\_DetalleDeComandaPartial.cshtml" />
+    <Content Include="Views\Shared\_Layout.Mobile.cshtml" />
+    <Content Include="Views\Anotaciones\Agregar.cshtml" />
+    <Content Include="Views\Anotaciones\Editar.cshtml" />
+    <Content Include="Views\Anotaciones\Index.cshtml" />
+    <Content Include="Views\Reportes\ResumenDeProducto.cshtml" />
+    <Content Include="Views\Reportes\_ResumenDeProductoPartial.cshtml" />
+    <Content Include="Views\Comandas\Index.cshtml" />
+    <Content Include="Views\Comandas\_ListaDeComandasPartial.cshtml" />
+    <Content Include="Views\Comandas\_MenusEnComandaPartial.cshtml" />
+    <Content Include="Views\Comandas\Editar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />
@@ -1588,6 +1630,9 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201708091753188_CambiosDeComanda.resx">
+      <DependentUpon>201708091753188_CambiosDeComanda.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Reportes\Asistencia.resx">
       <DependentUpon>Asistencia.cs</DependentUpon>
@@ -1603,6 +1648,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\Cierre.resx">
       <DependentUpon>Cierre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\ComandaReport.resx">
+      <DependentUpon>ComandaReport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\ValeDeVenta.resx">
       <DependentUpon>ValeDeVenta.cs</DependentUpon>

@@ -1,0 +1,86 @@
+﻿@model ErpMvc.ViewModels.ParametrosMovProdViewModel
+
+@{
+    ViewBag.Tittle = "Resum de Prod";
+}
+
+@using (Ajax.BeginForm("ResumenDeProducto", "Reportes", new AjaxOptions() { InsertionMode = InsertionMode.Replace, HttpMethod = "Post", UpdateTargetId = "resumen", OnSuccess = "completo" , OnBegin = "empezando", OnFailure = "fallido"}))
+{
+    @Html.AntiForgeryToken()
+    <div class="formpanel panel-default">
+        <div class="panel-heading">
+            <h3 class="text-center">Resumen de producto en periodo</h3>
+        </div>
+        <div class="panel-body">
+            @*<p class="alert-success"><strong>Nota:</strong> Utilice los diferentes filtros de búsqueda para obtener la información que desee</p>*@
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaInicio, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FechaInicio)
+                        @Html.ValidationMessageFor(model => model.FechaInicio)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaFin, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FechaFin)
+                        @Html.ValidationMessageFor(model => model.FechaFin)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ProductoId, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("ProductoId", null, new { @class = "form-control select" })
+                        @Html.ValidationMessageFor(model => model.ProductoId)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="panel-footer text-right">
+            <div class="form-group">
+                <input type="submit" value="Generar reporte" class="btn btn-success"  id="reporte-btn"/>
+                <a class="btn btn-info" href="@Url.Action("Index","Inicio")">Cancelar</a>
+            </div>
+        </div>
+    </div>
+}
+
+<div id="resumen">
+
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/chosen.jquery.min.js"></script>
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".select").chosen();
+            $('#FechaInicio').val("");
+            $('#FechaFin').val("");
+
+        });
+
+        function completo() {
+            $('#reporte-btn').attr('disabled', false);
+            declareDatatable('#resumen-mov-tabla');
+        }
+
+        function empezando() {
+            $('#reporte-btn').attr('disabled', true);
+            $('#resumen').html("");
+        }
+
+        function fallido() {
+            $('#reporte-btn').attr('disabled', false);
+            $('#resumen').append("<p> No hay informacion del producto en el periodo solicitado</p>");
+        }
+    </script>
+}

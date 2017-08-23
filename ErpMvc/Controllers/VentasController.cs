@@ -77,6 +77,17 @@ namespace ErpMvc.Controllers
             return PartialView("_ListaDeVentasSoloVerPartial", ventas);
         }
 
+        public PartialViewResult ListaDeVentasFacturasPorFechaPartial(DateTime fecha)
+        {
+            var fIni = fecha.Date;
+            var fFin = fecha.Date.AddHours(23).AddMinutes(59);
+            ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContable.Fecha >= fIni && p.Venta.DiaContable.Fecha <= fFin && p.Venta.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura).ToList();
+            var ventas = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin && v.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura).OrderByDescending(v => v.Fecha).ToList();
+            ViewBag.CantidadDeVentas = ventas.Count();
+            return PartialView("_ListaDeVentasSoloVerPartial", ventas);
+        }
+
+
         public PartialViewResult ListaDeVentasCuentaCasaPartial(DateTime fecha)
         {
             var fIni = fecha.Date;
@@ -168,7 +179,7 @@ namespace ErpMvc.Controllers
         {
             return RedirectToAction("ListaDeVentasCuentaCasaPartial", new { Fecha = fecha });
         }
-
+        
         [HttpPost]
         [DiaContable]
         public ActionResult NuevaVenta(Venta venta)
@@ -249,7 +260,6 @@ namespace ErpMvc.Controllers
         }
 
 
-
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         [DiaContable]
         public ActionResult Editar(int id)
@@ -320,6 +330,11 @@ namespace ErpMvc.Controllers
             }
             if (_ventasService.EliminarVenta(id, User.Identity.GetUserId()))
             {
+                var propina = _db.Set<Propina>().SingleOrDefault(p => p.VentaId == id);
+                if (propina != null)
+                {
+                    _db.Set<Propina>().Remove(propina);
+                }
                 if (_ventasService.GuardarCambios())
                 {
                     TempData["exito"] = "Comanda eliminada correctamente";

@@ -35,7 +35,7 @@
                     <p>
                         Centro de costo: @item.CentroDeCosto.Nombre<br/>
                         Precio de Venta: @String.Format("{0:C}", item.PrecioDeVenta)<br/>
-                        Precio Total de Materias Primas: @String.Format("{0:C}", item.Costo)<br/>
+                        Costo: @String.Format("{0:C}", item.Costo)<br/>
                         Precio con Índice: @String.Format("{0:C}", item.Costo*item.IndiceEsperado)<br/>
                         @if ((ViewBag.Porcientos as ICollection<PorcientoMenu>).Any(p => p.ElaboracioId == item.Id)
                              && (ViewBag.Porcientos as ICollection<PorcientoMenu>).SingleOrDefault(p => p.ElaboracioId == item.Id).SeCalcula)

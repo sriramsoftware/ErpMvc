@@ -1,0 +1,61 @@
+﻿@using AlmacenCore.Models
+@using CompraVentaCore.Models
+@using ErpMvc.ViewModels
+@{
+    var compras = ViewBag.Entrada as ICollection<EntradaAlmacen>;
+    var ventas = ViewBag.Ventas as ICollection<ResumenProductoVM>;
+    var ventasEfectivo = ViewBag.VentasNormales as ICollection<ResumenProductoVM>;
+    var ventasAlCosto = ViewBag.AlCosto as ICollection<ResumenProductoVM>;
+    var ventasPorLaCasa = ViewBag.PorLaCasa as ICollection<ResumenProductoVM>;
+    var ventasPorFactura = ViewBag.PorFactura as ICollection<ResumenProductoVM>;
+    var mermas = ViewBag.Merma as ICollection<MovimientoDeProducto>;
+    var entradaAjustes = ViewBag.EntradasPorAjuste as ICollection<MovimientoDeProducto>;
+    var salidasAjustes = ViewBag.SalidasPorAjuste as ICollection<MovimientoDeProducto>;
+
+    var merm = mermas.Sum(c => c.Cantidad);
+    var ajustes = entradaAjustes.Sum(e => e.Cantidad) + salidasAjustes.Sum(s => s.Cantidad);
+    var quedan = compras.Sum(c => c.Cantidad) - ventas.Sum(v => v.Cantidad) - merm + ajustes;
+
+
+}
+
+<table class="table">
+    <tr>
+        <td>Entrada</td>
+        <td>@compras.Sum(c => c.Cantidad)</td>
+    </tr>
+    <tr>
+        <td>Ventas totales</td>
+        <td> - @ventas.Sum(c => c.Cantidad)</td>
+    </tr>
+    <tr>
+        <td>Ventas en efectivo</td>
+        <td>@ventasEfectivo.Sum(c => c.Cantidad)</td>
+    </tr> 
+    <tr>
+        <td>Ventas al costo</td>
+        <td>@ventasAlCosto.Sum(c => c.Cantidad)</td>
+    </tr>
+    <tr>
+        <td>Ventas por la casa</td>
+        <td>@ventasPorLaCasa.Sum(c => c.Cantidad)</td>
+    </tr>
+    <tr>
+        <td>Ventas Por Factura</td>
+        <td>@ventasPorFactura.Sum(c => c.Cantidad)</td>
+    </tr>
+    <tr>
+        <td>Mermas</td>
+        <td> - @merm</td>
+    </tr>
+    <tr>
+        <td>Ajustes</td>
+        <td> + @ajustes</td>
+    </tr>
+    <tr>
+        <td>Quedan</td>
+        <td>@quedan</td>
+    </tr>
+</table>
+
+

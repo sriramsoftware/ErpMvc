@@ -10,5 +10,6 @@ namespace ErpMvc.Models
         public const string Administrador = "ADMINISTRADOR";
         public const string UsuarioAvanzado = "USUARIO_AVANZADO";
         public const string Vendedor = "VENDEDOR";
+        public const string CapitanDeSalon = "CAPITAN_DE_SALON";
     }
 }

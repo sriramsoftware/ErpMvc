@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using AlmacenCore.Models;
 using CompraVentaBL;
+using CompraVentaCore.Models;
 using ErpMvc.Models;
 using ErpMvc.Utiles;
 using Microsoft.AspNet.Identity;
@@ -18,11 +19,13 @@ namespace ErpMvc.Controllers
     {
         private DbContext _db;
         private AlmacenService _almacenService;
+        private CentroDeCostoService _centroCostoService;
 
         public AlmacenController(DbContext context)
         {
             _db = context;
             _almacenService = new AlmacenService(context);
+            _centroCostoService = new CentroDeCostoService(context);
         }
 
         public JsonResult ExistenciasAlmacen(int id)
@@ -116,6 +119,45 @@ namespace ErpMvc.Controllers
         public JsonResult SePuedeDarSalida(SalidaPorMerma producto)
         {
             return _almacenService.SePuedeDarSalidaPorMerma(producto) ? Json(true, JsonRequestBehavior.AllowGet) : Json(false, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult TrasladoDeCentroAAlmacen()
+        {
+            ViewBag.AlmacenId = _db.Set<Almacen>().FirstOrDefault().Id;
+            ViewBag.CentroDeCostoId = new SelectList(_centroCostoService.CentrosDeCosto(), "Id", "Nombre");
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [DiaContable]
+        public ActionResult TrasladoDeCentroAAlmacen(Compra compra, int centroDeCostoId)
+        {
+            var usuario = User.Identity.GetUserId();
+            compra.UsuarioId = usuario;
+            var almacenId = _almacenService.GetAlmacenIdPorDefecto();
+            if (ModelState.IsValid)
+            {
+                if (!compra.Productos.Any())
+                {
+                    TempData["error"] = "No se puede efectuar un traslado sin productos";
+                    return View();
+                }
+                foreach (var prod in compra.Productos)
+                {
+                    _almacenService.EntradaDesdeCentroDeCosto(almacenId, centroDeCostoId, prod.ProductoId, prod.Cantidad, prod.UnidadDeMedidaId, User.Identity.GetUserId());
+                }
+
+                if (_almacenService.GuardarCambios())
+                {
+                    TempData["exito"] = "Salida registrada correctamente";
+                    return RedirectToAction("CentroDeCosto", "Inventario");
+                }
+                TempData["error"] = "No se pudo registrar la salida correctamente";
+                return RedirectToAction("CentroDeCosto", "Inventario");
+            }
+            ViewBag.CentroDeCostoId = new SelectList(_centroCostoService.CentrosDeCosto(), "Id", "Nombre", centroDeCostoId);
+            return View(compra);
         }
     }
 }

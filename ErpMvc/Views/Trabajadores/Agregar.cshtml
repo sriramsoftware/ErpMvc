@@ -41,7 +41,7 @@
             </div>
         </div>
         
-        @*<div class="form-group">
+        <div class="form-group">
             @Html.LabelFor(m => m.UsuarioViewModel.NombreUsuario, new { @class = "col-md-4 control-label" })
             <div class="col-md-8">
                 @Html.TextBoxFor(m => m.UsuarioViewModel.NombreUsuario, new { @class = "form-control" })
@@ -68,7 +68,7 @@
                 @Html.ListBox("Roles", null, new { @class = "form-control select" })
                 @Html.ValidationMessageFor(m => m.Roles)
             </div>
-        </div>*@
+        </div>
         <div class="form-group">
             <div class="col-md-offset-4 col-md-8">
                 @Html.ActionLink("Atrás", "Index", null, new { @class = "btn btn-default" })

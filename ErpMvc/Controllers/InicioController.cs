@@ -8,6 +8,7 @@ using ContabilidadBL;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
 using ErpMvc.ViewModels;
+using SeguridadCore.Utiles;
 
 namespace ErpMvc.Controllers
 {
@@ -28,8 +29,13 @@ namespace ErpMvc.Controllers
         //private ErpContext db = new ErpContext();        
         public ActionResult Index()
         {
+            //throw new Exception("Hola mi exception.");
             if (User.Identity.IsAuthenticated)
             {
+                if (User.IsInRole(RolesMontin.Vendedor) || User.IsInRole(RolesMontin.CapitanDeSalon))
+                {
+                    return RedirectToAction("Index", "Comandas");
+                }
                 ViewBag.DiaContable = _periodoContableService.GetDiaContableActual() != null? _periodoContableService.GetDiaContableActual():null;
                 ViewBag.VentasDiarias = 0;
                 ViewBag.ImporteVentasDiarias = 0;

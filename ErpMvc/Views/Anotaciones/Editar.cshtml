@@ -1,0 +1,41 @@
+﻿@model ErpMvc.Models.Anotacion
+
+@{
+    ViewBag.Title = "Modificar anotacion";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Editar", "Anotaciones", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    <div class="col-md-8 col-md-offset-2">
+        @Html.HiddenFor(m => m.Id)
+        <div class="form-group">
+            @Html.LabelFor(m => m.Abreviatura, new {@class = "col-md-4 control-label"})
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Abreviatura, new {@class = "form-control"})
+                @Html.ValidationMessageFor(m => m.Abreviatura)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Descripcion, new {@class = "col-md-4 control-label"})
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Descripcion, new {@class = "form-control"})
+                @Html.ValidationMessageFor(m => m.Descripcion)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                @Html.ActionLink("Atrás", "Index", null, new {@class = "btn btn-default"})
+                <input type="submit" class="btn btn-success" value="Guardar"/>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

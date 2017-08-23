@@ -1,0 +1,159 @@
+﻿@using CompraVentaCore.Models
+@model IEnumerable<CompraVentaCore.Models.Venta>
+
+@{
+    ViewBag.Title = "Comandas";
+}
+
+<div id="ventas-div">
+    @{
+        Html.RenderAction("ListaDeComandasPartial", new { Id = ViewBag.DiaContable.Id });
+    }
+</div>
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha"><i class="glyphicon glyphicon-usd icono_derecha"></i>&nbsp;Comandas</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-justify contenido_derecho_descripcion">
+            <p>Observe sus comandas registradas en la fecha contable actual y sus menús asociados</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <a href="@Url.Action("NuevaComanda")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Registrar Nueva Comanda</a>
+        </div>
+    </div>
+    <br />
+}
+
+<!-- MODAL AGREGAR MENU -->
+<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 id="modal-title" class="modal-title">Menús en venta</h4>
+            </div>
+            <div id="modal-detalle" class="modal-body">
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- TERMINA MODAL AGREGAR MENU -->
+
+<div id="modalEliminarVenta" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Eliminar Venta</h4>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <p>¿Desea realmente eliminar la comanda <span id="numero-comanda"></span>?</p>
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("EliminarComanda", "Comandas"))
+                {
+                    @Html.AntiForgeryToken()
+                    <input id="id-venta" type="hidden" name="Id" value="0" />
+                    <div class="col-md-3 col-md-offset-6">
+                        <input id="button-eliminar-venta" type="submit" value="Eliminar Venta" class="btn btn-primary" />
+                    </div>
+                }
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-default col-md-12" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalImprimirVenta" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Imprimir Venta</h4>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <p>
+                    <strong>¡Atención!!!</strong> Si imprime el reporte correspondiente a la comanda<br />
+                    no podrá realizar futuras ediciones en la venta y deberá realizar el pago correspondiente a esta.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <div class="col-md-3 col-md-offset-6">
+                    @*<a class="btn btn-primary" id="imprimir-btn" href="@Url.Action("ImprimirReporte","Ventas")">Imprimir</a>*@
+                    <a class="btn btn-primary" id="imprimir-btn" href="javascript:;">Imprimir</a>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-default col-md-12" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+
+            function ImprimirVenta(id) {
+                var w = window.open("/Reportes/Comanda/" + id);
+                $("#modalImprimirVenta").modal('hide');
+            }
+
+            $(document).on('click', "#imprimir-btn", function () {
+                var id = $(this).attr("data-id");
+                ImprimirVenta(id);
+                //window.location = '/Ventas/Index';
+            });
+
+
+
+            $(document).on('click', ".print-vale-btn", function () {
+                var id = $(this).attr("data-id");
+                ImprimirVenta(id);
+            });
+
+            $(document).on('click', ".pagar-vale-btn", function () {
+                angular.element('#modalPagarVale').scope().fetchImporte($(this).attr("data-id"));
+                angular.element('#modalPagarVale').scope().$apply();
+                $("#modalPagarVale").modal('show');
+            });
+
+            $(document).on('click', ".propina-btn", function () {
+                angular.element('#modalPropina').scope().setVentaId($(this).attr("data-id"));
+                angular.element('#modalPropina').scope().$apply();
+                $("#modalPropina").modal('show');
+            });
+
+            $(document).on('click', ".eliminar-venta-btn", function () {
+                var id = $(this).attr('data-id');
+                $("#id-venta").val(id);
+                $("#numero-comanda").html(id);
+                $("#modalEliminarVenta").modal('show');
+            });
+        });
+
+        function mostrarModal() {
+            $("#modal").modal('show');
+        }
+
+    </script>
+}

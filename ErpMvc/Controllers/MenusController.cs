@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Net;
 using ContabilidadCore.Models;
 using ErpMvc.Models;
+using ErpMvc.ViewModels;
 
 namespace ErpMvc.Controllers
 {
@@ -207,13 +208,13 @@ namespace ErpMvc.Controllers
         public JsonResult Menus()
         {
             var menus = _elaboracionService.Elaboraciones().Where(e => e.Activo && e.Productos.Any()).ToList();
-            var menusLista = new List<dynamic>();
+            var menusLista = new List<MenuViewModel>();
             foreach (var menu in menus)
             {
-                menusLista.Add(new { Id = menu.Id, Nombre = menu.Nombre, Precio = menu.PrecioDeVenta,CentroDeCostoId = menu.CentroDeCostoId });
+                menusLista.Add(new MenuViewModel() { Id = menu.Id, Nombre = menu.Nombre, Precio = menu.PrecioDeVenta,CentroDeCostoId = menu.CentroDeCostoId });
             }
 
-            return Json(menusLista, JsonRequestBehavior.AllowGet);
+            return Json(menusLista.OrderBy(m => m.Nombre), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

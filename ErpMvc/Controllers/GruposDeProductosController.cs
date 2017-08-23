@@ -56,7 +56,7 @@ namespace ErpMvc.Controllers
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        public ActionResult Editar(int id)
+        public ActionResult Editar(int? id)
         {
             if (id == null)
             {

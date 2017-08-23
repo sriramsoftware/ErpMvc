@@ -1,0 +1,35 @@
+﻿@model IEnumerable<ErpMvc.Models.DetalleDeComanda>
+
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr class="primary">
+            <th>Menu</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => item.Elaboracion.Nombre)
+                    @if (item.Agregados.Any())
+                    {
+                        var agreg = "con " + String.Join(",", item.Agregados.Select(a => a.Agregado.Producto.Nombre + " (" + a.Cantidad + ")"));
+                        @: @agreg
+                    }
+                    @foreach (var ord in item.Ordenes)
+                    {
+                        var anot = String.Join(",", ord.Anotaciones.Select(a => a.Abreviatura));
+                        <br/>
+                        @ord.Orden.Numero @ord.Orden.Comensal @: @anot
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.Cantidad)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

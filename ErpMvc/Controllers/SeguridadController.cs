@@ -207,7 +207,8 @@ namespace ErpMvc.Controllers
             {
               new { Nombre = RolesMontin.Administrador},
               new { Nombre = RolesMontin.UsuarioAvanzado},
-              new { Nombre = RolesMontin.Vendedor}
+              new { Nombre = RolesMontin.Vendedor},
+              new { Nombre = RolesMontin.CapitanDeSalon}
             };
             ViewBag.Roles = new SelectList(roles, "Nombre", "Nombre");
             return View();
@@ -240,7 +241,8 @@ namespace ErpMvc.Controllers
             {
               new { Nombre = RolesMontin.Administrador},
               new { Nombre = RolesMontin.UsuarioAvanzado},
-              new { Nombre = RolesMontin.Vendedor}
+              new { Nombre = RolesMontin.Vendedor},
+              new { Nombre = RolesMontin.CapitanDeSalon}
             };
             ViewBag.Roles = new MultiSelectList(roles, "Nombre", "Nombre", usuarioViewModel.Roles);
             return View(usuarioViewModel);

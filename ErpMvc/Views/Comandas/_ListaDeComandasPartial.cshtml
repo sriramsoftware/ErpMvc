@@ -1,0 +1,80 @@
+﻿@using CompraVentaCore.Models
+@using ErpMvc.Models
+@model IEnumerable<Comanda>
+
+
+@foreach (var comanda in Model)
+{
+    <div class="row">
+        <div class="col-md-9 col-sm-8 col-xs-12">
+            <h4 class="title_insight">Comanda # @comanda.VentaId</h4>
+            <br />
+            @comanda.Fecha.ToShortDateString() @comanda.Fecha.ToShortTimeString()
+            <br />
+            <strong>Posición : </strong>&nbsp; @comanda.PuntoDeVenta.Nombre - <strong> Pax:</strong> @comanda.CantidadPersonas
+            <br />
+            <strong> Dependiente:</strong> @comanda.Vendedor.NombreCompleto
+            <br />
+            <strong>Estado: </strong>
+            @if (comanda.Venta == null)
+            {
+                @: <strong>En espera de pago por el cliente</strong>
+            }
+            else
+            {
+                 switch (comanda.Venta.EstadoDeVenta)
+                 {
+                     case EstadoDeVenta.Pendiente:
+                         @:<strong>En espera de pago por el cliente</strong>
+                         break;
+                     case EstadoDeVenta.PendienteParaOtroDia:
+                         @:<strong>A pagar otro dia</strong>
+                         break;
+                     case EstadoDeVenta.PagadaEnEfectivo:
+                         @:<strong>Pagada en efectivo</strong>
+                         break;
+                     case EstadoDeVenta.NoCobrada:
+                         @:<strong>Por cuenta de la casa</strong>
+                         break;
+                     case EstadoDeVenta.PagadaPorTarjeta:
+                         @:<strong>Pagado con tarjeta de cliente</strong>
+                         break;
+                     case EstadoDeVenta.Facturada:
+                         @:<strong>En espera de pago por el cliente</strong>
+                         break;
+                     case EstadoDeVenta.PagadaPorFactura:
+                         @:<strong>A pagar por factura</strong>
+                         break;
+
+                 }
+            }
+            
+        </div>
+        <div class="col-md-3 col-sm-4 col-xs-12 botones">
+            @Ajax.ActionLink("Ver Menus Consumidos", "MenusEnComandaPartial", "Comandas", new { Id = comanda.Id }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, HttpMethod = "Get", UpdateTargetId = "modal-detalle", OnComplete = "mostrarModal" }, new { @class = "btn btn-primary btn-sm col-md-12" })
+            <br />
+            <a class="btn btn-primary btn-sm col-md-12 print-vale-btn" href="javascript:;" data-id="@comanda.Id" data-estado="@comanda.EstadoDeVenta">
+                <i class="glyphicon glyphicon-print"></i>&nbsp;Imprimir Reporte
+            </a>
+            @if ((User.IsInRole(RolesMontin.Administrador) || User.IsInRole(RolesMontin.UsuarioAvanzado)) && comanda.VentaId == null)
+            {
+                <br />
+                <a href="@Url.Action("GenerarVenta", "Comandas", new {Id = comanda.Id})" class="btn btn-primary btn-sm col-md-12">
+                    <i class="glyphicon glyphicon-edit"></i>&nbsp;Generar Venta
+                </a>
+            }
+            @if ((User.IsInRole(RolesMontin.Administrador) || (comanda.EstadoDeVenta != EstadoDeVenta.PagadaEnEfectivo && comanda.EstadoDeVenta != EstadoDeVenta.PagadaPorTarjeta&& comanda.EstadoDeVenta != EstadoDeVenta.Facturada)) && comanda.VentaId == null)
+            {
+                <br />
+                <a href="@Url.Action("Editar", "Comandas", new {Id = comanda.Id})" class="btn btn-primary btn-sm col-md-12">
+                    <i class="glyphicon glyphicon-edit"></i>&nbsp;Editar Comanda
+                </a>
+                <br />
+                <a class="btn btn-primary btn-sm col-md-12 eliminar-venta-btn" data-id="@comanda.Id">
+                    <i class="glyphicon glyphicon-trash"></i>&nbsp;Eliminar esta comanda
+                </a>
+            }
+        </div>
+    </div>
+    <hr />
+}

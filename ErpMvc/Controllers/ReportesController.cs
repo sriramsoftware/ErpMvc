@@ -16,7 +16,7 @@ using ErpMvc.ViewModels;
 
 namespace ErpMvc.Controllers
 {
-    [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+    [Authorize()]
     public class ReportesController : Controller
     {
         private PeriodoContableService _periodoContableService;
@@ -46,7 +46,7 @@ namespace ErpMvc.Controllers
             reports.Remove(reporteId);
             return DevExpress.Web.Mvc.ReportViewerExtension.ExportTo(reporte);
         }
-
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Inventario()
         {
             var lista = new List<dynamic>();
@@ -55,7 +55,7 @@ namespace ErpMvc.Controllers
             ViewBag.OrigenId = new SelectList(lista, "Nombre", "Nombre");
             return View();
         }
-
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult ComprasConComprobante()
         {
             ViewBag.Mes = new SelectList(new List<dynamic>()
@@ -72,11 +72,12 @@ namespace ErpMvc.Controllers
                 new {Id = 10, Mes = "Octubre"},
                 new {Id = 11, Mes = "Noviembre"},
                 new {Id = 12, Mes = "Diciembre"},
-            },"Id","Mes");
+            }, "Id", "Mes");
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult ComprasConComprobante(int mes)
         {
             var report = new ComprasConComprobantes(mes, NombreMeses(mes));
@@ -87,7 +88,8 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
-        public ActionResult Inventario(string origenId,DateTime? fecha)
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        public ActionResult Inventario(string origenId, DateTime? fecha)
         {
             var report = new Inventario(origenId, fecha);
             string random = System.IO.Path.GetRandomFileName().Replace(".", string.Empty);
@@ -96,10 +98,21 @@ namespace ErpMvc.Controllers
             return View("Plantilla");
         }
 
-
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult ValeDeVenta(int id)
         {
             var report = new ValeDeVenta(id);
+            string random = System.IO.Path.GetRandomFileName().Replace(".", string.Empty);
+
+            reports.Add(random, report);
+            ViewData["ReporteId"] = random;
+            return View("Plantilla");
+        }
+
+        [Authorize(Roles = RolesMontin.Vendedor + ","+ RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        public ActionResult Comanda(int id)
+        {
+            var report = new ComandaReport(id);
             string random = System.IO.Path.GetRandomFileName().Replace(".", string.Empty);
 
             reports.Add(random, report);
@@ -119,13 +132,14 @@ namespace ErpMvc.Controllers
             return View("Plantilla");
         }
 
-
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Operaciones()
         {
             return View("OperacionesEnPeriodo");
         }
 
         [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Operaciones(ParametrosViewModel parametros)
         {
             var report = new Operaciones(parametros.FechaInicio, parametros.FechaFin);
@@ -135,12 +149,14 @@ namespace ErpMvc.Controllers
             return View("Plantilla");
         }
 
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult ResumenDeGanaciasDiario()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult ResumenDeGanaciasDiario(ParametrosViewModel parametros)
         {
             var report = new ResumenDeGanaciaDiaria(parametros.FechaInicio);
@@ -149,33 +165,33 @@ namespace ErpMvc.Controllers
             ViewData["ReporteId"] = random;
             return View("Plantilla");
         }
-
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Ventas()
         {
             return View();
         }
-
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult VentasAlCosto()
         {
             return View();
         }
-
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult VentasCuentaCasa()
         {
             return View();
         }
-
-        public ActionResult VentasPorFactura()
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        public ActionResult VentasPorFacturas()
         {
             return View();
         }
-
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Consumo()
         {
             return View();
         }
-
-        public ActionResult VentasPorProducto(int id, DateTime fechaInicio,DateTime fechaFin)
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        public ActionResult VentasPorProducto(int id, DateTime fechaInicio, DateTime fechaFin)
         {
             var productoConcreto = _db.Set<ProductoConcreto>().SingleOrDefault(p => p.Id == id);
             ViewBag.Producto = productoConcreto.Producto.Nombre;
@@ -187,7 +203,7 @@ namespace ErpMvc.Controllers
             });
             return View("VentasDeProducto", menus);
         }
-
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult MovimientosDeProductos()
         {
             ViewBag.ProductoId = new SelectList(_db.Set<ProductoConcreto>().ToList(), "Id", "Producto.Nombre");
@@ -198,6 +214,7 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public PartialViewResult MovimientosDeProductos(ParametrosMovProdViewModel parametros)
         {
             var fIni = parametros.FechaInicio.Date;
@@ -275,7 +292,98 @@ namespace ErpMvc.Controllers
                 e.ProductoId == parametros.ProductoId && e.CentroDeCosto.Nombre == parametros.Lugar).Sum(e => e.Cantidad * e.Tipo.Factor) : 0m);
                 return PartialView("_MovDeProductosPartial", result.OrderBy(r => r.Fecha));
             }
-            return PartialView("_MovDeProductosPartial");
+            //return PartialView("_MovDeProductosPartial");
+        }
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        public ActionResult ResumenDeProducto()
+        {
+            ViewBag.ProductoId = new SelectList(_db.Set<ProductoConcreto>().ToList(), "Producto.Id", "Producto.Nombre");
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        public PartialViewResult ResumenDeProducto(ParametrosMovProdViewModel parametros)
+        {
+            var fIni = parametros.FechaInicio.Date;
+            var fFin = parametros.FechaFin.Date.AddHours(23).AddMinutes(59);
+            var productoConcreto = _db.Set<ProductoConcreto>()
+                .FirstOrDefault(p => p.ProductoId == parametros.ProductoId);
+            var compras = _db.Set<EntradaAlmacen>().Where(e => e.DiaContable.Fecha >= fIni &&
+                                                                e.DiaContable.Fecha <= fFin &&
+                                                                e.ProductoId == productoConcreto.Id).ToList();
+
+            var ventas = _db.Set<DetalleDeVenta>().Include(d => d.Venta).Include(d => d.Elaboracion).Include(d => d.Agregados).Where(e => e.Venta.DiaContable.Fecha >= fIni &&
+                                                                e.Venta.DiaContable.Fecha <= fFin &&
+                                                                (e.Elaboracion.Productos.Any(p => p.ProductoId == parametros.ProductoId)
+                                                                || e.Agregados.Any(a => a.Agregado.ProductoId == parametros.ProductoId))).ToList();
+
+            var ventasNormales =
+                ventas.Where(
+                    d =>
+                        d.Venta.Importe > 0 && (d.Venta.Observaciones ==null || !d.Venta.Observaciones.Contains("Venta al costo")) &&
+                        d.Venta.EstadoDeVenta != EstadoDeVenta.PagadaPorFactura).ToList();
+
+            var ventasAlCosto =
+                ventas.Where(d => d.Venta.Observaciones != null && d.Venta.Observaciones.Contains("Venta al costo"));
+            var ventasPorLaCasa =
+                ventas.Where(d => d.Venta.Importe == 0);
+            var ventasPorFactura =
+                ventas.Where(d => d.Venta.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura);
+
+            var mermas =
+               _db.Set<MovimientoDeProducto>().Include(e => e.Tipo).Include(e => e.Usuario).Include(e => e.CentroDeCosto).Include(e => e.Producto).Include(e => e.Producto.UnidadDeMedida).Where(e => e.DiaContable.Fecha >= fIni &&
+               e.DiaContable.Fecha <= fFin && e.ProductoId == parametros.ProductoId && e.Tipo.Descripcion == TipoDeMovimientoConstantes.Merma).ToList();
+
+            var entradasAjustes =
+               _db.Set<MovimientoDeProducto>().Include(e => e.Tipo).Include(e => e.Usuario).Include(e => e.CentroDeCosto).Include(e => e.Producto).Include(e => e.Producto.UnidadDeMedida).Where(e => e.DiaContable.Fecha >= fIni &&
+               e.DiaContable.Fecha <= fFin && e.ProductoId == parametros.ProductoId && e.Tipo.Descripcion == TipoDeMovimientoConstantes.EntradaPorAjuste).ToList();
+
+            var salidasAjustes =
+               _db.Set<MovimientoDeProducto>().Include(e => e.Tipo).Include(e => e.Usuario).Include(e => e.CentroDeCosto).Include(e => e.Producto).Include(e => e.Producto.UnidadDeMedida).Where(e => e.DiaContable.Fecha >= fIni &&
+               e.DiaContable.Fecha <= fFin && e.ProductoId == parametros.ProductoId && e.Tipo.Descripcion == TipoDeMovimientoConstantes.SalidaPorAjuste).ToList();
+
+            ViewBag.Entrada = compras;
+            ViewBag.Ventas = ventas.Select(d => new ResumenProductoVM
+            {
+                Fecha = d.Venta.DiaContable.Fecha,
+                Comanda = d.VentaId,
+                Cantidad = d.Elaboracion.Productos.Where(p => p.ProductoId == parametros.ProductoId).Sum(p => d.Cantidad * p.Cantidad * productoConcreto.UnidadDeMedida.FactorDeConversion / p.UnidadDeMedida.FactorDeConversion) +
+                d.Agregados.Where(a => a.Agregado.ProductoId == parametros.ProductoId).Sum(a => a.Cantidad * (a.Agregado.Cantidad * (productoConcreto.UnidadDeMedida.FactorDeConversion / a.Agregado.UnidadDeMedida.FactorDeConversion)))
+            }).ToList();
+            ViewBag.VentasNormales = ventasNormales.Select(d => new ResumenProductoVM
+            {
+                Fecha = d.Venta.DiaContable.Fecha,
+                Comanda = d.VentaId,
+                Cantidad = d.Elaboracion.Productos.Where(p => p.ProductoId == parametros.ProductoId).Sum(p => d.Cantidad * p.Cantidad * productoConcreto.UnidadDeMedida.FactorDeConversion / p.UnidadDeMedida.FactorDeConversion) +
+                d.Agregados.Where(a => a.Agregado.ProductoId == parametros.ProductoId).Sum(a => a.Cantidad * (a.Agregado.Cantidad * (productoConcreto.UnidadDeMedida.FactorDeConversion / a.Agregado.UnidadDeMedida.FactorDeConversion)))
+            }).ToList();
+            ViewBag.AlCosto = ventasAlCosto.Select(d => new ResumenProductoVM
+            {
+                Fecha = d.Venta.DiaContable.Fecha,
+                Comanda = d.VentaId,
+                Cantidad = d.Elaboracion.Productos.Where(p => p.ProductoId == parametros.ProductoId).Sum(p => d.Cantidad * p.Cantidad * productoConcreto.UnidadDeMedida.FactorDeConversion / p.UnidadDeMedida.FactorDeConversion) +
+                d.Agregados.Where(a => a.Agregado.ProductoId == parametros.ProductoId).Sum(a => a.Cantidad * (a.Agregado.Cantidad * (productoConcreto.UnidadDeMedida.FactorDeConversion / a.Agregado.UnidadDeMedida.FactorDeConversion)))
+            }).ToList();
+            ViewBag.PorLaCasa = ventasPorLaCasa.Select(d => new ResumenProductoVM
+            {
+                Fecha = d.Venta.DiaContable.Fecha,
+                Comanda = d.VentaId,
+                Cantidad = d.Elaboracion.Productos.Where(p => p.ProductoId == parametros.ProductoId).Sum(p => d.Cantidad * p.Cantidad * productoConcreto.UnidadDeMedida.FactorDeConversion / p.UnidadDeMedida.FactorDeConversion) +
+                d.Agregados.Where(a => a.Agregado.ProductoId == parametros.ProductoId).Sum(a => a.Cantidad * (a.Agregado.Cantidad * (productoConcreto.UnidadDeMedida.FactorDeConversion / a.Agregado.UnidadDeMedida.FactorDeConversion)))
+            }).ToList();
+            ViewBag.PorFactura = ventasPorFactura.Select(d => new ResumenProductoVM
+            {
+                Fecha = d.Venta.DiaContable.Fecha,
+                Comanda = d.VentaId,
+                Cantidad = d.Elaboracion.Productos.Where(p => p.ProductoId == parametros.ProductoId).Sum(p => d.Cantidad * p.Cantidad * productoConcreto.UnidadDeMedida.FactorDeConversion / p.UnidadDeMedida.FactorDeConversion) +
+                d.Agregados.Where(a => a.Agregado.ProductoId == parametros.ProductoId).Sum(a => a.Cantidad * (a.Agregado.Cantidad * (productoConcreto.UnidadDeMedida.FactorDeConversion / a.Agregado.UnidadDeMedida.FactorDeConversion)))
+            }).ToList();
+            ViewBag.Merma = mermas;
+            ViewBag.EntradasPorAjuste = entradasAjustes;
+            ViewBag.SalidasPorAjuste = salidasAjustes;
+            ViewBag.ProductoId = parametros.ProductoId;
+            return PartialView("_ResumenDeProductoPartial");
         }
 
         private string NombreMeses(int mes)

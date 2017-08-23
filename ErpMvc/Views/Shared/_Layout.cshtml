@@ -37,12 +37,13 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @if (User.IsInRole(RolesMontin.Administrador) || User.IsInRole(RolesMontin.UsuarioAvanzado) || User.IsInRole(RolesMontin.Vendedor))
+                    @if (User.IsInRole(RolesMontin.Administrador) || User.IsInRole(RolesMontin.UsuarioAvanzado))
                     {
                         <li><a href="@Url.Action("Listado", "Productos")">Productos</a></li>
                         <li><a href="@Url.Action("Listado", "Menus")">Menus</a></li>
                         <li><a href="@Url.Action("TramitarCompra", "Compras")">Comprar</a></li>
                         <li><a href="@Url.Action("NuevaVenta", "Ventas")">Vender</a></li>
+                        <li><a href="@Url.Action("Index", "Comandas")">Comandas</a></li>
                         <li><a href="@Url.Action("Index", "OtrosGastos")">Otros gastos</a></li>
                         <li><a href="@Url.Action("Index", "Caja")">Caja</a></li>
                         <li class="dropdown">
@@ -51,6 +52,7 @@
                                 <li><a href="@Url.Action("Listado", "ClasificacionesDeProductos")">Clasificacion de productos</a></li>
                                 <li><a href="@Url.Action("Listado", "GruposDeProductos")">Grupos de productos</a></li>
                                 <li><a href="@Url.Action("Index", "ConceptosDeGastos")">Conceptos de gastos</a></li>
+                                <li><a href="@Url.Action("Index", "Anotaciones")">Anotaciones</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -64,10 +66,16 @@
                                 <li><a href="@Url.Action("Consumo","Reportes")">Consumo</a></li>
                                 <li><a href="@Url.Action("ResumenDeGanaciasDiario","Reportes")">Resumen de ganacias</a></li>
                                 <li><a href="@Url.Action("MovimientosDeProductos","Reportes")">Movimientos de productos</a></li>
+                                <li><a href="@Url.Action("ResumenDeProducto","Reportes")">Resumen de productos</a></li>
                                 <li><a href="@Url.Action("ComprasConComprobante","Reportes")">Compras con comprobante</a></li>
                                 <li>@*<a href="@Url.Action("ComprasPersonalizado","Reportes")">Compras personalizado</a>*@</li>
                             </ul>
                         </li>
+                    }
+                    @if (User.IsInRole(RolesMontin.Vendedor) || User.IsInRole(RolesMontin.CapitanDeSalon))
+                    {
+                        <li><a href="@Url.Action("Index", "Comandas")">Comandas</a></li>
+                        <li><a href="@Url.Action("NuevaComanda", "Comandas")">Nueva comanda</a></li>
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -94,12 +102,12 @@
 
     <div class="container-fluid body-content">
         <div class="row">
-            <div class="col-md-9 panel-con-fondo">
+            <div class="col-md-9 col-xs-12 col-sm-12 panel-con-fondo">
                 <!-- menu -->
-                @if (User.IsInRole(RolesMontin.Administrador) || User.IsInRole(RolesMontin.UsuarioAvanzado) || User.IsInRole(RolesMontin.Vendedor))
+                @if (User.IsInRole(RolesMontin.Administrador) || User.IsInRole(RolesMontin.UsuarioAvanzado))
                 {
-                    <div class="col-md-1 col-xs-3">
-                        <nav class="navbar-collapse collapse menu-izquierda">
+                    <div class="col-md-1 col-xs-2 col-sm-2">
+                        <nav class="menu-izquierda">
                             <ul class="nav navbar-nav">
                                 <li><a href="@Url.Action("Listado", "GruposDeProductos")" class="glyphicon glyphicon-compressed icono_izquierda_otra" title="Grupos de productos" data-toggle="tooltip" data-placement="top"></a></li>
                                 <li><a href="@Url.Action("Listado", "Productos")" class="glyphicon glyphicon-glass icono_izquierda_otra" title="Productos" data-toggle="tooltip" data-placement="top"></a></li>
@@ -114,18 +122,17 @@
                 }
                 <!-- /menu -->
 
-                <div class="col-md-10 col-md-offset-1 contenido-central">
-
+                <div class="col-md-10 col-md-offset-1 col-sm-12 col-xs-12 contenido-central">
                     @RenderBody()
                 </div>
             </div>
-            <div class="col-md-3 seccion-derecha">
+            <div class="col-md-3 hidden-sm hidden-xs seccion-derecha">
                 @RenderSection("SeccionDerecha", required: false)
             </div>
         </div>
     </div>
 
-    <footer class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <footer class="navbar navbar-default navbar-fixed-bottom hidden-sm hidden-xs" role="navigation">
         <div class="container">
             <div class="row">
                 <div class="col-md-3">

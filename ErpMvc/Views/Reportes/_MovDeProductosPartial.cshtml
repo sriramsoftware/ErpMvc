@@ -1,38 +1,39 @@
 ﻿@model IEnumerable<ErpMvc.ViewModels.DetalleMovimientoProductoViewModel>
-
+@{
+    var saldoInicial = ViewBag.SaldoAnterior;
+    var saldo = saldoInicial;
+}
+<p class="text-right"><strong>Saldo Anterior: </strong>@ViewBag.SaldoAnterior</p>
 <table id="resumen-mov-tabla" class="table">
     <thead>
         <tr>
-            <th>Fecha</th>
-            <th>Tipo</th>
-            <th>Lugar</th>
+            <th class="col-md-3">Fecha</th>
+            <th class="col-md-3">Tipo</th>
+            <th class="col-md-2">Lugar</th>
             <th>Cantidad</th>
+            <th>Saldo</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>Saldo anterior</td>
-            <td></td>
-            <td></td>
-            <td>@ViewBag.SaldoAnterior</td>            
-        </tr>
-    @foreach (var mov in Model)
-    {
-        <tr>
-            <td>@mov.Fecha</td>
-            <td>@mov.TipoDeMovimiento</td>
-            <td>@mov.Lugar</td>
-            <td>@mov.Cantidad @mov.Unidad</td>
-        </tr>
-    }
+        @foreach (var mov in Model)
+        {
+            saldo += mov.Cantidad;
+            <tr>
+                <td><span class="hidden">@mov.Fecha.Ticks</span>@mov.Fecha</td>
+                <td>@mov.TipoDeMovimiento</td>
+                <td>@mov.Lugar</td>
+                <td>@mov.Cantidad @mov.Unidad</td>
+                <td>@saldo</td>
+            </tr>
+        }
     </tbody>
     <tfoot>
         <tr>
             <td>Movimientos</td>
             <td>Entradas: @Model.Where(m => m.Cantidad > 0).Sum(m => m.Cantidad) Salidas: @Model.Where(m => m.Cantidad < 0).Sum(m => m.Cantidad)</td>
+            <td></td>
             <td>Saldo final</td>
-            <td>@(ViewBag.SaldoAnterior + Model.Sum(m => m.Cantidad)) @(Model.Any()? Model.FirstOrDefault().Unidad: "")</td>
+            <td>@(ViewBag.SaldoAnterior + Model.Sum(m => m.Cantidad)) @(Model.Any() ? Model.FirstOrDefault().Unidad : "")</td>
         </tr>
     </tfoot>
 </table>
-

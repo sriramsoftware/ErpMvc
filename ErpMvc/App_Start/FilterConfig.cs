@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using ErpMvc.Utiles;
 
 namespace ErpMvc
 {
@@ -6,7 +7,7 @@ namespace ErpMvc
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+            filters.Add(new CustomErrorHandlerAttribute());
         }
     }
 }

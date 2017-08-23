@@ -19,8 +19,8 @@
                 <td>@menu.Detalle</td>
                 <td>@menu.Venta.Observaciones</td>
                 <td>@menu.Cantidad</td>
-                <td>@menu.PrecioDeVenta</td>
-                <td>@menu.Costo</td>
+                <td>@String.Format("{0:C}", menu.PrecioDeVenta)</td>
+                <td>@String.Format("{0:C}",menu.Costo * menu.Cantidad)</td>
             </tr>
         }
     <tr>
@@ -28,8 +28,8 @@
         <td></td>
         <td></td>
         <td>TOTALES</td>
-        <td>@Model.Sum(v => v.PrecioDeVenta)</td>
-        <td>@Model.Sum(v => v.Costo)</td>
+        <td>@String.Format("{0:C}", Model.Sum(v => v.PrecioDeVenta))</td>
+        <td>@String.Format("{0:C}", Model.Sum(v => v.Costo))</td>
     </tr>
     </tbody>
 </table>
