@@ -19,7 +19,7 @@ namespace ErpMvc.Reportes
             var db = new ErpContext();
             var comanda = db.Comandas.Find(id);
 
-            fecha_reporte.Text = "Amelia del Mar        " + comanda.Fecha.ToShortDateString();
+            fecha_reporte.Text = "Amelia del Mar (" + comanda.Fecha.ToShortDateString() + " " + comanda.Fecha.ToShortTimeString() + ")";
             titulo_reporte.Text = "Comanda # " + comanda.VentaId;
             atendidoPor.Text = "Dep: " + comanda.Vendedor.NombreCompleto + " | Pos: " + comanda.PuntoDeVenta.Nombre + " | Pax: " + comanda.CantidadPersonas;
 
@@ -40,7 +40,7 @@ namespace ErpMvc.Reportes
             {
                 Menu = e.Elaboracion.Nombre + (e.Agregados.Count > 0 ? " con: " + String.Join(",", e.Agregados.Select(a => a.Agregado.Producto.Nombre + " (" + a.Cantidad + ")")) : ""),
                 Cantidad = (int)e.Cantidad,
-                Detalles = String.Join("\n\r", e.Ordenes.Select(o => o.Orden.Numero + ": " + String.Join(",", o.Anotaciones.Select(a => a.Abreviatura))))
+                Detalles = String.Join("\n\r", e.Ordenes.Select(o => "[" + o.Orden.Numero + "]: " + String.Join(",", o.Anotaciones.Select(a => a.Abreviatura))))
             }).ToList();
 
             DataSource = data;

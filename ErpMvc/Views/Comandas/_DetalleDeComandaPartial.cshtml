@@ -16,7 +16,7 @@
         @Html.ValidationMessageFor(model => model.ElaboracionId)
     </div>
     <div class="col-sm-2 col-xs-2 padding3px">
-        @Html.TextBoxFor(model => model.Cantidad, new { @class = "form-control", @style = "max-width: 100px !important", @ng_model = "newDetalle.Cantidad" })
+        @Html.TextBoxFor(model => model.Cantidad, new { @class = "form-control",@type = "number", @style = "max-width: 100px !important", @ng_model = "newDetalle.Cantidad" })
         @Html.ValidationMessageFor(model => model.Cantidad)
     </div>
     <div class="col-sm-2 col-xs-2 padding3px">
@@ -25,11 +25,11 @@
 </div>
 
 <div class="row padding0px" ng-repeat="detalle in detalles" ng-cloak>
-    <div class="col-sm-1 col-xs-1">
-        <a class="btn btn-sm btn-default" title="Agregados" ng-click="mostrarAgregados(detalle)"><i class="glyphicon glyphicon-bell"></i></a>
-        <a class="btn btn-sm btn-default" title="Orden" ng-click="mostrarOrdenes(detalle)"><i class="glyphicon glyphicon-list"></i></a>
+    <div class="col-sm-2 col-xs-2">
+        <a class="btn btn-lg btn-default" title="Agregados" ng-click="mostrarAgregados(detalle)"><i class="glyphicon glyphicon-bell"></i></a>
+        <a class="btn btn-lg btn-default" title="Orden" ng-click="mostrarOrdenes(detalle)"><i class="glyphicon glyphicon-list"></i></a>
     </div>
-    <div class="col-sm-6 col-xs-6">
+    <div class="col-sm-5 col-xs-5">
 
         <strong data-ng-hide="detalle.editMode">{{ detalle.Elaboracion.Nombre }}</strong><span ng-if="detalle.Agregados.length > 0"> con :</span>
         <span ng-repeat-start="agregado in detalle.Agregados">{{agregado.Nombre}} ({{agregado.Cantidad}})</span><span ng-if="$index < detalle.Agregados.length -1">,</span>
@@ -52,11 +52,11 @@
             <label class="cantidad-menu">{{ detalle.Cantidad }}</label>
         </div>
         <div class="col-sm-6 col-xs-6">
-            <a class="btn btn-primary btn-xs add-menu" ng-click="aumentarCantidad(detalle)">
+            <a class="btn btn-primary btn-lg add-menu" ng-click="aumentarCantidad(detalle)">
                 <i class="glyphicon glyphicon-plus-sign"></i>
             </a>
 
-            <a class="btn btn-primary btn-xs rest-menu" ng-click="disminuirCantidad(detalle)">
+            <a class="btn btn-primary btn-lg rest-menu" ng-click="disminuirCantidad(detalle)">
                 <i class="glyphicon glyphicon-minus-sign"></i>
             </a>
         </div>

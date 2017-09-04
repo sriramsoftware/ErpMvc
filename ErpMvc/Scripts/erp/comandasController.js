@@ -14,7 +14,7 @@
                 $scope.ordenActual = {};
                 $scope.ordenes_detalle = {};
 
-                $scope.comensales = [{ Id: 0, Nombre: "Niña" }, { Id: 1, Nombre: "Niño" }, { Id: 2, Nombre: "Mujer" }, { Id: 3, Nombre: "Hombre" }];
+                $scope.comensales = [{ Id: 1, Nombre: "Niña" }, { Id: 2, Nombre: "Niño" }, { Id: 3, Nombre: "Mujer" }, { Id: 4, Nombre: "Hombre" }];
 
                 $scope.buscarOrden = function (numero) {
                     return $scope.ordenes.find(function (a) {
@@ -66,7 +66,7 @@
                     }
                     return true;
                 }
-
+                //no hace nada se edita
                 $scope.cambiarCantidadDeComensales = function () {
                     var cantidadAnterior = $scope.ordenes.length;
                     var dif = cantidadAnterior - $scope.cantidadComensales;
@@ -107,10 +107,31 @@
                     if (index > -1) {
                         $scope.detalleActual.Ordenes.splice(index, 1);
                         $scope.ordenActual = {};
+                        if (det.Id != undefined) {
+                            $http.get('/Comandas/EliminarOrdenEnDetalle/' + det.Id).then(function (result) {
+                                if (result.data) {
+                                    $scope.tieneError = false;
+                                } else {
+                                    $scope.error = "Error al eliminar el orden.";
+                                    $scope.tieneError = true;
+                                }
+                            });
+                        }
                     } else {
                         var ordenAct = { Orden: orden, Anotaciones: [] };
                         $scope.detalleActual.Ordenes.push(ordenAct);
                         $scope.ordenActual = ordenAct;
+                        if (orden.Id != undefined) {
+                            $http.get('/Comandas/AgregarOrdenEnDetalle?ordenId=' + orden.Id + '&detalleId=' + $scope.detalleActual.Id).then(function (result) {
+                                if (result.data.Result) {
+                                    $scope.ordenActual.Id = result.data.Id;
+                                    $scope.tieneError = false;
+                                } else {
+                                    $scope.error = "Error al eliminar el orden.";
+                                    $scope.tieneError = true;
+                                }
+                            });
+                        }
                     }
                 }
 
@@ -126,11 +147,32 @@
                     if ($scope.ordenActual.Anotaciones == undefined) {
                         $scope.ordenActual.Anotaciones = [];
                     }
-                    var index = $scope.ordenActual.Anotaciones.indexOf(anotacion);
-                    if (index > -1) {
+                    var a = $scope.buscarAnotacionOrdenDetalle(anotacion);
+                    if (a != null) {
+                        var index = $scope.ordenActual.Anotaciones.indexOf(a);
                         $scope.ordenActual.Anotaciones.splice(index, 1);
+                        if ($scope.ordenActual.Id != undefined) {
+                            $http.get('/Comandas/EliminarAnotacion?anotacionId=' + anotacion.Id + '&ordenId=' + $scope.ordenActual.Id).then(function (result) {
+                                if (result.data) {
+                                    $scope.tieneError = false;
+                                } else {
+                                    $scope.error = "Error al eliminar el anotacion.";
+                                    $scope.tieneError = true;
+                                }
+                            });
+                        }
                     } else {
                         $scope.ordenActual.Anotaciones.push(anotacion);
+                        if ($scope.ordenActual.Id != undefined) {
+                            $http.get('/Comandas/AgregarAnotacion?anotacionId=' + anotacion.Id + '&ordenId=' + $scope.ordenActual.Id).then(function (result) {
+                                if (result.data) {
+                                    $scope.tieneError = false;
+                                } else {
+                                    $scope.error = "Error al agregar la anotacion.";
+                                    $scope.tieneError = true;
+                                }
+                            });
+                        }
                     }
                 }
 

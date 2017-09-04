@@ -40,6 +40,7 @@
                         <li><a href="@Url.Action("Listado", "Menus")">Menus</a></li>
                         <li><a href="@Url.Action("TramitarCompra", "Compras")">Comprar</a></li>
                         <li><a href="@Url.Action("NuevaVenta", "Ventas")">Vender</a></li>
+                        <li><a href="@Url.Action("Index", "Comandas")">Comandas</a></li>
                         <li><a href="@Url.Action("Index", "OtrosGastos")">Otros gastos</a></li>
                         <li><a href="@Url.Action("Index", "Caja")">Caja</a></li>
                         <li class="dropdown">
@@ -66,9 +67,10 @@
                             </ul>
                         </li>
                     }
-                    @if (User.IsInRole(RolesMontin.Vendedor))
+                    @if (User.IsInRole(RolesMontin.Vendedor) || User.IsInRole(RolesMontin.CapitanDeSalon))
                     {
-                        <li><a href="@Url.Action("NuevaVenta", "Ventas")">Vender</a></li>
+                        <li><a href="@Url.Action("Index", "Comandas")">Comandas</a></li>
+                        <li><a href="@Url.Action("NuevaComanda", "Comandas")">Nueva comanda</a></li>
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

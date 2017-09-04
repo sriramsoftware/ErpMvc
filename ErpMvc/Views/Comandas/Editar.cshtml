@@ -9,11 +9,12 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.Id)
         @Html.HiddenFor(model => model.DiaContableId)
+        @Html.HiddenFor(model => model.VendedorId)
         @Html.HiddenFor(model => model.Fecha)
         @Html.HiddenFor(model => model.EstadoDeVenta)
 
         <div class="row padding0px">
-            @if (!User.IsInRole(RolesMontin.Vendedor) || !User.IsInRole(RolesMontin.CapitanDeSalon))
+            @if (!User.IsInRole(RolesMontin.Vendedor))
             {
                 <div class="col-md-5 col-sm-12 col-xs-12 padding0px">
                     <div class="row padding0px">
@@ -42,7 +43,7 @@
                         Pax
                     </div>
                     <div class="col-md-9 col-sm-12 col-xs-12">
-                        @Html.TextBoxFor(model => model.CantidadPersonas, new {@class = "form-control", @ng_model = "cantidadComensales", @ng_change = "cambiarCantidadDeComensales()"})
+                        @Html.TextBoxFor(model => model.CantidadPersonas, new {@class = "form-control", @type = "number", @ng_model = "cantidadComensales", @ng_change = "cambiarCantidadDeComensales()"})
                     </div>
                 </div>
             </div>
@@ -76,11 +77,11 @@
                                             <tr ng-repeat="a in agregados">
                                                 <td class="col-md-6">{{a.Nombre}}</td>
                                                 <td class="col-md-6">
-                                                    <a class="btn btn-primary btn-sm rest-menu" ng-disabled="menosADisabled" ng-click="disminuirAgregado(a)">
+                                                    <a class="btn btn-primary btn-lg rest-menu" ng-disabled="menosADisabled" ng-click="disminuirAgregado(a)">
                                                         <i class="glyphicon glyphicon-minus-sign"></i>
                                                     </a>
                                                     <label class="cantidad-menu">{{ cantidadAgregado(a) }}</label>
-                                                    <a class="btn btn-primary btn-sm add-menu" ng-disabled="masADisabled" ng-click="aumentarAgregado(a)">
+                                                    <a class="btn btn-primary btn-lg add-menu" ng-disabled="masADisabled" ng-click="aumentarAgregado(a)">
                                                         <i class="glyphicon glyphicon-plus-sign"></i>
                                                     </a>
                                                 </td>
@@ -108,38 +109,39 @@
                             </div>
                             <div id="modal-detalle" class="modal-body">
                                 <div class="container">
-
-                                    <div class="col-md-6">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
                                         <div class="form-group">
-                                            <div class="col-md-6">
-                                                <div class="col-md-12" ng-repeat="orden in ordenes">
-                                                    <input type="checkbox" name="selectedOrdenes[]" value="{{orden.Orden.Numero}}" ng-checked="detalleActual.Ordenes.indexOf(buscarOrdenDetalle(detalleActual,orden)) > -1"
-                                                           ng-click="toggleOrdenSelection(orden)">
-                                                    <label ng-click="selectOrden(orden)" style="margin-left: 20px"> <strong class="text-center"> {{orden.Numero}}</strong> </label>
-                                                </div>
+                                            <div class="col-md-12">
+                                                <p class="text-center">Seleccionado comensal # {{ordenActual.Orden.Numero}}</p>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <div class="col-md-12">
-                                                        <p class="text-center">Seleccionado comensal # {{ordenActual.Orden.Numero}}</p>
+                                        </div>
+                                    </div>
+                                        <div class="col-md-7 col-sm-7 col-xs-7">
+                                            <div class="form-group">
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="col-md-12" ng-repeat="orden in ordenes">
+                                                        <input type="checkbox" name="selectedOrdenes[]" value="{{orden.Orden.Numero}}" ng-checked="detalleActual.Ordenes.indexOf(buscarOrdenDetalle(detalleActual,orden)) > -1"
+                                                               ng-click="toggleOrdenSelection(orden)">
+                                                        <label class="badge badge-select" ng-click="selectOrden(orden)" style="margin-left: 20px"> <strong class="text-center"> {{orden.Numero}}</strong> </label>
                                                     </div>
                                                 </div>
-                                                <select class="form-control" ng-options="comensal.Nombre for comensal in comensales track by comensal.Id" ng-model="ordenActual.Orden.Comensal"></select>
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <select class="form-control" ng-options="comensal.Nombre for comensal in comensales track by comensal.Id" ng-model="ordenActual.Orden.Comensal"></select>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <div class="col-md-12" ng-repeat="anotacion in anotaciones" ng-show="detalleActual.Ordenes.indexOf(ordenActual) > -1">
-                                                <label>
-                                                    <input type="checkbox" name="selectedAnotaciones[]" value="{{anotacion.Id}}" ng-checked="isCheckedAnotacion(anotacion)"
-                                                           ng-click="toggleAnotacionesSelection(anotacion)"> {{anotacion.Abreviatura}} ({{anotacion.Descripcion}})
-                                                </label>
+                                        <div class="col-md-5 col-sm-5 col-xs-5">
+                                            <div class="form-group">
+                                                <div class="col-md-12" ng-repeat="anotacion in anotaciones" ng-show="detalleActual.Ordenes.indexOf(ordenActual) > -1">
+                                                    <label>
+                                                        <input type="checkbox" name="selectedAnotaciones[]" value="{{anotacion.Id}}" ng-checked="isCheckedAnotacion(anotacion)"
+                                                               ng-click="toggleAnotacionesSelection(anotacion)"> {{anotacion.Abreviatura}} ({{anotacion.Descripcion}})
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                </div>
+                                    </div>
                             </div>
 
                             <div class="modal-footer">
@@ -217,7 +219,7 @@
                           }),
                       })));
 
-            var ordenes = @Html.Raw(Json.Encode(Model.Detalles.SelectMany(e => e.Ordenes.Select(o => new { Id = o.OrdenId, Numero = o.Orden.Numero, Comensal = new { Id = (int)o.Orden.Comensal, Nombre = o.Orden.Comensal.ToString() } }))));
+            var ordenes = @Html.Raw(Json.Encode(Model.Comensales.Select(o => new { Id = o.Id, Numero = o.Numero, Comensal = new { Id = (int)o.Comensal, Nombre = o.Comensal.ToString() } })));
             angular.element('#tabla-detalle-de-venta').scope().cantidadComensales = @Model.CantidadPersonas;
             angular.element('#tabla-detalle-de-venta').scope().detalles = detalles;
             angular.element('#tabla-detalle-de-venta').scope().ordenes = ordenes;

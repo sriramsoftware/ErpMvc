@@ -328,6 +328,11 @@ namespace ErpMvc.Controllers
                 TempData["error"] = "Usted no puede editar una venta impresa o pagada";
                 return RedirectToAction("Index");
             }
+            var comandas = _db.Set<Comanda>().Where(c => c.VentaId == id);
+            foreach (var com in comandas)
+            {
+                com.VentaId = null;
+            }
             if (_ventasService.EliminarVenta(id, User.Identity.GetUserId()))
             {
                 var propina = _db.Set<Propina>().SingleOrDefault(p => p.VentaId == id);

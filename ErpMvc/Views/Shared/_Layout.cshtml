@@ -157,6 +157,8 @@
     <script src="~/Scripts/chosen.jquery.js"></script>
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/angular.min.js"></script>
+
+    <script src="~/Scripts/angular-touch.min.js"></script>
     <script src="~/Scripts/toastr.min.js"></script>
     <script>
 
@@ -209,7 +211,7 @@
             @if (TempData["notice"] != null)
             {
                 @:var messageInfo = "@TempData["notice"]";
-                                                                                                                                                                                                }
+                                                                                                                                                                                                            }
             @if (TempData["error"] != null)
            {
                @:var messageError = "@TempData["error"]";
@@ -218,7 +220,7 @@
             @if (TempData["exito"] != null)
            {
                @:var messageSuccess = "@TempData["exito"]";
-                                                                                                                                                                                               }
+                                                                                                                                                                                                           }
 
             var showMessage = function () {
                 toastr.options = { "positionClass": "toast-bottom-right" };

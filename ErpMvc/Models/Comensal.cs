@@ -2,6 +2,7 @@
 {
     public enum Comensal
     {
+        SinDefinir,
         Niña,
         Niño,
         Mujer,

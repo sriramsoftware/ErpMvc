@@ -26,7 +26,7 @@
     .container-fluid {
         padding-left: 0 !important;
         padding-right: 0 !important;
-        margin-right: 0!important;
+        margin-right: 0 !important;
         margin-left: 0 !important;
     }
 }
@@ -686,7 +686,8 @@ img {
 }
 
 input[type="checkbox"] {
-    height: 20px !important;
+    height: 30px !important;
+    width: 30px !important;
 }
 
 .highlight {
@@ -718,3 +719,10 @@ input[type="checkbox"] {
     .print-money > table {
         width: 500px !important;
     }
+
+.badge-select {
+    height: 30px !important;
+    width: 30px !important;
+    font-size: 18px !important;
+
+}

@@ -37,11 +37,11 @@ namespace ErpMvc.Controllers
             {
                 var usuarioId = User.Identity.GetUserId();
                 var vendedor = _ventasService.Vendedores().SingleOrDefault(v => v.UsuarioId == usuarioId);
-                comandas = _db.Set<Comanda>().Where(v => v.DiaContableId == id && v.VendedorId == vendedor.Id).ToList().OrderByDescending(v => v.Fecha).ToList();
+                comandas = _db.Set<Comanda>().Where(v => v.DiaContableId == id && v.VendedorId == vendedor.Id && v.VentaId == null).ToList().OrderByDescending(v => v.Fecha).ToList();
             }
             else
             {
-                comandas = _db.Set<Comanda>().Where(v => v.DiaContableId == id).ToList().OrderByDescending(v => v.Fecha).ToList();
+                comandas = _db.Set<Comanda>().Where(v => v.DiaContableId == id && v.VentaId == null).ToList().OrderByDescending(v => v.Fecha).ToList();
             }
             return PartialView("_ListaDeComandasPartial", comandas);
         }
@@ -74,6 +74,10 @@ namespace ErpMvc.Controllers
         public ActionResult GenerarVenta(int id)
         {
             var comanda = _db.Set<Comanda>().Find(id);
+            if (comanda.VentaId != null)
+            {
+                TempData["error"] = "Ya esta comanda genero una cuenta";
+            }
             var venta = new Venta()
             {
                 Fecha = DateTime.Now,
@@ -121,7 +125,7 @@ namespace ErpMvc.Controllers
         public ActionResult NuevaComanda(Comanda comanda)
         {
             var usuarioId = User.Identity.GetUserId();
-            if (User.IsInRole(RolesMontin.Vendedor))
+            if (User.IsInRole(RolesMontin.Vendedor) || User.IsInRole(RolesMontin.CapitanDeSalon))
             {
 
                 var vendedor = _ventasService.Vendedores().SingleOrDefault(v => v.UsuarioId == usuarioId);
@@ -158,6 +162,13 @@ namespace ErpMvc.Controllers
                         var anot = _db.Set<Anotacion>().Find(id);
                         orden.Anotaciones.Add(anot);
                     }
+                }
+            }
+            for (int i = 1; i <= comanda.CantidadPersonas; i++)
+            {
+                if (!ordenes.Any(o => o.Numero == i))
+                {
+                    ordenes.Add(new Orden() { Numero = i, Comensal = Comensal.Hombre });
                 }
             }
             comanda.Comensales = ordenes;
@@ -225,6 +236,8 @@ namespace ErpMvc.Controllers
             if (ModelState.IsValid)
             {
                 var result = true;
+                comanda.Comensales = null;
+                comanda.Detalles = null;
                 _db.Entry(comanda).State = EntityState.Modified;
                 result = _ventasService.GuardarCambios();
                 if (result)
@@ -358,5 +371,39 @@ namespace ErpMvc.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult EliminarOrdenEnDetalle(int id)
+        {
+            var detalle = _db.Set<OrdenPorDetalle>().Find(id);
+            _db.Set<OrdenPorDetalle>().Remove(detalle);
+            var result = _ventasService.GuardarCambios();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AgregarOrdenEnDetalle(int ordenId, int detalleId)
+        {
+            var detalle = _db.Set<DetalleDeComanda>().Find(detalleId);
+            var ordenDetalle = new OrdenPorDetalle() {OrdenId = ordenId};
+            detalle.Ordenes.Add(ordenDetalle);
+            var result = _ventasService.GuardarCambios();
+            return Json(new { Result = result, Id = ordenDetalle.Id }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult EliminarAnotacion(int anotacionId, int ordenId)
+        {
+            var detalle = _db.Set<OrdenPorDetalle>().Find(ordenId);
+            var anotacion = _db.Set<Anotacion>().Find(anotacionId);
+            detalle.Anotaciones.Remove(anotacion);
+            var result = _ventasService.GuardarCambios();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AgregarAnotacion(int anotacionId, int ordenId)
+        {
+            var detalle = _db.Set<OrdenPorDetalle>().Find(ordenId);
+            var anotacion = _db.Set<Anotacion>().Find(anotacionId);
+            detalle.Anotaciones.Add(anotacion);
+            var result = _ventasService.GuardarCambios();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }
