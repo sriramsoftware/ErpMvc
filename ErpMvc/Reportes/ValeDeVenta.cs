@@ -21,8 +21,8 @@ namespace ErpMvc.Reportes
 
             fecha_reporte.Text = "Amelia del Mar        " + venta.Fecha.ToShortDateString();
             titulo_reporte.Text = "Comanda # " + id;
-            atendidoPor.Text = "Dep: " + venta.Vendedor.NombreCompleto + "      Pos: " + venta.PuntoDeVenta.Nombre;
-            
+            atendidoPor.Text = "Dep: " + venta.Vendedor.NombreCompleto + " | Pos: " + venta.PuntoDeVenta.Nombre + " | Pax: " + venta.CantidadPersonas;
+
             var data = venta.Elaboraciones.Select(e => new
             {
                 Menu = e.Elaboracion.Nombre + (e.Agregados.Count > 0? " con: " + String.Join(",",e.Agregados.Select(a => a.Agregado.Producto.Nombre + " (" + a.Cantidad + ")")):""),
