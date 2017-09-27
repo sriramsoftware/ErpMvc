@@ -92,8 +92,8 @@ namespace ErpMvc.Controllers
                     ElaboracionId = d.ElaboracionId,
                     Cantidad = d.Cantidad,
                     Agregados = d.Agregados.Select(a => new AgregadosVendidos() {AgregadoId = a.AgregadoId, Cantidad = a.Cantidad}).ToList(),
-                    ImporteTotal = (d.Elaboracion.PrecioDeVenta * d.Cantidad ) + d.Agregados.Sum(a => a.Cantidad * a.Agregado.Precio),
-                    Costo = (d.Elaboracion.Costo * d.Cantidad) + d.Agregados.Sum(a => a.Cantidad * a.Agregado.Costo)
+                    ImporteTotal = (d.Elaboracion.PrecioDeVenta * d.Cantidad ) +( d.Agregados.Sum(a => a.Cantidad * a.Agregado.Precio) * d.Cantidad),
+                    Costo = (d.Elaboracion.Costo * d.Cantidad) + (d.Agregados.Sum(a => a.Cantidad * a.Agregado.Costo) * d.Cantidad)
                 }).ToList()
 
             };
