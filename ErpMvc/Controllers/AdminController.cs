@@ -42,7 +42,7 @@ namespace ErpMvc.Controllers
             db.Set<Asiento>().RemoveRange(db.Set<Asiento>());
             db.Set<DiaContable>().RemoveRange(db.Set<DiaContable>());
 
-            var dia = new DiaContable() { Abierto = true, Fecha = DateTime.Now };
+            var dia = new DiaContable() { Abierto = false, Fecha = DateTime.Now, HoraEnQueCerro = DateTime.Now};
             db.Set<DiaContable>().Add(dia);
 
             var existencias = db.Set<ExistenciaAlmacen>().ToList();
@@ -76,6 +76,7 @@ namespace ErpMvc.Controllers
                         ProductoId = existencia.ProductoId,
                         TipoId = db.Set<TipoDeMovimiento>().SingleOrDefault(t => t.Descripcion == TipoDeMovimientoConstantes.Entrada).Id,
                         Cantidad = existencia.Cantidad,
+                        UsuarioId = User.Identity.GetUserId(),
                     });
                 }
             }
