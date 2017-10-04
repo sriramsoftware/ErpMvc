@@ -347,6 +347,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AlmacenController.cs" />
     <Compile Include="Controllers\CajaController.cs" />
     <Compile Include="Controllers\CentrosDeCostosController.cs" />
@@ -1624,6 +1625,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />
+    <Folder Include="Views\Admin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
