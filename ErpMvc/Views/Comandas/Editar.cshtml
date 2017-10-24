@@ -9,7 +9,6 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.Id)
         @Html.HiddenFor(model => model.DiaContableId)
-        @Html.HiddenFor(model => model.VendedorId)
         @Html.HiddenFor(model => model.Fecha)
         @Html.HiddenFor(model => model.EstadoDeVenta)
 
@@ -26,6 +25,10 @@
                         </div>
                     </div>
                 </div>
+            }
+            else
+            {
+        @Html.HiddenFor(model => model.VendedorId)
             }
             <div class="col-md-4 col-sm-7 col-xs-7 padding0px">
                 <div class="row padding0px">
