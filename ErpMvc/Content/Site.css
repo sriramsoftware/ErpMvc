@@ -726,3 +726,13 @@ input[type="checkbox"] {
     font-size: 18px !important;
 
 }
+
+.chosen-big .chosen-container {
+    height: 50px !important;
+    font-size: 20px !important;
+}
+
+.chosen-big .chosen-container .chosen-results li {
+    height: 50px !important;
+    font-size: 20px !important;
+}
