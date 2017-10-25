@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ErpMvc.ViewModels.DetalleMovimientoProductoViewModel>
+﻿@using AlmacenCore.Models
+@model IEnumerable<ErpMvc.ViewModels.DetalleMovimientoProductoViewModel>
 @{
     var saldoInicial = ViewBag.SaldoAnterior;
     var saldo = saldoInicial;
@@ -30,7 +31,15 @@
     <tfoot>
         <tr>
             <td>Movimientos</td>
-            <td>Entradas: @Model.Where(m => m.Cantidad > 0).Sum(m => m.Cantidad) Salidas: @Model.Where(m => m.Cantidad < 0).Sum(m => m.Cantidad)</td>
+            <td>
+                Entradas: @Model.Where(m => m.TipoDeMovimiento == TipoDeMovimientoConstantes.Entrada).Sum(m => m.Cantidad)
+                <br /> Entrada traslado: @Model.Where(m => m.TipoDeMovimiento == TipoDeMovimientoConstantes.EntradaTrasladoInterno).Sum(m => m.Cantidad)
+                <br /> Entradas Ajustes: @Model.Where(m => m.TipoDeMovimiento == TipoDeMovimientoConstantes.EntradaPorAjuste || m.TipoDeMovimiento == TipoDeMovimientoConstantes.EntradaPorErrorDeSalida).Sum(m => m.Cantidad)
+                <br /> Ventas: @Model.Where(m => m.TipoDeMovimiento == TipoDeMovimientoConstantes.SalidaAProduccion).Sum(m => m.Cantidad) *
+                <br /> Salidas traslado: @Model.Where(m => m.TipoDeMovimiento == TipoDeMovimientoConstantes.SalidaTrasladoInterno).Sum(m => m.Cantidad)
+                <br /> Salidas Ajustes: @Model.Where(m => m.TipoDeMovimiento == TipoDeMovimientoConstantes.SalidaPorAjuste || m.TipoDeMovimiento == TipoDeMovimientoConstantes.SalidaPorErrorDeEntrada).Sum(m => m.Cantidad)
+                <br /> Mermas: @Model.Where(m => m.TipoDeMovimiento == TipoDeMovimientoConstantes.Merma).Sum(m => m.Cantidad)
+            </td>
             <td></td>
             <td>Saldo final</td>
             <td>@(ViewBag.SaldoAnterior + Model.Sum(m => m.Cantidad)) @(Model.Any() ? Model.FirstOrDefault().Unidad : "")</td>

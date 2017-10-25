@@ -4,7 +4,7 @@
     ViewBag.Tittle = "Mov de Prod";
 }
 
-@using (Ajax.BeginForm("MovimientosDeProductos", "Reportes", new AjaxOptions() { InsertionMode = InsertionMode.Replace, HttpMethod = "Post", UpdateTargetId = "resumen", OnSuccess = "completo" , OnBegin = "empezando", OnFailure = "fallido"}))
+@using (Ajax.BeginForm("MovimientosDeProductos", "Reportes", new AjaxOptions() { InsertionMode = InsertionMode.Replace, HttpMethod = "Post", UpdateTargetId = "resumen", OnSuccess = "completo", OnBegin = "empezando", OnFailure = "fallido" }))
 {
     @Html.AntiForgeryToken()
     <div class="formpanel panel-default">
@@ -53,7 +53,7 @@
         </div>
         <div class="panel-footer text-right">
             <div class="form-group">
-                <input type="submit" value="Generar reporte" class="btn btn-success"  id="reporte-btn"/>
+                <input type="submit" value="Generar reporte" class="btn btn-success" id="reporte-btn" />
                 <a class="btn btn-info" href="@Url.Action("Index","Inicio")">Cancelar</a>
             </div>
         </div>
@@ -63,6 +63,12 @@
 <div id="resumen">
 
 </div>
+
+<p class="alert alert-danger">
+    * Las ventas no es el consumo sino todos los movimientos por ventas,
+    si se elimino una venta se mantiene el movimiento por la venta pero se realiza un movimiento
+    de ajuste para volver a insertar la cantidad de producto
+</p>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/chosen.jquery.min.js"></script>
