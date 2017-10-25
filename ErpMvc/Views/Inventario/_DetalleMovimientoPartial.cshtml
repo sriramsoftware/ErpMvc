@@ -43,9 +43,9 @@
                     <input name="Productos[{{ $index }}].ProductoId" ng-show="detalle.editMode" type="text" ng-model="detalle.Producto.Id" class="form-control" />
                 </td>
                 <td>
-                    <p data-ng-hide="carga.editMode">{{ detalle.Cantidad }} {{detalle.Producto.Unidad}}</p>
+                    <p data-ng-hide="carga.editMode">{{ detalle.Cantidad }} {{detalle.Unidad.Siglas}}</p>
                     <input name="Productos[{{ $index }}].Cantidad" ng-show="detalle.editMode" type="text" ng-model="detalle.Cantidad" class="form-control"/>
-                    <input name="Productos[{{ $index }}].UnidadDeMedidaId" ng-show="detalle.editMode" type="text" ng-model="detalle.Producto.UnidadId" class="form-control" />
+                    <input name="Productos[{{ $index }}].UnidadDeMedidaId" ng-show="detalle.editMode" type="text" ng-model="detalle.Unidad.Id" class="form-control" />
                 </td>
                 <td>
                     <p data-ng-hide="carga.editMode">
