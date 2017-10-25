@@ -11,10 +11,16 @@ using Microsoft.AspNet.Identity;
 
 namespace ErpMvc.Controllers
 {
+    [Authorize(Roles = RolesMontin.Administrador)]
     public class AdminController : Controller
     {
-        // GET: Admin
         public ActionResult DeleteInfo()
+        {
+            return View();
+        }
+
+        // GET: Admin
+        public ActionResult DeleteInfoConfirmado()
         {
             var db = new ErpContext();
             db.Set<DetalleDeCompra>().RemoveRange(db.Set<DetalleDeCompra>());

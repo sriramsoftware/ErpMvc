@@ -1622,10 +1622,10 @@
     <Content Include="Views\Comandas\_ListaDeComandasPartial.cshtml" />
     <Content Include="Views\Comandas\_MenusEnComandaPartial.cshtml" />
     <Content Include="Views\Comandas\Editar.cshtml" />
+    <Content Include="Views\Admin\DeleteInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />
-    <Folder Include="Views\Admin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
