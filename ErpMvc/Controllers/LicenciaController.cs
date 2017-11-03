@@ -10,7 +10,7 @@ using VerificadorDeLicencia;
 
 namespace ErpMvc.Controllers
 {
-    [Authorize(Roles = RolesMontin.Administrador)]
+    //[Authorize(Roles = RolesMontin.Administrador)]
     public class LicenciaController : Controller
     {
         private ErpContext _db = new ErpContext();
@@ -52,7 +52,7 @@ namespace ErpMvc.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = ErpRoles.Administrador)]
+        [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult Quitar()
         {
             _db.Licencias.RemoveRange(_db.Licencias.ToList());
