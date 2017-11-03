@@ -12,7 +12,6 @@ using HumanResourcesCore.Models;
 using IdentidadCore.DbConfigurations;
 using IdentidadCore.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
-using MySql.Data.Entity;
 using SeguridadCore.Models;
 
 namespace ErpMvc.Models
@@ -22,12 +21,7 @@ namespace ErpMvc.Models
         public ErpContext()
             : base("DefaultConnection")
         {
-            //AutomaticMigrationsEnabled = false;
-            //SetSqlGenerator("MySql.Data.MySqlClient", new MySqlMigrationSqlGenerator());
-            //SetHistoryContextFactory("MySql.Data.MySqlClient", (conn, schema) => new MySqlHistoryContext(conn, schema));
             
-            DbConfiguration.SetConfiguration(new MySql.Data.Entity.MySqlEFConfiguration());
-            Database.SetInitializer<ErpContext>(null);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -44,6 +38,9 @@ namespace ErpMvc.Models
             modelBuilder.Entity<ValeSalidaDeAlmacen>().HasRequired(v => v.Almacen).WithMany(a => a.ValesDeSalida).WillCascadeOnDelete(false);
             modelBuilder.Entity<Venta>().HasRequired(v => v.Vendedor).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<TarjetaDeAsistencia>().HasKey(v => v.VendedorId).HasRequired(v => v.Vendedor).WithOptional().WillCascadeOnDelete(false);
+            modelBuilder.Entity<PuntoDeVenta>().HasRequired(c => c.CentroDeCosto).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<PuntoDeVenta>().HasMany(c => c.Vendedores).WithRequired(v => v.PuntoDeVenta).WillCascadeOnDelete(false);
+            modelBuilder.Entity<SalidaPorMerma>().HasRequired(s => s.UnidadDeMedida).WithMany().WillCascadeOnDelete(false);
             
             //modulo contabilidad
             modelBuilder.Configurations.Add(new AsientoConfig());

@@ -16,8 +16,8 @@ namespace ErpMvc.Migrations
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
-            ContextKey = "PruebaSeguridadMvc.Models.ErpContext";
-            SetSqlGenerator("MySql.Data.MySqlClient", new MySql.Data.Entity.MySqlMigrationSqlGenerator());
+            //ContextKey = "PruebaSeguridadMvc.Models.ErpContext";
+            //SetSqlGenerator("MySql.Data.MySqlClient", new MySql.Data.Entity.MySqlMigrationSqlGenerator());
         }
 
         protected override void Seed(ErpContext context)
