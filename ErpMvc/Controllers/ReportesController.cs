@@ -21,14 +21,12 @@ namespace ErpMvc.Controllers
     {
         private PeriodoContableService _periodoContableService;
         private CuentasServices _cuentasServices;
-        private SubmayorService _submayorService;
         private DbContext _db;
 
         public ReportesController(DbContext context)
         {
             _db = context;
             _cuentasServices = new CuentasServices(context);
-            _submayorService = new SubmayorService(context);
             _periodoContableService = new PeriodoContableService(context);
         }
 

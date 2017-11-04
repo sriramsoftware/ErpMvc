@@ -19,14 +19,12 @@ namespace ErpMvc.Controllers
     {
         private DbContext _db;
         private PeriodoContableService _periodoContableService;
-        private SubmayorService _submayorService;
         private CuentasServices _cuentasServices;
 
         public OtrosGastosController(DbContext context)
         {
             _db = context;
             _periodoContableService = new PeriodoContableService(context);
-            _submayorService = new SubmayorService(context);
             _cuentasServices = new CuentasServices(context);
         }
 
@@ -74,15 +72,10 @@ namespace ErpMvc.Controllers
                 }
                 if (result)
                 {
-                    if (_submayorService.AgregarOperacion(cta.Id, cuentaGasto.Id, otrosGastos.Importe, DateTime.Now,
-                                detalle, User.Identity.GetUserId()))
-                    {
-                        TempData["exito"] = "Gasto agregado correctamente";
-                    }
-                    else
-                    {
-                        TempData["error"] = "Error al agregar el gasto";
-                    } 
+                    _cuentasServices.AgregarOperacion(cta.Id, cuentaGasto.Id, otrosGastos.Importe, DateTime.Now,
+                        detalle, User.Identity.GetUserId());
+                    _db.SaveChanges();
+                    TempData["exito"] = "Gasto agregado correctamente";
                 }
                 return RedirectToAction("Index");
             }
@@ -117,7 +110,7 @@ namespace ErpMvc.Controllers
                 var concepto = _db.Set<ConceptoDeGasto>().Find(otrosGastos.ConceptoDeGastoId);
 
                 string detalle = "Pago de: " + concepto.Nombre;
-                _db.Set<Asiento>().Add(_submayorService.CrearAsientoContable(cuentaGasto.Id, cuentaCajaAnterior.Id, importeAnterior, DateTime.Now,
+                _db.Set<Asiento>().Add(_cuentasServices.CrearAsientoContable(cuentaGasto.Id, cuentaCajaAnterior.Id, importeAnterior, DateTime.Now,
                     "Ajuste por error en gasto con id " + otrosGastos.Id + " de " + concepto.Nombre, User.Identity.GetUserId()));
                 if (otrosGastos.PagadoPorCaja)
                 {
@@ -129,16 +122,10 @@ namespace ErpMvc.Controllers
                 }
                 if (result)
                 {
-                    _db.Set<Asiento>().Add(_submayorService.CrearAsientoContable(cuentaCaja.Id, cuentaGasto.Id, otrosGastos.Importe, DateTime.Now,
+                    _db.Set<Asiento>().Add(_cuentasServices.CrearAsientoContable(cuentaCaja.Id, cuentaGasto.Id, otrosGastos.Importe, DateTime.Now,
                                 detalle, User.Identity.GetUserId()));
-                    if (_submayorService.GuardarCambios())
-                    {
-                        TempData["exito"] = "Gasto modificado correctamente";
-                    }
-                    else
-                    {
-                        TempData["error"] = "Error al modificar el gasto";
-                    } 
+                    _db.SaveChanges();
+                    TempData["exito"] = "Gasto modificado correctamente";
                 }
                 return RedirectToAction("Index");
             }
@@ -179,16 +166,10 @@ namespace ErpMvc.Controllers
             var cuentaCaja = _cuentasServices.FindCuentaByNombre("Caja");
             var cuentaGasto = _cuentasServices.FindCuentaByNombre("Gastos");
             var concepto = _db.Set<ConceptoDeGasto>().Find(gasto.ConceptoDeGastoId);
-
-            if (_submayorService.AgregarOperacion(cuentaGasto.Id, cuentaCaja.Id, gasto.Importe, DateTime.Now,
-                "Ajuste por error en gasto " + gasto.Id + " de " + concepto.Nombre, User.Identity.GetUserId()))
-            {
-                TempData["exito"] = "Gasto eliminado correctamente";
-            }
-            else
-            {
-                TempData["error"] = "No se pudo eliminar el gasto";
-            }
+            _cuentasServices.AgregarOperacion(cuentaGasto.Id, cuentaCaja.Id, gasto.Importe, DateTime.Now,
+                "Ajuste por error en gasto " + gasto.Id + " de " + concepto.Nombre, User.Identity.GetUserId());
+            _db.SaveChanges();
+            TempData["exito"] = "Gasto eliminado correctamente";
             return RedirectToAction("Index");
         }
 

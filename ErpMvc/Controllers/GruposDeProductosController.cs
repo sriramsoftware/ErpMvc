@@ -29,13 +29,13 @@ namespace ErpMvc.Controllers
 
         public ActionResult Listado()
         {
-            return View(_productoService.GruposDeProductos().Include(g => g.Clasificacion).ToList());
+            return View(_db.Set<GrupoDeProducto>().Include(g => g.Clasificacion).ToList());
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Agregar()
         {
-            ViewBag.ClasificacionId = new SelectList(_productoService.ClasificacionesDeProductos(), "Id", "Descripcion");
+            ViewBag.ClasificacionId = new SelectList(_db.Set<ClasificacionDeProducto>(), "Id", "Descripcion");
             return View();
         }
 
@@ -45,13 +45,13 @@ namespace ErpMvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_productoService.AgregarGrupo(grupoDeProducto))
-                {
-                    TempData["exito"] = "Grupo de producto agregado correctamente!";
-                    return RedirectToAction("Listado");
-                }
+                _db.Set<GrupoDeProducto>().Add(grupoDeProducto);
+                _db.SaveChanges();
+                TempData["exito"] = "Grupo de producto agregado correctamente!";
+                return RedirectToAction("Listado");
+
             }
-            ViewBag.ClasificacionId = new SelectList(_productoService.ClasificacionesDeProductos(), "Id", "Descripcion", grupoDeProducto.ClasificacionId);
+            ViewBag.ClasificacionId = new SelectList(_db.Set<ClasificacionDeProducto>(), "Id", "Descripcion", grupoDeProducto.ClasificacionId);
             return View();
         }
 
@@ -62,12 +62,12 @@ namespace ErpMvc.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var grupo = _productoService.GruposDeProductos().Find(id);
+            var grupo = _db.Set<GrupoDeProducto>().Find(id);
             if (grupo == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ClasificacionId = new SelectList(_productoService.ClasificacionesDeProductos(), "Id", "Descripcion",grupo.ClasificacionId);
+            ViewBag.ClasificacionId = new SelectList(_db.Set<ClasificacionDeProducto>(), "Id", "Descripcion", grupo.ClasificacionId);
             return View(grupo);
         }
 
@@ -83,22 +83,8 @@ namespace ErpMvc.Controllers
                 return RedirectToAction("Listado");
 
             }
-            ViewBag.ClasificacionId = new SelectList(_productoService.ClasificacionesDeProductos(), "Id", "Descripcion", grupoDeProducto.ClasificacionId);
+            ViewBag.ClasificacionId = new SelectList(_db.Set<ClasificacionDeProducto>(), "Id", "Descripcion", grupoDeProducto.ClasificacionId);
             return View();
         }
-
-        //[Authorize(Roles = RolesMontin.Administrador)]
-        //public ActionResult Eliminar(int id)
-        //{
-        //    return PartialView("_EliminarTrabajadorPartial");
-        //}
-
-        //[Authorize(Roles = RolesMontin.Administrador)]
-        //[HttpPost]
-        //public ActionResult EliminarConfirmado(int id)
-        //{
-        //    return RedirectToAction("Index");
-        //}
-
     }
 }

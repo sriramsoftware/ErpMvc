@@ -64,8 +64,10 @@ namespace ErpMvc.Controllers
         [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult Agregar(CentroDeCosto centroDeCosto)
         {
-            if (_centroDeCostoService.AgregarCentroDeCosto(centroDeCosto))
+            if (ModelState.IsValid)
             {
+                _db.Set<CentroDeCosto>().Add(centroDeCosto);
+                _db.SaveChanges();
                 TempData["exito"] = "Centro de costo agregado correctamente";
                 return RedirectToAction("Index");
             }
@@ -83,8 +85,10 @@ namespace ErpMvc.Controllers
         [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult Editar(CentroDeCosto centroDeCosto)
         {
-            if (_centroDeCostoService.ModificarCentroDeCosto(centroDeCosto))
+            if (ModelState.IsValid)
             {
+                _db.Entry(centroDeCosto).State = EntityState.Modified;
+                _db.SaveChanges();
                 TempData["exito"] = "Centro de costo modificado correctamente";
                 return RedirectToAction("Index");
             }

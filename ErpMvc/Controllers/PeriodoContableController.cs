@@ -23,14 +23,14 @@ namespace ErpMvc.Controllers
     {
         private PeriodoContableService _service;
         private CuentasServices _cuentasServices;
-        private SubmayorService _submayorService;
+        private CierreService _cierreService;
         private DbContext _db;
 
         public PeriodoContableController(DbContext context)
         {
             _service = new PeriodoContableService(context);
             _cuentasServices = new CuentasServices(context);
-            _submayorService = new SubmayorService(context);
+            _cierreService = new CierreService(context);
             _db = context;
         }
 
@@ -63,7 +63,7 @@ namespace ErpMvc.Controllers
             var cierre = _db.Set<CierreDeCaja>().SingleOrDefault(c => c.DiaContableId == dia.Id);
             return PartialView("_DesgloseDeEfectivoCierrePartial", cierre.Desglose);
         }
-        
+
         public JsonResult ResumenEfectivoData(int diaId)
         {
             var resumenCierre = new ResumenCierre(_db);
@@ -113,76 +113,74 @@ namespace ErpMvc.Controllers
                 var cuentaCaja = _cuentasServices.FindCuentaByNombre("Caja");
                 var cuentaBanco = _cuentasServices.FindCuentaByNombre("Banco");
                 var cuentaGasto = _cuentasServices.FindCuentaByNombre("Gastos");
-                var result = _submayorService.AgregarOperacion(cuentaCaja.Id, cuentaBanco.Id, importeAExtraer, DateTime.Now, "Cierre del dia",
+                if (cuentaCaja.Disponibilidad.Saldo < importeAExtraer + pagoTrabajadores)
+                {
+                    return Json(new { result = false, mensaje = "No se puede realizar la extraccion de la caja, saldo en caja inferior al extraer" }, JsonRequestBehavior.AllowGet);
+                }
+                _cuentasServices.AgregarOperacion(cuentaCaja.Id, cuentaBanco.Id, importeAExtraer, DateTime.Now, "Cierre del dia",
                     User.Identity.GetUserId());
-                result = _submayorService.AgregarOperacion(cuentaCaja.Id, cuentaGasto.Id, pagoTrabajadores, DateTime.Now, "Trabajadores : Pago al cierre",
+                _cuentasServices.AgregarOperacion(cuentaCaja.Id, cuentaGasto.Id, pagoTrabajadores, DateTime.Now, "Trabajadores : Pago al cierre",
                    User.Identity.GetUserId());
-                if (result)
+                var caja = _db.Set<Caja>().FirstOrDefault();
+                var cierre = new CierreDeCaja()
                 {
-                    var caja = _db.Set<Caja>().FirstOrDefault();
-                    var cierre = new CierreDeCaja()
-                    {
-                        CajaId = caja.Id,
-                        DiaContableId = dia.Id
-                    };
-                    var cuc = _db.Set<Moneda>().SingleOrDefault(m => m.Sigla == "CUC");
-                    var cup = _db.Set<Moneda>().SingleOrDefault(m => m.Sigla == "CUP");
-                    foreach (var billete in desgloceEfectivoViewModel.Billetes)
-                    {
-                        if (billete.Cuc && billete.CantidadCuc > 0)
-                        {
-                            var denominacion =
-                                _db.Set<DenominacionDeMoneda>().SingleOrDefault(d => d.Billete && d.MonedaId == cuc.Id && d.Valor == billete.Valor);
-                            cierre.Desglose.Add(new DenominacionesEnCierreDeCaja()
-                            {
-                                DenominacionDeMonedaId = denominacion.Id,
-                                Cantidad = billete.CantidadCuc
-                            });
-                        }
-                        if (billete.Cup && billete.CantidadCup > 0)
-                        {
-                            var denominacion =
-                                _db.Set<DenominacionDeMoneda>().SingleOrDefault(d => d.Billete && d.MonedaId == cup.Id && d.Valor == billete.Valor);
-                            cierre.Desglose.Add(new DenominacionesEnCierreDeCaja()
-                            {
-                                DenominacionDeMonedaId = denominacion.Id,
-                                Cantidad = billete.CantidadCup
-                            });
-                        }
-
-                    }
-                    foreach (var moneda in desgloceEfectivoViewModel.Monedas)
-                    {
-                        if (moneda.Cuc && moneda.CantidadCuc > 0)
-                        {
-                            var denominacion =
-                                _db.Set<DenominacionDeMoneda>().SingleOrDefault(d => !d.Billete && d.MonedaId == cuc.Id && d.Valor == moneda.Valor);
-                            cierre.Desglose.Add(new DenominacionesEnCierreDeCaja()
-                            {
-                                DenominacionDeMonedaId = denominacion.Id,
-                                Cantidad = moneda.CantidadCuc
-                            });
-                        }
-                        if (moneda.Cup && moneda.CantidadCup > 0)
-                        {
-                            var denominacion =
-                                _db.Set<DenominacionDeMoneda>().SingleOrDefault(d => !d.Billete && d.MonedaId == cup.Id && d.Valor == moneda.Valor);
-                            cierre.Desglose.Add(new DenominacionesEnCierreDeCaja()
-                            {
-                                DenominacionDeMonedaId = denominacion.Id,
-                                Cantidad = moneda.CantidadCup
-                            });
-                        }
-
-                    }
-                    _service.CerrarDiaContable(cierre);
-                    //HttpContext.GetOwinContext().Authentication.SignOut();
-                    return Json(new { result = true, cierreId = cierre.DiaContableId, mensaje = "Cierre correcto" }, JsonRequestBehavior.AllowGet);
-                }
-                else
+                    CajaId = caja.Id,
+                    DiaContableId = dia.Id
+                };
+                var cuc = _db.Set<Moneda>().SingleOrDefault(m => m.Sigla == "CUC");
+                var cup = _db.Set<Moneda>().SingleOrDefault(m => m.Sigla == "CUP");
+                foreach (var billete in desgloceEfectivoViewModel.Billetes)
                 {
-                    return Json(new { result = false, mensaje = "No se puede realizar la extraccion de la caja" }, JsonRequestBehavior.AllowGet);
+                    if (billete.Cuc && billete.CantidadCuc > 0)
+                    {
+                        var denominacion =
+                            _db.Set<DenominacionDeMoneda>().SingleOrDefault(d => d.Billete && d.MonedaId == cuc.Id && d.Valor == billete.Valor);
+                        cierre.Desglose.Add(new DenominacionesEnCierreDeCaja()
+                        {
+                            DenominacionDeMonedaId = denominacion.Id,
+                            Cantidad = billete.CantidadCuc
+                        });
+                    }
+                    if (billete.Cup && billete.CantidadCup > 0)
+                    {
+                        var denominacion =
+                            _db.Set<DenominacionDeMoneda>().SingleOrDefault(d => d.Billete && d.MonedaId == cup.Id && d.Valor == billete.Valor);
+                        cierre.Desglose.Add(new DenominacionesEnCierreDeCaja()
+                        {
+                            DenominacionDeMonedaId = denominacion.Id,
+                            Cantidad = billete.CantidadCup
+                        });
+                    }
+
                 }
+                foreach (var moneda in desgloceEfectivoViewModel.Monedas)
+                {
+                    if (moneda.Cuc && moneda.CantidadCuc > 0)
+                    {
+                        var denominacion =
+                            _db.Set<DenominacionDeMoneda>().SingleOrDefault(d => !d.Billete && d.MonedaId == cuc.Id && d.Valor == moneda.Valor);
+                        cierre.Desglose.Add(new DenominacionesEnCierreDeCaja()
+                        {
+                            DenominacionDeMonedaId = denominacion.Id,
+                            Cantidad = moneda.CantidadCuc
+                        });
+                    }
+                    if (moneda.Cup && moneda.CantidadCup > 0)
+                    {
+                        var denominacion =
+                            _db.Set<DenominacionDeMoneda>().SingleOrDefault(d => !d.Billete && d.MonedaId == cup.Id && d.Valor == moneda.Valor);
+                        cierre.Desglose.Add(new DenominacionesEnCierreDeCaja()
+                        {
+                            DenominacionDeMonedaId = denominacion.Id,
+                            Cantidad = moneda.CantidadCup
+                        });
+                    }
+                }
+                _cierreService.CerrarCaja(cierre);
+                _service.CerrarDiaContable();
+                _db.SaveChanges();
+                //HttpContext.GetOwinContext().Authentication.SignOut();
+                return Json(new { result = true, cierreId = cierre.DiaContableId, mensaje = "Cierre correcto" }, JsonRequestBehavior.AllowGet);
 
             }
             return Json(new { result = false, mensaje = "No se puede cerrar, importe a extraer negativo" }, JsonRequestBehavior.AllowGet);
@@ -255,7 +253,6 @@ namespace ErpMvc.Controllers
         {
             if (fecha != null)
             {
-                //_service.CerrarDiaContable();
                 _service.EmpezarDiaContable(fecha.Value);
                 TempData["exito"] = "Dia abierto correctamente";
                 return RedirectToAction("Index", "Inicio");

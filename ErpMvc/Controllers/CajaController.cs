@@ -19,22 +19,16 @@ namespace ErpMvc.Controllers
         private DbContext _db;
         private PeriodoContableService _periodoContableService;
         private CuentasServices _cuentasServices;
-        private SubmayorService _submayorService;
 
         public CajaController(DbContext context)
         {
             _db = context;
             _periodoContableService = new PeriodoContableService(context);
             _cuentasServices = new CuentasServices(context);
-            _submayorService = new SubmayorService(context);
         }
         // GET: Caja
         public ActionResult Index()
         {
-            if (_periodoContableService.NoHayDiaAbierto())
-            {
-                _periodoContableService.EmpezarDiaContable(DateTime.Now);
-            }
             ViewBag.DiaContable = _periodoContableService.GetDiaContableActual();
             return View();
         }
@@ -62,26 +56,21 @@ namespace ErpMvc.Controllers
             return View();
         }
 
-        
+
         [HttpPost]
         [DiaContable]
-        public ActionResult Extraccion(OperacionCajaViewModel extraccion)
+        public ActionResult Extraccion(ExtraccionDeCajaViewModel extraccion)
         {
             if (ModelState.IsValid)
             {
                 var cta = _cuentasServices.FindCuentaByNombre("Caja");
                 var cuentaGasto = _cuentasServices.FindCuentaByNombre("Gastos");
-               
+
                 string detalle = "Extracción de efectivo: " + extraccion.Observaciones;
-                if (_submayorService.AgregarOperacion(cta.Id, cuentaGasto.Id, extraccion.Importe, DateTime.Now,
-                    detalle, User.Identity.GetUserId()))
-                {
-                    TempData["exito"] = "Extracción efectuada correctamente";
-                }
-                else
-                {
-                    TempData["error"] = "Error al extraer efectivo";
-                }
+                _cuentasServices.AgregarOperacion(cta.Id, cuentaGasto.Id, extraccion.Importe, DateTime.Now,
+                    detalle, User.Identity.GetUserId());
+                _db.SaveChanges();
+                TempData["exito"] = "Extracción efectuada correctamente";
                 return RedirectToAction("Index");
             }
             return View(extraccion);
@@ -93,7 +82,7 @@ namespace ErpMvc.Controllers
             return View();
         }
 
-        
+
         [HttpPost]
         [DiaContable]
         public ActionResult Deposito(OperacionCajaViewModel deposito)
@@ -104,15 +93,10 @@ namespace ErpMvc.Controllers
                 var cuentaBanco = _cuentasServices.FindCuentaByNombre("Banco");
 
                 string detalle = "Deposito de efectivo: " + deposito.Observaciones;
-                if (_submayorService.AgregarOperacion( cuentaBanco.Id, cta.Id, deposito.Importe, DateTime.Now,
-                    detalle, User.Identity.GetUserId()))
-                {
-                    TempData["exito"] = "Deposito efectuado correctamente";
-                }
-                else
-                {
-                    TempData["error"] = "Error al depositar efectivo";
-                }
+                _cuentasServices.AgregarOperacion(cuentaBanco.Id, cta.Id, deposito.Importe, DateTime.Now,
+                    detalle, User.Identity.GetUserId());
+                _db.SaveChanges();
+                TempData["exito"] = "Deposito efectuado correctamente";
                 return RedirectToAction("Index");
             }
             return View(deposito);

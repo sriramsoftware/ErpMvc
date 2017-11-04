@@ -66,7 +66,6 @@ namespace ErpMvc.Controllers
                 }
                 productos.Add(prodConcreto);
             }
-            //productos.AddRange(_db.Set<ProductoConcreto>().Where(p=> p.));
             return View(productos);
         }
 
@@ -126,10 +125,7 @@ namespace ErpMvc.Controllers
 
             var existencia = _db.Set<ExistenciaCentroDeCosto>().Where(e => e.ProductoId == id).Select(e => new ExistenciaViewModel() {Lugar = e.CentroDeCosto.Nombre, Cantidad = e.Cantidad}).ToList();
             existencia.Add(new ExistenciaViewModel() {Lugar = "Almacen", Cantidad = _db.Set<ExistenciaAlmacen>().Any(a => a.ProductoId == id)? _db.Set<ExistenciaAlmacen>().Where(a => a.ProductoId == id).Sum(a => a.ExistenciaEnAlmacen):0});
-            //if (!existencia.Any())
-            //{
-            //    existencia = new List<ExistenciaCentroDeCosto>();
-            //}
+            
             var viewModel = new ProductoConcretoViewModel()
             {
                 Producto = producto,
@@ -138,31 +134,7 @@ namespace ErpMvc.Controllers
             };
             return View(viewModel);
         }
-
-        // GET: Productos
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        public ActionResult Agregar()
-        {
-            ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion");
-            return View();
-        }
-
-        [HttpPost]
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        public ActionResult Agregar(Producto producto)
-        {
-            if (ModelState.IsValid)
-            {
-                if (_service.AgregarProducto(producto))
-                {
-                    TempData["exito"] = "Producto agregado correctamente!";
-                    return RedirectToAction("Listado");
-                }
-            }
-            ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion", producto.GrupoId);
-            return View(producto);
-        }
-
+        
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Editar(int? id)
         {
@@ -175,7 +147,7 @@ namespace ErpMvc.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion", producto.Producto.GrupoId);
+            ViewBag.GrupoId = new SelectList(_db.Set<GrupoDeProducto>(), "Id", "Descripcion", producto.Producto.GrupoId);
             ViewBag.UnidadDeMedida = producto.UnidadDeMedida.Nombre;
             //ViewBag.UnidadDeMedidaId = new SelectList(_service.ListaDeUnidadesDeMedida(), "Id", "Nombre", producto.UnidadDeMedidaId);
             return View(new ProductoViewModel(producto));
@@ -203,8 +175,8 @@ namespace ErpMvc.Controllers
                 return RedirectToAction("Listado");
 
             }
-            ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion", productoViewModel.GrupoId);
-            ViewBag.UnidadDeMedidaId = new SelectList(_service.ListaDeUnidadesDeMedida(), "Id", "Nombre", productoViewModel.UnidadDeMedidaId);
+            ViewBag.GrupoId = new SelectList(_db.Set<GrupoDeProducto>(), "Id", "Descripcion", productoViewModel.GrupoId);
+            ViewBag.UnidadDeMedidaId = new SelectList(_db.Set<UnidadDeMedida>(), "Id", "Nombre", productoViewModel.UnidadDeMedidaId);
             return View(productoViewModel);
         }
 
@@ -228,8 +200,8 @@ namespace ErpMvc.Controllers
 
         public PartialViewResult AgregarProductoPartial()
         {
-            ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion");
-            ViewBag.UnidadDeMedidaId = new SelectList(_service.ListaDeUnidadesDeMedida(), "Id", "Nombre");
+            ViewBag.GrupoId = new SelectList(_db.Set<GrupoDeProducto>(), "Id", "Descripcion");
+            ViewBag.UnidadDeMedidaId = new SelectList(_db.Set<UnidadDeMedida>(), "Id", "Nombre");
             return PartialView("_AgregarProductoPartial",new ProductoViewModel() {EsInventariable = true});
         }
 
@@ -239,13 +211,13 @@ namespace ErpMvc.Controllers
             if (ModelState.IsValid)
             {
                 var producto = new Producto() { Activo = true, Nombre = productoViewModel.Nombre, GrupoId = productoViewModel.GrupoId, EsInventariable = productoViewModel.EsInventariable };
-                var unidad = _service.ListaDeUnidadesDeMedida().Find(productoViewModel.UnidadDeMedidaId);
+                var unidad = _db.Set<UnidadDeMedida>().Find(productoViewModel.UnidadDeMedidaId);
                 _service.AgregarProducto(producto, unidad, productoViewModel.PrecioUnitario,
                     productoViewModel.Cantidad);
                 return RedirectToAction("Listado");
             }
-            ViewBag.GrupoId = new SelectList(_service.GruposDeProductos(), "Id", "Descripcion");
-            ViewBag.UnidadDeMedidaId = new SelectList(_service.ListaDeUnidadesDeMedida(), "Id", "Nombre");
+            ViewBag.GrupoId = new SelectList(_db.Set<GrupoDeProducto>(), "Id", "Descripcion");
+            ViewBag.UnidadDeMedidaId = new SelectList(_db.Set<UnidadDeMedida>(), "Id", "Nombre");
             return PartialView("_AgregarProductoPartial");
         }
 
@@ -292,7 +264,7 @@ namespace ErpMvc.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            _service.EliminarProducto(id.Value);
+            _service.DesactivarProducto(id.Value);
             return RedirectToAction("Listado");
         }
 
@@ -322,13 +294,8 @@ namespace ErpMvc.Controllers
                 {
                     _centroCostoService.DarSalidaPorMerma(prod.ProductoId, centroDeCostoId, prod.Cantidad, prod.UnidadDeMedidaId, User.Identity.GetUserId());
                 }
-
-                if (_centroCostoService.GuardarCambios())
-                {
-                    TempData["exito"] = "Salida registrada correctamente";
-                    return RedirectToAction("CentroDeCosto", "Inventario");
-                }
-                TempData["error"] = "No se pudo registrar la salida correctamente";
+                _db.SaveChanges();
+                TempData["exito"] = "Salida registrada correctamente";
                 return RedirectToAction("CentroDeCosto", "Inventario");
             }
             ViewBag.CentroDeCostoId = new SelectList(_centroCostoService.CentrosDeCosto(), "Id", "Nombre",centroDeCostoId);
@@ -365,91 +332,14 @@ namespace ErpMvc.Controllers
                 {
                     _centroCostoService.DarEntrada(prod.ProductoId, centroDeCostoId,tipoDeMovimiento.Id, prod.Cantidad, prod.UnidadDeMedidaId, User.Identity.GetUserId());
                 }
-
-                if (_centroCostoService.GuardarCambios())
-                {
-                    TempData["exito"] = "Salida registrada correctamente";
-                    return RedirectToAction("CentroDeCosto", "Inventario");
-                }
-                TempData["error"] = "No se pudo registrar la salida correctamente";
+                _db.SaveChanges();
+                TempData["exito"] = "Salida registrada correctamente";
                 return RedirectToAction("CentroDeCosto", "Inventario");
             }
             ViewBag.CentroDeCostoId = new SelectList(_centroCostoService.CentrosDeCosto(), "Id", "Nombre", centroDeCostoId);
             return View(compra);
         }
-
-
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        [DiaContable]
-        public ActionResult MoverDeAlmacenACentroDeCosto()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        [DiaContable]
-        public ActionResult MoverDeAlmacenACentroDeCosto(MovimientoProductosViewModel movimiento)
-        {
-            var usuario = User.Identity.GetUserId();
-            if (ModelState.IsValid)
-            {
-                if (!movimiento.Productos.Any())
-                {
-                    TempData["error"] = "No se puede efectuar un movimiento sin productos";
-                    return View();
-                }
-                foreach (var prod in movimiento.Productos)
-                {
-                    //_centroCostoService.TrasladarProductoDeCentroDeCosto();
-                }
-
-                if (_centroCostoService.GuardarCambios())
-                {
-                    TempData["exito"] = "Movimiento registrado correctamente";
-                    return RedirectToAction("Listado", "Productos");
-                }
-                TempData["error"] = "No se pudo registrar el movimiento";
-                return RedirectToAction("Listado", "Productos");
-            }
-            return View(movimiento);
-        }
-
-
-        //[Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        //public ActionResult MoverEntreCentrosDeCosto()
-        //{
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //[Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        //public ActionResult MoverEntreCentrosDeCosto(MovimientoProductosViewModel movimiento)
-        //{
-        //    var usuario = User.Identity.GetUserId();
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (!movimiento.Productos.Any())
-        //        {
-        //            TempData["error"] = "No se puede efectuar un movimiento sin productos";
-        //            return View();
-        //        }
-        //        foreach (var prod in movimiento.Productos)
-        //        {
-        //            _centroCostoService.TrasladarProductoDeCentroDeCosto(movimiento.OrigenId,movimiento.DestinoId,prod.ProductoId,prod.Cantidad, prod.UnidadDeMedidaId,usuario);
-        //        }
-
-        //        if (_centroCostoService.GuardarCambios())
-        //        {
-        //            TempData["exito"] = "Movimiento registrado correctamente";
-        //            return RedirectToAction("Listado", "Productos");
-        //        }
-        //        TempData["error"] = "No se pudo registrar el movimiento";
-        //        return RedirectToAction("Listado", "Productos");
-        //    }
-        //    return View(movimiento);
-        //}
-
+        
         public JsonResult SePuedeDarSalida(int productoId, decimal cantidad, int unidadId)
         {
             var centroCostoId = _centroCostoService.CentrosDeCosto().FirstOrDefault().Id;

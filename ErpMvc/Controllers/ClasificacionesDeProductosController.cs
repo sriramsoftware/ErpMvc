@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,17 +14,19 @@ namespace ErpMvc.Controllers
     [Authorize(Roles = RolesMontin.Administrador)]
     public class ClasificacionesDeProductosController : Controller
     {
+        private DbContext _db;
         private ProductoService _productoService;
 
-        public ClasificacionesDeProductosController(ProductoService productoService)
+        public ClasificacionesDeProductosController(DbContext context)
         {
-            _productoService = productoService;
+            _db = context;
+            _productoService = new ProductoService(context);
         }
 
         // GET: ClasificacionesDeProductos
         public ActionResult Listado()
         {
-            return View(_productoService.ClasificacionesDeProductos());
+            return View(_db.Set<ClasificacionDeProducto>().ToList());
         }
 
         public ActionResult Agregar()
@@ -36,10 +39,9 @@ namespace ErpMvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_productoService.AgregarClasificacion(clasificacionDeProducto))
-                {
-                    return RedirectToAction("Listado");
-                }
+                _db.Set<ClasificacionDeProducto>().Add(clasificacionDeProducto);
+                _db.SaveChanges();
+                return RedirectToAction("Listado");
             }
             return View();
         }
@@ -47,8 +49,8 @@ namespace ErpMvc.Controllers
 
         public ActionResult Editar(int id)
         {
-            //var centro = _centroDeCostoService.CentrosDeCosto().Find(id);
-            return View();
+            var clasif = _db.Set<ClasificacionDeProducto>().Find(id);
+            return View(clasif);
         }
 
         [HttpPost]

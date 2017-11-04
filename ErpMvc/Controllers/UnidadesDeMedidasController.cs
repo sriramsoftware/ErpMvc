@@ -13,22 +13,24 @@ namespace ErpMvc.Controllers
     [Authorize(Roles = RolesMontin.Administrador)]
     public class UnidadesDeMedidasController : Controller
     {
+        private DbContext _db;
         private ProductoService _productoService;
 
-        public UnidadesDeMedidasController(ProductoService service)
+        public UnidadesDeMedidasController(DbContext context)
         {
-            _productoService = service;
+            _db = context;
+            _productoService = new ProductoService(context);
         }
 
         // GET: UnidadesDeMedidas
         public ActionResult Listado()
         {
-            return View(_productoService.ListaDeUnidadesDeMedida().Include(u => u.TipoDeUnidadDeMedida));
+            return View(_db.Set<UnidadDeMedida>().Include(u => u.TipoDeUnidadDeMedida));
         }
 
         public ActionResult Agregar()
         {
-            ViewBag.TipoDeUnidadDeMedidaId = new SelectList(_productoService.ListaTipoDeUnidadDeMedidas(), "Id", "Name");
+            ViewBag.TipoDeUnidadDeMedidaId = new SelectList(_db.Set<TipoDeUnidadDeMedida>(), "Id", "Name");
             return View();
         }
 
@@ -37,18 +39,19 @@ namespace ErpMvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                _productoService.AgregarUnidadDeMedida(unidadDeMedida);
+                _db.Set<UnidadDeMedida>().Add(unidadDeMedida);
+                _db.SaveChanges();
                 TempData["exito"] = "Unidad agregada correctamente!";
                 return RedirectToAction("Listado");
             }
-            ViewBag.TipoDeUnidadDeMedidaId = new SelectList(_productoService.ListaTipoDeUnidadDeMedidas(), "Id", "Name",unidadDeMedida.TipoDeUnidadDeMedidaId);
+            ViewBag.TipoDeUnidadDeMedidaId = new SelectList(_db.Set<TipoDeUnidadDeMedida>(), "Id", "Name",unidadDeMedida.TipoDeUnidadDeMedidaId);
             return View(unidadDeMedida);
         }
 
         public ActionResult Editar(int id)
         {
-            var unidad = _productoService.ListaDeUnidadesDeMedida().Find(id);
-            ViewBag.TipoDeUnidadDeMedidaId = new SelectList(_productoService.ListaTipoDeUnidadDeMedidas(), "Id", "Name", unidad.TipoDeUnidadDeMedidaId);
+            var unidad = _db.Set<UnidadDeMedida>().Find(id);
+            ViewBag.TipoDeUnidadDeMedidaId = new SelectList(_db.Set<TipoDeUnidadDeMedida>(), "Id", "Name", unidad.TipoDeUnidadDeMedidaId);
             return View(unidad);
         }
 
@@ -57,32 +60,13 @@ namespace ErpMvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                _productoService.ModificarUnidadDeMedida(unidadDeMedida);
+                _db.Entry(unidadDeMedida).State = EntityState.Modified;
+                _db.SaveChanges();
                 TempData["exito"] = "Unidad modificada correctamente!";
                 return RedirectToAction("Listado");
             }
-            ViewBag.TipoDeUnidadDeMedidaId = new SelectList(_productoService.ListaTipoDeUnidadDeMedidas(), "Id", "Name", unidadDeMedida.TipoDeUnidadDeMedidaId);
+            ViewBag.TipoDeUnidadDeMedidaId = new SelectList(_db.Set<TipoDeUnidadDeMedida>(), "Id", "Name", unidadDeMedida.TipoDeUnidadDeMedidaId);
             return View(unidadDeMedida);
         }
-
-        //public ActionResult Eliminar(int id)
-        //{
-        //    var producto = _productoService.ListaDeUnidadesDeMedida().Find(id);
-        //    return View(producto);
-        //}
-
-        //[HttpPost]
-        //[ActionName("Eliminar")]
-        //public ActionResult ComfirmarEliminar(int id)
-        //{
-            
-        //    if (_productoService.EliminarUnidadDeMedida(id) > 0)
-        //    {
-        //        TempData["exito"] = "Unidad eliminada correctamente!";
-        //        return RedirectToAction("Listado");
-        //    }
-        //    TempData["error"] = "No se pudo eliminar la unidad de medida!";
-        //    return RedirectToAction("Listado");
-        //}
     }
 }

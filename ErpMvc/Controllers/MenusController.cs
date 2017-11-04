@@ -17,11 +17,13 @@ namespace ErpMvc.Controllers
     {
         private DbContext _db;
         private ElaboracionService _elaboracionService;
+        private ProductoService _productoService;
 
         public MenusController(DbContext context)
         {
             _db = context;
             _elaboracionService = new ElaboracionService(context);
+            _productoService = new ProductoService(context);
         }
         // GET: Menus
         public ActionResult Listado()
@@ -157,7 +159,7 @@ namespace ErpMvc.Controllers
             var costos = new Dictionary<int, decimal>();
             foreach (var detalle in elab.Productos)
             {
-                var costo = _elaboracionService.GetPrecioDeProducto(detalle.ProductoId, detalle.UnidadDeMedidaId);
+                var costo = _productoService.GetPrecioUnitarioDeProducto(detalle.ProductoId, detalle.UnidadDeMedidaId);
                 costos.Add(detalle.ProductoId, costo);
             }
             ViewBag.Costos = costos;
@@ -264,7 +266,7 @@ namespace ErpMvc.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            if (_elaboracionService.EliminarElaboracion(id.Value) > -1)
+            if (_elaboracionService.InactivarElaboracion(id.Value) > -1)
             {
                 TempData["exito"] = "Menu eliminado correctamente";
                 return RedirectToAction("Listado");

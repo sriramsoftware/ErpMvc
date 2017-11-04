@@ -20,27 +20,19 @@ namespace ErpMvc.Controllers
         private DbContext _db;
         private PeriodoContableService _periodoContableService;
         private CuentasServices _cuentasServices;
-        private SubmayorService _submayorService;
 
         public OperacionesController(DbContext context)
         {
             _db = context;
             _periodoContableService = new PeriodoContableService(context);
             _cuentasServices = new CuentasServices(context);
-            _submayorService = new SubmayorService(context);
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Index()
         {
-            
-                if (_periodoContableService.NoHayDiaAbierto())
-                {
-                    _periodoContableService.EmpezarDiaContable(DateTime.Now);
-                }
-                ViewBag.DiaContable = _periodoContableService.GetDiaContableActual();
-                return View();
-            
+            ViewBag.DiaContable = _periodoContableService.GetDiaContableActual();
+            return View();
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
@@ -100,7 +92,7 @@ namespace ErpMvc.Controllers
             {
                 return PartialView("_ResumenDeOperacionesConteblesPartial");
             }
-            return RedirectToAction("ResumenDeOperacionesContables", "Operaciones", new {Id = dia.Id});
+            return RedirectToAction("ResumenDeOperacionesContables", "Operaciones", new { Id = dia.Id });
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
@@ -108,16 +100,7 @@ namespace ErpMvc.Controllers
         {
             var operaciones = ResumenDeOperaciones(id, "Caja");
             var diaAnterior = _db.Set<DiaContable>().Find(id - 1);
-            //if (diaAnterior == null)
-            //{
-            //    ViewBag.ImporteAnterior = 0;
-            //}
-            //else
-            //{
-            //    var cierre = _db.Set<CierreDeCaja>().SingleOrDefault(c => c.DiaContableId == diaAnterior.Id);
-            //    ViewBag.ImporteAnterior = CalculoImporte(cierre.Desglose);
-
-            //}
+            
             ViewBag.ImporteAnterior = 100;
             return PartialView("_ResumenDeOperacionesConteblesPartial", operaciones);
         }
@@ -125,15 +108,15 @@ namespace ErpMvc.Controllers
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult AgregarOperacion()
         {
-            ViewBag.CuentaCreditoId = new SelectList(_db.Set<Cuenta>().ToList(),"Id","Nombre");
-            ViewBag.CuentaDebitoId = new SelectList(_db.Set<Cuenta>().ToList(),"Id","Nombre");
+            ViewBag.CuentaCreditoId = new SelectList(_db.Set<Cuenta>().ToList(), "Id", "Nombre");
+            ViewBag.CuentaDebitoId = new SelectList(_db.Set<Cuenta>().ToList(), "Id", "Nombre");
             return View();
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public JsonResult Cuentas()
         {
-            var cuentas = _db.Set<Cuenta>().ToList().Select(c => new {Id = c.Id, Nombre = c.Nombre});
+            var cuentas = _db.Set<Cuenta>().ToList().Select(c => new { Id = c.Id, Nombre = c.Nombre });
             return Json(cuentas, JsonRequestBehavior.AllowGet);
         }
 
@@ -144,18 +127,14 @@ namespace ErpMvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_submayorService.AgregarOperacion(asiento.CuentaCreditoId,asiento.CuentaDebitoId,asiento.Importe,DateTime.Now,"Ajuste: " + asiento.Observaciones, User.Identity.GetUserId()))
-                {
-                    TempData["exito"] = "Operacion realizada correctamente";
-                }
-                else
-                {
-                    TempData["error"] = "Error al realizar la operacion contable";
-                }
+                _cuentasServices.AgregarOperacion(asiento.CuentaCreditoId, asiento.CuentaDebitoId, asiento.Importe,
+                    DateTime.Now, "Ajuste: " + asiento.Observaciones, User.Identity.GetUserId());
+                _db.SaveChanges();
+                TempData["exito"] = "Operacion realizada correctamente";
                 return RedirectToAction("Index");
             }
-            ViewBag.CuentaCreditoId = new SelectList(_db.Set<Cuenta>().ToList(), "Id", "Nombre",asiento.CuentaCreditoId);
-            ViewBag.CuentaDebitoId = new SelectList(_db.Set<Cuenta>().ToList(), "Id", "Nombre",asiento.CuentaDebitoId);
+            ViewBag.CuentaCreditoId = new SelectList(_db.Set<Cuenta>().ToList(), "Id", "Nombre", asiento.CuentaCreditoId);
+            ViewBag.CuentaDebitoId = new SelectList(_db.Set<Cuenta>().ToList(), "Id", "Nombre", asiento.CuentaDebitoId);
             return View(asiento);
         }
 
@@ -179,7 +158,7 @@ namespace ErpMvc.Controllers
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         private decimal CalculoImporte(ICollection<DenominacionesEnCierreDeCaja> denominaciones)
         {
-            return denominaciones.Sum(d => (d.Cantidad*d.DenominacionDeMoneda.Valor));
+            return denominaciones.Sum(d => (d.Cantidad * d.DenominacionDeMoneda.Valor));
         }
     }
 }

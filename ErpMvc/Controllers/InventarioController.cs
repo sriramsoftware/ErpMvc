@@ -92,14 +92,8 @@ namespace ErpMvc.Controllers
                         return RedirectToAction("CentroDeCosto");
                     }
                 }
-                if (centroCostoService.GuardarCambios())
-                {
-                    TempData["exito"] = "Movimiento realizado correctamente";
-                }
-                else
-                {
-                    TempData["error"] = "No se pudo realizar el movimiento";
-                }
+                _db.SaveChanges();
+                TempData["exito"] = "Movimiento realizado correctamente";
                 return RedirectToAction("CentroDeCosto");
             }
             return View();

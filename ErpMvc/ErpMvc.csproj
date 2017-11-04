@@ -56,16 +56,16 @@
       <HintPath>..\packages\ComercialCore.1.5.0\lib\net45\ComercialCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaBL, Version=1.24.30.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaBL.1.24.30\lib\net45\CompraVentaBL.dll</HintPath>
+    <Reference Include="CompraVentaBL, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaBL.2.0.0\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CompraVentaCore, Version=1.12.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CompraVentaCore.1.12.5\lib\net45\CompraVentaCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ContabilidadBL, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ContabilidadBL.1.5.1\lib\net45\ContabilidadBL.dll</HintPath>
+    <Reference Include="ContabilidadBL, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ContabilidadBL.2.0.0\lib\net45\ContabilidadBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ContabilidadCore, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">

@@ -91,7 +91,6 @@ namespace ErpMvc.Controllers
         public ActionResult DarSalidaPorMerma()
         {
             ViewBag.AlmacenId = _db.Set<Almacen>().FirstOrDefault().Id;
-
             return View();
         }
 
@@ -147,13 +146,8 @@ namespace ErpMvc.Controllers
                 {
                     _almacenService.EntradaDesdeCentroDeCosto(almacenId, centroDeCostoId, prod.ProductoId, prod.Cantidad, prod.UnidadDeMedidaId, User.Identity.GetUserId());
                 }
-
-                if (_almacenService.GuardarCambios())
-                {
-                    TempData["exito"] = "Salida registrada correctamente";
-                    return RedirectToAction("CentroDeCosto", "Inventario");
-                }
-                TempData["error"] = "No se pudo registrar la salida correctamente";
+                _db.SaveChanges();
+                TempData["exito"] = "Salida registrada correctamente";
                 return RedirectToAction("CentroDeCosto", "Inventario");
             }
             ViewBag.CentroDeCostoId = new SelectList(_centroCostoService.CentrosDeCosto(), "Id", "Nombre", centroDeCostoId);

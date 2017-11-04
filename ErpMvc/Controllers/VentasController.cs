@@ -291,19 +291,11 @@ namespace ErpMvc.Controllers
                 var result = _ventasService.Editar(venta, User.Identity.GetUserId());
                 if (result)
                 {
-                    result = _ventasService.GuardarCambios();
-                    if (!result)
-                    {
-                        TempData["error"] = "No se pudo editar la venta, error al guardar los cambios";
-                    }
+                    TempData["exito"] = "Venta editada correctamente";
                 }
                 else
                 {
                     TempData["error"] = "No se pudo editar la venta, es posible que se cambiara el centro de costo y este no tenga los productos de la venta";
-                }
-                if (result)
-                {
-                    TempData["exito"] = "Venta editada correctamente";
                 }
                 return RedirectToAction("Index");
             }
@@ -340,14 +332,8 @@ namespace ErpMvc.Controllers
                 {
                     _db.Set<Propina>().Remove(propina);
                 }
-                if (_ventasService.GuardarCambios())
-                {
-                    TempData["exito"] = "Comanda eliminada correctamente";
-                }
-                else
-                {
-                    TempData["error"] = "La comanda no se puede eliminar";
-                }
+                _db.SaveChanges();
+                TempData["exito"] = "Comanda eliminada correctamente";
             }
             else
             {
@@ -367,7 +353,12 @@ namespace ErpMvc.Controllers
         public JsonResult DisminuirMenu(int id)
         {
             var result = _ventasService.DisminuirMenuEnVenta(id, User.Identity.GetUserId());
-            return Json(result, JsonRequestBehavior.AllowGet);
+            if (result)
+            {
+                _db.SaveChanges();
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            return Json(false, JsonRequestBehavior.AllowGet);
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
@@ -376,9 +367,10 @@ namespace ErpMvc.Controllers
             var result = _ventasService.DisminuirAgregadoEnVenta(detalleId,agregadoId, User.Identity.GetUserId());
             if (result)
             {
-                result = _ventasService.GuardarCambios();
+                _db.SaveChanges();
+                return Json(true, JsonRequestBehavior.AllowGet);
             }
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(false, JsonRequestBehavior.AllowGet);
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
@@ -387,9 +379,10 @@ namespace ErpMvc.Controllers
             var result = _ventasService.AumentarAgregadoEnVenta(detalleId,agregadoId, User.Identity.GetUserId());
             if (result)
             {
-                result = _ventasService.GuardarCambios();
+                _db.SaveChanges();
+                return Json(true, JsonRequestBehavior.AllowGet);
             }
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(false, JsonRequestBehavior.AllowGet);
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
@@ -398,9 +391,10 @@ namespace ErpMvc.Controllers
             var result = _ventasService.AumentarMenuEnVenta(id, User.Identity.GetUserId());
             if (result)
             {
-                result = _ventasService.GuardarCambios();
+                _db.SaveChanges();
+                return Json(true, JsonRequestBehavior.AllowGet);
             }
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(false, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -411,9 +405,10 @@ namespace ErpMvc.Controllers
             var result = _ventasService.AgregarDetalleAVenta(detalle, User.Identity.GetUserId());
             if (result)
             {
-                result = _ventasService.GuardarCambios();
+                _db.SaveChanges();
+                return Json(new { Result = true, DetalleId = detalle.Id }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new {Result = result, DetalleId = detalle.Id}, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = false, DetalleId = 0 }, JsonRequestBehavior.AllowGet);
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
@@ -549,14 +544,8 @@ namespace ErpMvc.Controllers
             }
             venta.EstadoDeVenta = EstadoDeVenta.PendienteParaOtroDia;
             venta.Observaciones = observacion;
-            if (_ventasService.GuardarCambios())
-            {
-                TempData["exito"] = "Se paso la venta para otro dia correctamente";
-            }
-            else
-            {
-                TempData["errro"] = "Error al pasar para otro dia";
-            }
+            _db.SaveChanges();
+            TempData["exito"] = "Se paso la venta para otro dia correctamente";
             return RedirectToAction("Index");
         }
 
@@ -576,14 +565,9 @@ namespace ErpMvc.Controllers
                 menu.ImporteTotal = 0;
             }
             venta.Observaciones = observacion;
-            if (_ventasService.GuardarCambios())
-            {
-                TempData["exito"] = "La venta se puso por cuenta de la casa correctamente";
-            }
-            else
-            {
-                TempData["errro"] = "Error al pasar por cuenta de la casa";
-            }
+            _db.Entry(venta).State = EntityState.Modified;
+            _db.SaveChanges();
+            TempData["exito"] = "La venta se puso por cuenta de la casa correctamente";
             return RedirectToAction("Index");
         }
 

@@ -98,9 +98,8 @@ namespace ErpMvc.Controllers
 
             };
             venta.Importe = venta.Elaboraciones.Sum(e => e.ImporteTotal);
-            _ventasService.Vender(venta, User.Identity.GetUserId());
             comanda.Venta = venta;
-            if (_ventasService.GuardarCambios())
+            if (_ventasService.Vender(venta, User.Identity.GetUserId()))
             {
                 TempData["exito"] = "Venta generada correctamente";
             }
@@ -186,18 +185,7 @@ namespace ErpMvc.Controllers
             {
                 TempData["error"] = "Error al crear la comanda";
             }
-
-            //var venta = new Venta();
-            //if (_ventasService.Vender(venta, User.Identity.GetUserId()))
-            //{
-            //    _db.Set<Comanda>().Add(comanda);
-            //    TempData["exito"] = "Venta agregada correctamente";
-            //    return RedirectToAction("Index");
-            //}
-            //else
-            //{
-            //    TempData["error"] = "Error al crear la comanda";
-            //}
+            
             ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre");
             ViewBag.VendedorId = new SelectList(_ventasService.Vendedores(), "Id", "NombreCompleto");
             return View();
@@ -239,15 +227,8 @@ namespace ErpMvc.Controllers
                 comanda.Comensales = null;
                 comanda.Detalles = null;
                 _db.Entry(comanda).State = EntityState.Modified;
-                result = _ventasService.GuardarCambios();
-                if (result)
-                {
-                    TempData["exito"] = "Comanda editada correctamente";
-                }
-                else
-                {
-                    TempData["error"] = "No se pudo editar la comanda";
-                }
+                _db.SaveChanges();
+                TempData["exito"] = "Comanda editada correctamente";
                 return RedirectToAction("Index");
             }
             ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre", comanda.PuntoDeVentaId);
@@ -287,15 +268,8 @@ namespace ErpMvc.Controllers
             }
 
             _db.Set<Comanda>().Remove(comanda);
-
-            if (_ventasService.GuardarCambios())
-            {
-                TempData["exito"] = "Comanda eliminada correctamente";
-            }
-            else
-            {
-                TempData["error"] = "La comanda no se puede eliminar";
-            }
+            _db.SaveChanges();
+            TempData["exito"] = "Comanda eliminada correctamente";
             return RedirectToAction("Index");
         }
 
@@ -305,8 +279,12 @@ namespace ErpMvc.Controllers
         {
             var detalle = _db.Set<DetalleDeComanda>().Find(id);
             detalle.Cantidad--;
-            var result = _ventasService.GuardarCambios();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            if (detalle.Cantidad < 0)
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
+            _db.SaveChanges();
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -321,8 +299,8 @@ namespace ErpMvc.Controllers
             {
                 detalle.Agregados.Remove(agregado);
             }
-            var result = _ventasService.GuardarCambios();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            _db.SaveChanges();
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -340,8 +318,8 @@ namespace ErpMvc.Controllers
             {
                 detalle.Agregados.Add(new AgregadoDeComanda() { AgregadoId = agregadoId, Cantidad = 1, DetalleDeComandaId = detalleId });
             }
-            var result = _ventasService.GuardarCambios();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            _db.SaveChanges();
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -349,8 +327,8 @@ namespace ErpMvc.Controllers
         {
             var detalle = _db.Set<DetalleDeComanda>().Find(id);
             detalle.Cantidad++;
-            var result = _ventasService.GuardarCambios();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            _db.SaveChanges();
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -359,24 +337,24 @@ namespace ErpMvc.Controllers
             detalle.Elaboracion = null;
             var comanda = _db.Set<Comanda>().Find(detalle.ComandaId);
             comanda.Detalles.Add(detalle);
-            var result = _ventasService.GuardarCambios();
-            return Json(new { Result = result, DetalleId = detalle.Id }, JsonRequestBehavior.AllowGet);
+            _db.SaveChanges();
+            return Json(new { Result = true, DetalleId = detalle.Id }, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult EliminarDetalle(int id)
         {
             var detalle = _db.Set<DetalleDeComanda>().Find(id);
             _db.Set<DetalleDeComanda>().Remove(detalle);
-            var result = _ventasService.GuardarCambios();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            _db.SaveChanges();
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult EliminarOrdenEnDetalle(int id)
         {
             var detalle = _db.Set<OrdenPorDetalle>().Find(id);
             _db.Set<OrdenPorDetalle>().Remove(detalle);
-            var result = _ventasService.GuardarCambios();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            _db.SaveChanges();
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult AgregarOrdenEnDetalle(int ordenId, int detalleId)
@@ -384,8 +362,8 @@ namespace ErpMvc.Controllers
             var detalle = _db.Set<DetalleDeComanda>().Find(detalleId);
             var ordenDetalle = new OrdenPorDetalle() {OrdenId = ordenId};
             detalle.Ordenes.Add(ordenDetalle);
-            var result = _ventasService.GuardarCambios();
-            return Json(new { Result = result, Id = ordenDetalle.Id }, JsonRequestBehavior.AllowGet);
+            _db.SaveChanges();
+            return Json(new { Result = true, Id = ordenDetalle.Id }, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult EliminarAnotacion(int anotacionId, int ordenId)
@@ -393,8 +371,8 @@ namespace ErpMvc.Controllers
             var detalle = _db.Set<OrdenPorDetalle>().Find(ordenId);
             var anotacion = _db.Set<Anotacion>().Find(anotacionId);
             detalle.Anotaciones.Remove(anotacion);
-            var result = _ventasService.GuardarCambios();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            _db.SaveChanges();
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult AgregarAnotacion(int anotacionId, int ordenId)
@@ -402,8 +380,8 @@ namespace ErpMvc.Controllers
             var detalle = _db.Set<OrdenPorDetalle>().Find(ordenId);
             var anotacion = _db.Set<Anotacion>().Find(anotacionId);
             detalle.Anotaciones.Add(anotacion);
-            var result = _ventasService.GuardarCambios();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            _db.SaveChanges();
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
     }
 }
