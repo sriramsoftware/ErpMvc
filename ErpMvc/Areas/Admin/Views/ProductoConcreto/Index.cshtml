@@ -1,0 +1,102 @@
+﻿
+@model IEnumerable<AlmacenCore.Models.ProductoConcreto>
+@{
+    ViewBag.Title = "Existencias de centro de costo";
+}
+
+<table class="table dynamic">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Producto</th>
+            <th>Cantidad por presentacion</th>
+            <th>Unidad</th>
+            <th>Precio unitario</th>
+            <th>Precio de venta</th>
+            <th>Proporcion de merma</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Producto.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cantidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnidadDeMedida.Siglas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrecioUnitario)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrecioDeVenta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProporcionDeMerma)
+                </td>
+                <td class="col-md-2 text-right">
+                    <a class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="@Url.Action("Edit", new {Id = item.Id})"><i class="glyphicon glyphicon-edit"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha">&nbsp;@ViewBag.Title</p>
+        </div>
+    </div>
+}
+
+<!-- MODAL CONFIRMACION -->
+<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="agregados-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 id="modal-title" class="modal-title">Confirmar borrar</h4>
+            </div>
+            @using (Html.BeginForm("Borrar", "ExistenciaCentroDeCosto", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div id="modal-detalle" class="modal-body">
+                    <div class="container">
+                        <p>Seguro que desea borrar esta existencia de producto???</p>
+                        <input type="hidden" id="Id" name="Id" />
+                        <input type="hidden" id="CentroId" name="CentroId" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <input type="submit" class="btn btn-danger" id="btn-confirm" title="Borrar" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- TERMINA MODAL CONFIRMACION -->
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+        });
+    </script>
+}
+
+
