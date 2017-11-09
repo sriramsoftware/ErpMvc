@@ -41,6 +41,19 @@ namespace ErpMvc.Controllers
             }), JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult ExistenciasMismaUnidad(int id)
+        {
+            var producto = _db.Set<ProductoConcreto>().SingleOrDefault(p => p.ProductoId == id);
+            return Json(_db.Set<ExistenciaCentroDeCosto>().Where(e => e.Producto.UnidadDeMedida.TipoDeUnidadDeMedidaId == producto.UnidadDeMedida.TipoDeUnidadDeMedidaId).Select(e => new
+            {
+                Id = e.Producto.ProductoId,
+                Nombre = e.Producto.Producto.Nombre,
+                Cantidad = e.Cantidad,
+                UnidadId = e.Producto.UnidadDeMedidaId,
+                Unidad = e.Producto.UnidadDeMedida.Siglas
+            }), JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public JsonResult SePuedeDarSalida(DetalleProductoViewModel producto)
         {
