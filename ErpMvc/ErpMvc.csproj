@@ -40,8 +40,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AlmacenCore, Version=1.3.11.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AlmacenCore.1.3.11\lib\net45\AlmacenCore.dll</HintPath>
+    <Reference Include="AlmacenCore, Version=1.3.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AlmacenCore.1.3.12\lib\net45\AlmacenCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
@@ -56,8 +56,8 @@
       <HintPath>..\packages\ComercialCore.1.5.0\lib\net45\ComercialCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaBL, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaBL.2.0.0\lib\net45\CompraVentaBL.dll</HintPath>
+    <Reference Include="CompraVentaBL, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaBL.2.2.0\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CompraVentaCore, Version=1.12.5.0, Culture=neutral, processorArchitecture=MSIL">
@@ -339,7 +339,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\DeleteInfoController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductoConcretoController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ExistenciaCentroDeCostoController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ExistenciaAlmacenController.cs" />
+    <Compile Include="Areas\Admin\Models\EliminarExistenciaViewModel.cs" />
     <Compile Include="Controllers\AlmacenController.cs" />
     <Compile Include="Controllers\CajaController.cs" />
     <Compile Include="Controllers\CentrosDeCostosController.cs" />
@@ -452,6 +457,7 @@
     <Compile Include="ViewModels\AsientoContableViewModel.cs" />
     <Compile Include="ViewModels\CierreViewModel.cs" />
     <Compile Include="ViewModels\ConsumoViewModel.cs" />
+    <Compile Include="ViewModels\ConvertirProductoViewModel.cs" />
     <Compile Include="ViewModels\DenominacionViewModel.cs" />
     <Compile Include="ViewModels\DesgloceEfectivoViewModel.cs" />
     <Compile Include="ViewModels\DetalleMovimientoProductoViewModel.cs" />
@@ -465,6 +471,7 @@
     <Compile Include="ViewModels\ParametrosMovProdViewModel.cs" />
     <Compile Include="ViewModels\ParametrosViewModel.cs" />
     <Compile Include="ViewModels\ProductoConcretoViewModel.cs" />
+    <Compile Include="ViewModels\ProductosNecesariosViewModel.cs" />
     <Compile Include="ViewModels\ProductoViewModel.cs" />
     <Compile Include="ViewModels\ResumenDeOperaciones.cs" />
     <Compile Include="ViewModels\ResumenProductoVM.cs" />
@@ -577,6 +584,7 @@
     <Content Include="Scripts\erp\menu.js" />
     <Content Include="Scripts\datatables.min.js" />
     <Content Include="Scripts\erp\entradaProductoController.js" />
+    <Content Include="Scripts\erp\convertirProductoController.js" />
     <Content Include="Scripts\erp\movimientoProductoController.js" />
     <Content Include="Scripts\erp\comandasController.js" />
     <Content Include="Scripts\erp\ventasController.js" />
@@ -680,6 +688,14 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\ExistenciaAlmacen\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ExistenciaAlmacen\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ExistenciaCentroDeCosto\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ExistenciaCentroDeCosto\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductoConcreto\Index.cshtml" />
     <None Include="Properties\PublishProfiles\amelia.pubxml" />
     <None Include="Properties\PublishProfiles\montincubano.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -1614,7 +1630,11 @@
     <Content Include="Views\Comandas\_ListaDeComandasPartial.cshtml" />
     <Content Include="Views\Comandas\_MenusEnComandaPartial.cshtml" />
     <Content Include="Views\Comandas\Editar.cshtml" />
-    <Content Include="Views\Admin\DeleteInfo.cshtml" />
+    <Content Include="Areas\Admin\Views\DeleteInfo\Index.cshtml" />
+    <Content Include="Views\Comandas\ProductosNecesarios.cshtml" />
+    <Content Include="Views\Inventario\ConvertirProductoAOtro.cshtml" />
+    <Content Include="Views\Reportes\_MenusPorProductoPartial.cshtml" />
+    <Content Include="Views\Reportes\MenusPorProducto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />
