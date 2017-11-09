@@ -19,11 +19,13 @@ namespace ErpMvc.Controllers
     {
         private DbContext _db;
         private AlmacenService _almacenService;
+        private CentroDeCostoService _centroDeCostoService;
 
         public InventarioController(DbContext context)
         {
             _db = context;
             _almacenService = new AlmacenService(context);
+            _centroDeCostoService = new CentroDeCostoService(context);
         }
 
         public ActionResult Almacen()
@@ -71,7 +73,7 @@ namespace ErpMvc.Controllers
         [DiaContable]
         public ActionResult MoverEntreCentrosDeCosto()
         {
-            ViewBag.OrigenId = new SelectList(_db.Set<CentroDeCosto>(), "Id","Nombre");
+            ViewBag.OrigenId = new SelectList(_db.Set<CentroDeCosto>(), "Id", "Nombre");
             return View();
         }
 
@@ -99,6 +101,31 @@ namespace ErpMvc.Controllers
             return View();
         }
 
-        
+        [DiaContable]
+        public ActionResult ConvertirProductoAOtro()
+        {
+            ViewBag.CentroDeCostoId = new SelectList(_db.Set<CentroDeCosto>(), "Id", "Nombre");
+            return View();
+        }
+
+        [HttpPost]
+        [DiaContable]
+        public ActionResult ConvertirProductoAOtro(ConvertirProductoViewModel convertirProductoViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                _centroDeCostoService.ConvertirDeUnProductoAOtro(convertirProductoViewModel.CentroDeCostoId,
+                    convertirProductoViewModel.OrigenId, convertirProductoViewModel.Cantidad,
+                    convertirProductoViewModel.UnidadDeMedidaId, convertirProductoViewModel.DestinoId,
+                    User.Identity.GetUserId());
+                _db.SaveChanges();
+                TempData["exito"] = "Convercion entre productos correctamente";
+                return RedirectToAction("CentroDeCosto");
+            }
+            ViewBag.CentroDeCostoId = new SelectList(_db.Set<CentroDeCosto>(), "Id", "Nombre");
+            return View();
+        }
+
+
     }
 }

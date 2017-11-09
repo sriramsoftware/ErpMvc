@@ -1,0 +1,80 @@
+﻿@model ErpMvc.ViewModels.ConvertirProductoViewModel
+
+@{
+    ViewBag.Title = "Convertir de un producto a otro";
+}
+
+<h1 class="message-body">@ViewBag.Title.</h1>
+
+@using (Html.BeginForm("ConvertirProductoAOtro", "Inventario", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    <div class="col-md-12" id="convertirProductoController" ng-controller="convertirProductoController">
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.CentroDeCostoId, "Centro de costo", new {@class = "col-md-4 control-label"})
+            <div class="col-md-8">
+                @Html.DropDownList("CentroDeCostoId", null, new {@class = "form-control", @ng_model = "centroId", @chosen = "", @ng_change = "cambiarCentro()"})
+                @Html.ValidationMessageFor(m => m.CentroDeCostoId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.OrigenId, "De", new {@class = "col-md-4 control-label"})
+            <div class="col-md-8">
+                <select class="form-control" name="OrigenId" chosen ng-model="origenId" ng-options="producto.Nombre + ' (' + producto.Cantidad + ')' for producto in productos track by producto.Id" ng-change="cambiarProducto()">
+                    <option></option>
+                </select>
+                @Html.ValidationMessageFor(m => m.OrigenId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.DestinoId, "A", new {@class = "col-md-4 control-label"})
+            <div class="col-md-8">
+                <select class="form-control" name="DestinoId" chosen ng-model="destinoId" ng-options="producto.Nombre for producto in productosDestino track by producto.Id">
+                    <option></option>
+                </select>
+                @Html.ValidationMessageFor(m => m.DestinoId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Cantidad, new {@class = "col-md-4 control-label"})
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Cantidad, null, new {@class = "form-control"})
+                @Html.ValidationMessageFor(m => m.Cantidad)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.UnidadDeMedidaId, "Unidad", new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                <select id="UnidadDeMedidaId" name="UnidadDeMedidaId" class="form-control" chosen ng-model="unidadId" ng-options="unidad.Siglas for unidad in unidades track by unidad.Id">
+                    <option></option>
+                </select>
+                @Html.ValidationMessageFor(m => m.UnidadDeMedidaId)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                @Html.ActionLink("Atrás", "CentroDeCosto", "Inventario", null, new { @class = "btn btn-default" })
+                <input id="comprar-btn" type="submit" class="btn btn-success" value="Convertir" />
+            </div>
+        </div>
+    </div>
+                }
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/erp/convertirProductoController.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".select").chosen();
+
+            $('.nuevo').tooltip();
+
+            $('#comprar-btn').click(function () {
+                $('#form-detalle-compra').remove();
+            });
+        });
+    </script>
+}
