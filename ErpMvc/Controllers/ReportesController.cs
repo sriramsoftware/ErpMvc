@@ -5,6 +5,7 @@ using System.Linq;
 using System.Data.Entity;
 using AlmacenCore.Models;
 using CajaCore.Models;
+using ComercialCore.Models;
 using CompraVentaCore.Models;
 using ContabilidadBL;
 using ContabilidadCore.Models;
@@ -382,6 +383,18 @@ namespace ErpMvc.Controllers
             ViewBag.SalidasPorAjuste = salidasAjustes;
             ViewBag.ProductoId = parametros.ProductoId;
             return PartialView("_ResumenDeProductoPartial");
+        }
+
+        public ActionResult MenusPorProducto()
+        {
+            ViewBag.ProductoId = new SelectList(_db.Set<Producto>(),"Id","Nombre");
+            return View();
+        }
+
+        public PartialViewResult MenusProducto(int productoId)
+        {
+            var menus = _db.Set<ProductosPorElaboracion>().Where(p => p.ProductoId == productoId).Select(p => p.Elaboracion).ToList();
+            return PartialView("_MenusPorProductoPartial",menus);
         }
 
         private string NombreMeses(int mes)

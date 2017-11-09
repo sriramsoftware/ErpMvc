@@ -1,0 +1,18 @@
+﻿@using AlmacenCore.Models
+@model IEnumerable<CompraVentaCore.Models.Elaboracion>
+
+<table id="resumen-mov-tabla" class="table">
+    <thead>
+        <tr>
+            <th class="col-md-3">Menu</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var mov in Model)
+        {
+            <tr>
+                <td>@mov.Nombre</td>
+            </tr>
+        }
+    </tbody>
+</table>

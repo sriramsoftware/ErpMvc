@@ -1,0 +1,69 @@
+﻿@model ErpMvc.ViewModels.ParametrosMovProdViewModel
+
+@{
+    ViewBag.Tittle = "Menu por prod";
+}
+
+@using (Ajax.BeginForm("MenusProducto", "Reportes", new AjaxOptions() { InsertionMode = InsertionMode.Replace, HttpMethod = "Post", UpdateTargetId = "resumen", OnSuccess = "completo", OnBegin = "empezando", OnFailure = "fallido" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="formpanel panel-default">
+        <div class="panel-heading">
+            <h3 class="text-center">Menus por producto</h3>
+        </div>
+        <div class="panel-body">
+            @*<p class="alert-success"><strong>Nota:</strong> Utilice los diferentes filtros de búsqueda para obtener la información que desee</p>*@
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true)
+                
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ProductoId, "Producto", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("ProductoId",null, new { @class = "form-control select" })
+                        @Html.ValidationMessageFor(model => model.ProductoId)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="panel-footer text-right">
+            <div class="form-group">
+                <input type="submit" value="Buscar" class="btn btn-success" id="reporte-btn" />
+            </div>
+        </div>
+    </div>
+}
+
+<div id="resumen">
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/chosen.jquery.min.js"></script>
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".select").chosen();
+            $('#FechaInicio').val("");
+            $('#FechaFin').val("");
+
+        });
+
+        function completo() {
+            $('#reporte-btn').attr('disabled', false);
+            declareDatatable('#resumen-mov-tabla');
+        }
+
+        function empezando() {
+            $('#reporte-btn').attr('disabled', true);
+            $('#resumen').html("");
+        }
+
+        function fallido() {
+            $('#resumen').append("<p> No existe movimientos</p>");
+        }
+    </script>
+}
