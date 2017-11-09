@@ -10,6 +10,7 @@ using CompraVentaCore.Models;
 using ContabilidadBL;
 using ErpMvc.Models;
 using ErpMvc.Utiles;
+using ErpMvc.ViewModels;
 using HumanResourcesCore.Models;
 using Microsoft.AspNet.Identity;
 
@@ -91,8 +92,8 @@ namespace ErpMvc.Controllers
                 {
                     ElaboracionId = d.ElaboracionId,
                     Cantidad = d.Cantidad,
-                    Agregados = d.Agregados.Select(a => new AgregadosVendidos() {AgregadoId = a.AgregadoId, Cantidad = a.Cantidad}).ToList(),
-                    ImporteTotal = (d.Elaboracion.PrecioDeVenta * d.Cantidad ) +( d.Agregados.Sum(a => a.Cantidad * a.Agregado.Precio) * d.Cantidad),
+                    Agregados = d.Agregados.Select(a => new AgregadosVendidos() { AgregadoId = a.AgregadoId, Cantidad = a.Cantidad }).ToList(),
+                    ImporteTotal = (d.Elaboracion.PrecioDeVenta * d.Cantidad) + (d.Agregados.Sum(a => a.Cantidad * a.Agregado.Precio) * d.Cantidad),
                     Costo = (d.Elaboracion.Costo * d.Cantidad) + (d.Agregados.Sum(a => a.Cantidad * a.Agregado.Costo) * d.Cantidad)
                 }).ToList()
 
@@ -106,9 +107,52 @@ namespace ErpMvc.Controllers
             else
             {
                 TempData["error"] = "Error al generar comanda";
+                return View("ProductosNecesarios", ProductosNecesarios(venta));
             }
             return RedirectToAction("Index", "Ventas");
         }
+
+        private ICollection<ProductosNecesariosViewModel> ProductosNecesarios(Venta venta)
+        {
+            var result = new List<ProductosNecesariosViewModel>();
+            foreach (var detalle in venta.Elaboraciones)
+            {
+                if (!_ventasService.SePuedeVender(detalle.ElaboracionId, (int)detalle.Cantidad, detalle.Elaboracion.CentroDeCostoId))
+                {
+                    foreach (var prod in detalle.Elaboracion.Productos)
+                    {
+                        result.Add(new ProductosNecesariosViewModel
+                        {
+                            Producto = prod.Producto.Nombre,
+                            Cantidad = prod.Cantidad * detalle.Cantidad,
+                            Unidad = prod.UnidadDeMedida.Siglas,
+                            Menus = detalle.Elaboracion.Nombre
+                        });
+                    }
+                    foreach (var agreg in detalle.Agregados)
+                    {
+                        result.Add(new ProductosNecesariosViewModel
+                        {
+                            Producto = agreg.Agregado.Producto.Nombre,
+                            Cantidad = agreg.Cantidad * detalle.Cantidad * agreg.Agregado.Cantidad,
+                            Unidad = agreg.Agregado.UnidadDeMedida.Siglas,
+                            Menus = detalle.Elaboracion.Nombre
+                        });
+                    }
+                }
+            }
+            var data = result.GroupBy(r => r.Producto).Select(g => new ProductosNecesariosViewModel()
+            {
+                Producto = g.Key,
+                Cantidad = g.Sum(p => p.Cantidad),
+                Unidad = g.FirstOrDefault().Unidad,
+                Menus = String.Join(",",g.Select(r => r.Menus))
+
+            }).ToList();
+            return data;
+        }
+
+
 
         [DiaContable]
         public ActionResult NuevaComanda()
@@ -185,7 +229,7 @@ namespace ErpMvc.Controllers
             {
                 TempData["error"] = "Error al crear la comanda";
             }
-            
+
             ViewBag.PuntoDeVentaId = new SelectList(_ventasService.PuntosDeVentas(), "Id", "Nombre");
             ViewBag.VendedorId = new SelectList(_ventasService.Vendedores(), "Id", "NombreCompleto");
             return View();
@@ -360,7 +404,7 @@ namespace ErpMvc.Controllers
         public JsonResult AgregarOrdenEnDetalle(int ordenId, int detalleId)
         {
             var detalle = _db.Set<DetalleDeComanda>().Find(detalleId);
-            var ordenDetalle = new OrdenPorDetalle() {OrdenId = ordenId};
+            var ordenDetalle = new OrdenPorDetalle() { OrdenId = ordenId };
             detalle.Ordenes.Add(ordenDetalle);
             _db.SaveChanges();
             return Json(new { Result = true, Id = ordenDetalle.Id }, JsonRequestBehavior.AllowGet);

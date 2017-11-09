@@ -1,0 +1,57 @@
+﻿@using CompraVentaCore.Models
+@model IEnumerable<ErpMvc.ViewModels.ProductosNecesariosViewModel>
+
+@{
+    ViewBag.Title = "Productos necesarios para venta";
+}
+
+
+<table class="table dynamic">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Menus que lo llevan</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Producto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cantidad)
+                    @Html.DisplayFor(modelItem => item.Unidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Menus)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@section SeccionDerecha
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+            <p class="parrafo_derecha"><i class="glyphicon glyphicon-usd icono_derecha"></i>&nbsp;Ventas</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <a href="@Url.Action("NuevaVenta")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Registrar Nueva Venta</a>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+}
