@@ -1,0 +1,40 @@
+﻿@model AlmacenCore.Models.ExistenciaAlmacen
+
+@{
+    ViewBag.Title = "Modificar existencia de almacen";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Edit", "ExistenciaAlmacen", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+    @Html.ValidationSummary()
+    <div class="col-md-8 col-md-offset-2">
+        @Html.HiddenFor(m => m.Id)
+        <div class="form-group">
+            @Html.LabelFor(m => m.Producto, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.DisplayFor(m => m.Producto.Producto.Nombre, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ExistenciaEnAlmacen, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.ExistenciaEnAlmacen, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ExistenciaEnAlmacen)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                @Html.ActionLink("Atrás", "Index", null, new { @class = "btn btn-default" })
+                <input type="submit" class="btn btn-success" value="Guardar" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
