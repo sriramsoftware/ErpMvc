@@ -9,17 +9,17 @@ using ContabilidadCore.Models;
 using ErpMvc.Models;
 using Microsoft.AspNet.Identity;
 
-namespace ErpMvc.Controllers
+namespace ErpMvc.Areas.Admin.Controllers
 {
     [Authorize(Roles = RolesMontin.Administrador)]
-    public class AdminController : Controller
+    public class DeleteInfoController : Controller
     {
-        public ActionResult DeleteInfo()
+        // GET: Admin/DeleteInfo
+        public ActionResult Index()
         {
             return View();
         }
 
-        // GET: Admin
         public ActionResult DeleteInfoConfirmado()
         {
             var db = new ErpContext();
@@ -48,7 +48,7 @@ namespace ErpMvc.Controllers
             db.Set<Asiento>().RemoveRange(db.Set<Asiento>());
             db.Set<DiaContable>().RemoveRange(db.Set<DiaContable>());
 
-            var dia = new DiaContable() { Abierto = false, Fecha = DateTime.Now, HoraEnQueCerro = DateTime.Now};
+            var dia = new DiaContable() { Abierto = false, Fecha = DateTime.Now, HoraEnQueCerro = DateTime.Now };
             db.Set<DiaContable>().Add(dia);
 
             var existencias = db.Set<ExistenciaAlmacen>().ToList();
