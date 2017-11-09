@@ -70,14 +70,14 @@ namespace ErpMvc.Controllers
             return Json(agregados, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult AgregarMenu()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult AgregarMenu(Elaboracion elaboracion, bool? porCiento)
         {
             ModelState.Remove("Id");
@@ -95,7 +95,7 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult AgregarImagen(HttpPostedFileBase file, int id)
         {
             if (file != null)
@@ -119,7 +119,7 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [Authorize(Roles = RolesMontin.Administrador)]
         public ActionResult Editar(Elaboracion elaboracion,bool? porCiento)
         {
             if (ModelState.IsValid)
@@ -167,7 +167,7 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [Authorize(Roles = RolesMontin.Administrador)]
         public JsonResult AgregarProductoAMenu(int menuId, int productoId, int unidadId, decimal cantidad)
         {
             _elaboracionService.AgregarProductoAElaboracion(menuId, productoId, cantidad, unidadId);
@@ -175,7 +175,7 @@ namespace ErpMvc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [Authorize(Roles = RolesMontin.Administrador)]
         public JsonResult AgregarAgregadoAMenu(int menuId, int productoId, int unidadId, decimal cantidad, decimal precio)
         {
             _elaboracionService.AgregarAgregadoAElaboracion(menuId, productoId, cantidad, unidadId, precio);
