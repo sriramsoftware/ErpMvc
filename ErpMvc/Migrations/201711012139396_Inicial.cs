@@ -955,7 +955,7 @@ namespace ErpMvc.Migrations
                         CentroDeCostoId = c.Int(nullable: false),
                         TipoId = c.Int(nullable: false),
                         UsuarioId = c.String(maxLength: 128),
-                        Costo = c.Decimal(nullable: false, precision: 15, scale: 12),
+                        Costo = c.Decimal(nullable: false, precision: 18, scale: 12),
                 })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.contb_centros_de_costo", t => t.CentroDeCostoId, cascadeDelete: true)

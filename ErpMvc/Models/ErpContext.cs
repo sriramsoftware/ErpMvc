@@ -31,7 +31,7 @@ namespace ErpMvc.Models
             modelBuilder.Entity<MovimientoDeProducto>().Property(u => u.Cantidad).HasPrecision(15, 5);
             modelBuilder.Entity<ExistenciaAlmacen>().Property(u => u.ExistenciaEnAlmacen).HasPrecision(15, 5);
             modelBuilder.Entity<ExistenciaCentroDeCosto>().Property(u => u.Cantidad).HasPrecision(15, 5);
-            modelBuilder.Entity<SalidaPorMerma>().Property(u => u.Cantidad).HasPrecision(15, 5);
+            modelBuilder.Entity<SalidaPorMerma>().Property(u => u.Cantidad).HasPrecision(18, 5);
             modelBuilder.Entity<ProductoConcreto>().Property(u => u.PrecioUnitario).HasPrecision(15, 12);
             modelBuilder.Entity<MovimientoDeProducto>().Property(u => u.Costo).HasPrecision(15, 12);
             modelBuilder.Entity<ValeSalidaDeAlmacen>().HasMany(v => v.Productos).WithRequired(d => d.Vale).WillCascadeOnDelete(false);
