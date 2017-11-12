@@ -56,8 +56,8 @@
       <HintPath>..\packages\ComercialCore.1.5.0\lib\net45\ComercialCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaBL, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaBL.2.2.0\lib\net45\CompraVentaBL.dll</HintPath>
+    <Reference Include="CompraVentaBL, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaBL.2.3.0\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CompraVentaCore, Version=1.12.5.0, Culture=neutral, processorArchitecture=MSIL">
@@ -376,6 +376,10 @@
     <Compile Include="Migrations\201711012139396_Inicial.cs" />
     <Compile Include="Migrations\201711012139396_Inicial.Designer.cs">
       <DependentUpon>201711012139396_Inicial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711091944378_oo.cs" />
+    <Compile Include="Migrations\201711091944378_oo.Designer.cs">
+      <DependentUpon>201711091944378_oo.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AgregadoDeComanda.cs" />
@@ -1646,6 +1650,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201711012139396_Inicial.resx">
       <DependentUpon>201711012139396_Inicial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711091944378_oo.resx">
+      <DependentUpon>201711091944378_oo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Reportes\Asistencia.resx">
