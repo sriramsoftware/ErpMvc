@@ -101,6 +101,7 @@ namespace ErpMvc.Models
         public DbSet<GrupoDeProducto> GruposDeProductos { get; set; }
         public DbSet<EntradaAlmacen> EntradasAAlmacenes { get; set; }
         public DbSet<Elaboracion> Elaboraciones { get; set; }
+        public DbSet<Clasificacion> ClasificacionesDeElaboracion { get; set; }
         public DbSet<Agregado> Agregados { get; set; }
         public DbSet<AgregadosVendidos> AgregadosVendidos { get; set; }
         public DbSet<ProductosPorElaboracion> ProductosPorElaboraciones { get; set; }

@@ -60,8 +60,8 @@
       <HintPath>..\packages\CompraVentaBL.2.3.0\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaCore, Version=1.12.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaCore.1.12.5\lib\net45\CompraVentaCore.dll</HintPath>
+    <Reference Include="CompraVentaCore, Version=1.13.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaCore.1.13.0\lib\net45\CompraVentaCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ContabilidadBL, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
