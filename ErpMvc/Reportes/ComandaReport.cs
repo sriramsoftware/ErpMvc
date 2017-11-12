@@ -36,7 +36,7 @@ namespace ErpMvc.Reportes
                                          String.Join(",",
                                              comanda.Comensales.Where(c => c.Comensal == Comensal.Hombre).Select(c => c.Numero)) + ")";
 
-            var data = comanda.Detalles.Select(e => new
+            var data = comanda.Detalles.OrderBy(d => d.Elaboracion.Clasificacion.Orden).Select(e => new
             {
                 Menu = e.Elaboracion.Nombre + (e.Agregados.Count > 0 ? " con: " + String.Join(",", e.Agregados.Select(a => a.Agregado.Producto.Nombre + " (" + a.Cantidad + ")")) : ""),
                 Cantidad = (int)e.Cantidad,
