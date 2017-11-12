@@ -60,8 +60,8 @@
       <HintPath>..\packages\CompraVentaBL.2.3.0\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaCore, Version=1.13.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaCore.1.13.0\lib\net45\CompraVentaCore.dll</HintPath>
+    <Reference Include="CompraVentaCore, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaCore.1.13.1\lib\net45\CompraVentaCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ContabilidadBL, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -354,6 +354,7 @@
     <Compile Include="Controllers\AnotacionesController.cs" />
     <Compile Include="Controllers\ConceptosDeGastosController.cs" />
     <Compile Include="Controllers\ControlDeAsistenciaController.cs" />
+    <Compile Include="Controllers\ClasificacionDeMenusController.cs" />
     <Compile Include="Controllers\GruposDeProductosController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
     <Compile Include="Controllers\InventarioController.cs" />
@@ -380,6 +381,10 @@
     <Compile Include="Migrations\201711091944378_oo.cs" />
     <Compile Include="Migrations\201711091944378_oo.Designer.cs">
       <DependentUpon>201711091944378_oo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711121430551_AgregandoClasificacionMenu.cs" />
+    <Compile Include="Migrations\201711121430551_AgregandoClasificacionMenu.Designer.cs">
+      <DependentUpon>201711121430551_AgregandoClasificacionMenu.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AgregadoDeComanda.cs" />
@@ -1639,6 +1644,9 @@
     <Content Include="Views\Inventario\ConvertirProductoAOtro.cshtml" />
     <Content Include="Views\Reportes\_MenusPorProductoPartial.cshtml" />
     <Content Include="Views\Reportes\MenusPorProducto.cshtml" />
+    <Content Include="Views\ClasificacionDeMenus\Agregar.cshtml" />
+    <Content Include="Views\ClasificacionDeMenus\Editar.cshtml" />
+    <Content Include="Views\ClasificacionDeMenus\Listado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />
@@ -1653,6 +1661,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711091944378_oo.resx">
       <DependentUpon>201711091944378_oo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711121430551_AgregandoClasificacionMenu.resx">
+      <DependentUpon>201711121430551_AgregandoClasificacionMenu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Reportes\Asistencia.resx">

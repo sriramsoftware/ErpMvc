@@ -1,0 +1,52 @@
+﻿@model IEnumerable<CompraVentaCore.Models.Clasificacion>
+
+@{
+    ViewBag.Title = "clasificaciones de menus";
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<p>
+    <a class="btn btn-success" href="@Url.Action("Agregar","ClasificacionDeMenus")"> <i class="glyphicon glyphicon-plus"></i> Nuevo</a>
+</p>
+
+<table class="table dynamic">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>Nombre</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td class="col-md-2 text-right">
+                    <a class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Editar" href="@Url.Action("Editar", new {Id = item.Id})"><i class="glyphicon glyphicon-edit"></i></a>
+                    @*<a class="btn btn-danger btn-sm eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar" href="@Url.Action("Eliminar", new {Id = item.Id})"><i class="glyphicon glyphicon-trash"></i></a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+    <script src="~/Scripts/jquery.highlight.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+        });
+    </script>
+}

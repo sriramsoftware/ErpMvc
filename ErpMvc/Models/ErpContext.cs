@@ -41,7 +41,8 @@ namespace ErpMvc.Models
             modelBuilder.Entity<PuntoDeVenta>().HasRequired(c => c.CentroDeCosto).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<PuntoDeVenta>().HasMany(c => c.Vendedores).WithRequired(v => v.PuntoDeVenta).WillCascadeOnDelete(false);
             modelBuilder.Entity<SalidaPorMerma>().HasRequired(s => s.UnidadDeMedida).WithMany().WillCascadeOnDelete(false);
-            
+            modelBuilder.Entity<Clasificacion>().HasMany(c => c.Elaboraciones).WithOptional(e => e.Clasificacion).WillCascadeOnDelete(false);
+
             //modulo contabilidad
             modelBuilder.Configurations.Add(new AsientoConfig());
             modelBuilder.Configurations.Add(new CuentaConfig());
