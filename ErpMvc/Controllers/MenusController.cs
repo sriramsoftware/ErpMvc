@@ -29,6 +29,7 @@ namespace ErpMvc.Controllers
         public ActionResult Listado()
         {
             ViewBag.Porcientos = _db.Set<PorcientoMenu>().ToList();
+            //ViewBag.ClasificacionId = new SelectList(_db.Set<Clasificacion>(), "Id", "Nombre");
             return View(_elaboracionService.Elaboraciones().Include(e => e.Agregados).Where(e => e.Activo).ToList());
         }
 
@@ -58,7 +59,8 @@ namespace ErpMvc.Controllers
                 Presentacion = elaboracion.Presentacion,
                 Preparacion = elaboracion.Preparacion,
                 PorCiento = porCiento.SeCalcula,
-                CentroDeCostoId = elaboracion.CentroDeCostoId
+                CentroDeCostoId = elaboracion.CentroDeCostoId,
+                ClasificacionId = elaboracion.ClasificacionId
             };
             return Json(e, JsonRequestBehavior.AllowGet);
         }
@@ -108,6 +110,7 @@ namespace ErpMvc.Controllers
         public PartialViewResult AgregarMenuPartial()
         {
             ViewBag.CentroDeCostoId = new SelectList(_db.Set<CentroDeCosto>(), "Id", "Nombre");
+            ViewBag.ClasificacionId = new SelectList(_db.Set<Clasificacion>(), "Id", "Nombre");
             return PartialView("_AgregarMenuPartial");
         }
 

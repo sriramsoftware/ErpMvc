@@ -142,6 +142,7 @@ $(document).ready(function(){
 					$("#Preparacion").val(data.Preparacion);
 					$("#Presentacion").val(data.Presentacion);
 					$("#CentroDeCostoId").val(data.CentroDeCostoId);
+					$("#ClasificacionId").val(data.ClasificacionId);
                     $("#porCiento").val(data.PorCiento);
 					if (data.PorCiento) {
 					    $("#porCiento").prop('checked', 'checked');

@@ -10,16 +10,15 @@
         <tr>
             <th></th>
             <th></th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <td class="col-md-3">
+                @*<td class="col-md-3">
                     <img src="@Url.Content("~/Content/uploads/productos/" + item.Id + ".jpg")" onerror="this.remove();" class="img-thumbnail img-menu" />
-                </td>
+                </td>*@
                 <td class="col-md-5">
                     <h4 class="title_insight">
                         @if (item.Costo > item.PrecioDeVenta)
@@ -77,15 +76,6 @@
                             <a class="btn btn-primary btn-sm  col-md-12 edit-image"><i class="icon-picture"></i>&nbsp;Editar Imagen</a>
                         </form>
                     </div>
-                    @*@if (User.IsInRole(RolesMontin.Administrador))
-                    {
-                        <div class="form-group">
-                            <a href="@Url.Action("Eliminar",new {Id = item.Id})" class="btn btn-primary btn-sm  col-md-12">
-                                <i class="glyphicon glyphicon-trash"></i>&nbsp;Eliminar
-                            </a>
-                        </div>
-                    }*@
-
                 </td>
             </tr>
         }
