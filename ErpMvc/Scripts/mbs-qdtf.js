@@ -23,10 +23,10 @@
 
 
 $(document).ready(function () {
-    declareDatatable('.dynamic');
+    declareDatatable('.dynamic',[[0, "asc"]]);
 });
 
-function declareDatatable(tableclass) {
+function declareDatatable(tableclass, order) {
     var colums = $(tableclass + ' thead th').length;
     var dynamicTable = $(tableclass).DataTable({
         "lengthMenu": [[20, 25, 30, 50, 100, -1], [20, 25, 30, 50, 100, "Todos"]],
@@ -48,7 +48,7 @@ function declareDatatable(tableclass) {
         "columnDefs": [
             { "orderable": false, "targets": colums - 1 }
         ],
-        "order": [[0, "desc"]],
+        "order": order,
         dom: 'Bfrtip',
         buttons: [
             {
