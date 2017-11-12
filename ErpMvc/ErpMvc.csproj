@@ -60,8 +60,8 @@
       <HintPath>..\packages\CompraVentaBL.2.3.0\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaCore, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaCore.1.13.1\lib\net45\CompraVentaCore.dll</HintPath>
+    <Reference Include="CompraVentaCore, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaCore.1.13.2\lib\net45\CompraVentaCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ContabilidadBL, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -385,6 +385,10 @@
     <Compile Include="Migrations\201711121430551_AgregandoClasificacionMenu.cs" />
     <Compile Include="Migrations\201711121430551_AgregandoClasificacionMenu.Designer.cs">
       <DependentUpon>201711121430551_AgregandoClasificacionMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711121515188_AgregandoOrdenAClasificacion.cs" />
+    <Compile Include="Migrations\201711121515188_AgregandoOrdenAClasificacion.Designer.cs">
+      <DependentUpon>201711121515188_AgregandoOrdenAClasificacion.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AgregadoDeComanda.cs" />
@@ -1664,6 +1668,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711121430551_AgregandoClasificacionMenu.resx">
       <DependentUpon>201711121430551_AgregandoClasificacionMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711121515188_AgregandoOrdenAClasificacion.resx">
+      <DependentUpon>201711121515188_AgregandoOrdenAClasificacion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Reportes\Asistencia.resx">

@@ -21,6 +21,13 @@
             </div>
         </div>
         <div class="form-group">
+            @Html.LabelFor(m => m.Orden, new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Orden, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Orden)
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-md-offset-4 col-md-8">
                 @Html.ActionLink("Atrás", "Listado", null, new {@class = "btn btn-default"})
                 <input type="submit" class="btn btn-success" value="Guardar"/>
