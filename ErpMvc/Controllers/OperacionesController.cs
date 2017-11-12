@@ -96,13 +96,16 @@ namespace ErpMvc.Controllers
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
-        public PartialViewResult ResumenDeOperacionesContables(int id)
+        public PartialViewResult ResumenDeOperacionesContables(int? id)
         {
-            var operaciones = ResumenDeOperaciones(id, "Caja");
-            var diaAnterior = _db.Set<DiaContable>().Find(id - 1);
-            
             ViewBag.ImporteAnterior = 100;
-            return PartialView("_ResumenDeOperacionesConteblesPartial", operaciones);
+            if (id != null)
+            {
+                var operaciones = ResumenDeOperaciones(id.Value, "Caja");
+                var diaAnterior = _db.Set<DiaContable>().Find(id - 1);
+                return PartialView("_ResumenDeOperacionesConteblesPartial", operaciones);
+            }           
+            return PartialView("_ResumenDeOperacionesConteblesPartial", new List<ResumenDeOperaciones>());
         }
 
         [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]

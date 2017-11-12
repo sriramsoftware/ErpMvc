@@ -29,7 +29,12 @@ namespace ErpMvc.Controllers
         // GET: Caja
         public ActionResult Index()
         {
-            ViewBag.DiaContable = _periodoContableService.GetDiaContableActual();
+            var diaContable = _periodoContableService.GetDiaContableActual();
+            if (diaContable == null)
+            {
+                diaContable = _db.Set<DiaContable>().ToList().Last();
+            }
+            ViewBag.DiaContable = diaContable;
             return View();
         }
 
