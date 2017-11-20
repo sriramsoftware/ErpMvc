@@ -397,6 +397,15 @@ namespace ErpMvc.Controllers
             return PartialView("_MenusPorProductoPartial",menus);
         }
 
+        public ActionResult FichaDeCosto(int id)
+        {
+            var report = new FichaDeCosto(id);
+            string random = System.IO.Path.GetRandomFileName().Replace(".", string.Empty);
+            reports.Add(random, report);
+            ViewData["ReporteId"] = random;
+            return View("Plantilla");
+        }
+
         private string NombreMeses(int mes)
         {
             switch (mes)

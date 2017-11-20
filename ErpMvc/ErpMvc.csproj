@@ -420,6 +420,12 @@
     <Compile Include="Reportes\ComprasConComprobantes.Designer.cs">
       <DependentUpon>ComprasConComprobantes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reportes\FichaDeCosto.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\FichaDeCosto.Designer.cs">
+      <DependentUpon>FichaDeCosto.cs</DependentUpon>
+    </Compile>
     <Compile Include="Reportes\ResumenDeGanaciaDiaria.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1678,6 +1684,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\ComprasConComprobantes.resx">
       <DependentUpon>ComprasConComprobantes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\FichaDeCosto.resx">
+      <DependentUpon>FichaDeCosto.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\ResumenDeGanaciaDiaria.resx">
       <DependentUpon>ResumenDeGanaciaDiaria.cs</DependentUpon>
