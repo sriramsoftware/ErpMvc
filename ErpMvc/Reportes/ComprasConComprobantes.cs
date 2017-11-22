@@ -28,31 +28,29 @@ namespace ErpMvc.Reportes
 
             titulo_reporte.Text = "Compras con comprobantes del mes " + mesNombre;
 
-            var comprasData = compras.Select(c => new
+            var comprasData = compras.GroupBy(c => c.Fecha.Date).Select(c => new
             {
-                Fecha = c.Fecha,
-                Tienda = c.Entidad.Nombre,
-                Productos = String.Join("\n\r",c.Productos.Select(p => p.Producto.Nombre)),
-                Cantidad = String.Join("\n\r", c.Productos.Select(p => p.Cantidad + " " + p.UnidadDeMedida.Siglas)),
-                Importe = c.Productos.Sum(p => p.ImporteTotal)
+                Fecha = c.Key,
+                Importe = c.Sum(i => i.Productos.Sum(p => p.ImporteTotal)),
+                Compras = c.Select(co => co).ToList()
             }).ToList();
 
-            ComprasReport.DataSource = comprasData;
+            DataSource = comprasData;
+
+            xrSubreport1.ReportSource = new Compras();
 
             this.fechaCompraCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
             new DevExpress.XtraReports.UI.XRBinding("Text", null, "Fecha","{0:d}"), });
 
-            this.compraTiendaCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Tienda")});
-
-            this.compraProductosCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Productos")});
-
-            this.comprasCandidadCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Cantidad")});
-
             this.compraImporteCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
-            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Importe","{0:C}")});
+            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Importe")});
+        }
+
+        private void xrSubreport1_BeforePrint(object sender, System.Drawing.Printing.PrintEventArgs e)
+        {
+            var lista = (List<Compra>)GetCurrentColumnValue("Compras");
+            var report = ((Compras)((XRSubreport)sender).ReportSource);
+            report.CargarDatos(lista);
         }
     }
 }

@@ -414,6 +414,12 @@
     <Compile Include="Reportes\Asistencia.Designer.cs">
       <DependentUpon>Asistencia.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reportes\Compras.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\Compras.Designer.cs">
+      <DependentUpon>Compras.cs</DependentUpon>
+    </Compile>
     <Compile Include="Reportes\ComprasConComprobantes.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1681,6 +1687,9 @@
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Reportes\Asistencia.resx">
       <DependentUpon>Asistencia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\Compras.resx">
+      <DependentUpon>Compras.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\ComprasConComprobantes.resx">
       <DependentUpon>ComprasConComprobantes.cs</DependentUpon>
