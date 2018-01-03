@@ -29,7 +29,8 @@ namespace ErpMvc.Reportes
                 Tienda = c.Entidad.Nombre,
                 Productos = String.Join("\n\r", c.Productos.Select(p => p.Producto.Nombre)),
                 Cantidad = String.Join("\n\r", c.Productos.Select(p => p.Cantidad + " " + p.UnidadDeMedida.Siglas)),
-                Importe = String.Join("\n\r", c.Productos.Select(p => p.ImporteTotal)) + "\n\r" + c.Productos.Sum(p => p.ImporteTotal)
+                Importe = String.Join("\n\r", c.Productos.Select(p => p.ImporteTotal)),
+                Total = c.Productos.Sum(p => p.ImporteTotal)
             }).ToList();
 
             DataSource = comprasData;
@@ -49,6 +50,9 @@ namespace ErpMvc.Reportes
 
             this.compraImporteCell.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
             new DevExpress.XtraReports.UI.XRBinding("Text", null, "Importe")});
+
+            this.totalCompra.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
+            new DevExpress.XtraReports.UI.XRBinding("Text", null, "Total")});
         }
     }
 }

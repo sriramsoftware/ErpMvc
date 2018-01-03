@@ -36,9 +36,6 @@
             DevExpress.DataAccess.Sql.TableInfo tableInfo2 = new DevExpress.DataAccess.Sql.TableInfo();
             DevExpress.DataAccess.Sql.ColumnInfo columnInfo2 = new DevExpress.DataAccess.Sql.ColumnInfo();
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
-            this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
-            this.BottomMargin = new DevExpress.XtraReports.UI.BottomMarginBand();
-            this.sqlDataSource1 = new DevExpress.DataAccess.Sql.SqlDataSource("DefaultConnection");
             this.xrTable5 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow8 = new DevExpress.XtraReports.UI.XRTableRow();
             this.fechaCompraCell = new DevExpress.XtraReports.UI.XRTableCell();
@@ -46,6 +43,9 @@
             this.compraProductosCell = new DevExpress.XtraReports.UI.XRTableCell();
             this.comprasCandidadCell = new DevExpress.XtraReports.UI.XRTableCell();
             this.compraImporteCell = new DevExpress.XtraReports.UI.XRTableCell();
+            this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
+            this.BottomMargin = new DevExpress.XtraReports.UI.BottomMarginBand();
+            this.sqlDataSource1 = new DevExpress.DataAccess.Sql.SqlDataSource("DefaultConnection");
             this.xrTable4 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow7 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell7 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -54,6 +54,8 @@
             this.xrTableCell10 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell12 = new DevExpress.XtraReports.UI.XRTableCell();
             this.ReportHeader = new DevExpress.XtraReports.UI.ReportHeaderBand();
+            this.xrTableCell2 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.totalCompra = new DevExpress.XtraReports.UI.XRTableCell();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
@@ -66,6 +68,65 @@
             this.Detail.Name = "Detail";
             this.Detail.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.Detail.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
+            // 
+            // xrTable5
+            // 
+            this.xrTable5.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
+            this.xrTable5.Font = new System.Drawing.Font("Times New Roman", 12F);
+            this.xrTable5.LocationFloat = new DevExpress.Utils.PointFloat(12.50003F, 0F);
+            this.xrTable5.Name = "xrTable5";
+            this.xrTable5.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
+            this.xrTableRow8});
+            this.xrTable5.SizeF = new System.Drawing.SizeF(630F, 25F);
+            this.xrTable5.StylePriority.UseBorders = false;
+            this.xrTable5.StylePriority.UseFont = false;
+            this.xrTable5.StylePriority.UseTextAlignment = false;
+            this.xrTable5.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            // 
+            // xrTableRow8
+            // 
+            this.xrTableRow8.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.fechaCompraCell,
+            this.compraTiendaCell,
+            this.compraProductosCell,
+            this.comprasCandidadCell,
+            this.compraImporteCell,
+            this.totalCompra});
+            this.xrTableRow8.Name = "xrTableRow8";
+            this.xrTableRow8.Weight = 1D;
+            // 
+            // fechaCompraCell
+            // 
+            this.fechaCompraCell.Name = "fechaCompraCell";
+            this.fechaCompraCell.Text = "Fecha";
+            this.fechaCompraCell.Weight = 0.38492027013139152D;
+            // 
+            // compraTiendaCell
+            // 
+            this.compraTiendaCell.Name = "compraTiendaCell";
+            this.compraTiendaCell.Text = "Tienda";
+            this.compraTiendaCell.Weight = 0.53366945586066428D;
+            // 
+            // compraProductosCell
+            // 
+            this.compraProductosCell.Multiline = true;
+            this.compraProductosCell.Name = "compraProductosCell";
+            this.compraProductosCell.Text = "Productos";
+            this.compraProductosCell.Weight = 1.0456952708253224D;
+            // 
+            // comprasCandidadCell
+            // 
+            this.comprasCandidadCell.Multiline = true;
+            this.comprasCandidadCell.Name = "comprasCandidadCell";
+            this.comprasCandidadCell.Text = "Cantidad";
+            this.comprasCandidadCell.Weight = 0.32539657405315953D;
+            // 
+            // compraImporteCell
+            // 
+            this.compraImporteCell.Multiline = true;
+            this.compraImporteCell.Name = "compraImporteCell";
+            this.compraImporteCell.Text = "Importe";
+            this.compraImporteCell.Weight = 0.35317499069940483D;
             // 
             // TopMargin
             // 
@@ -104,64 +165,6 @@
     "W1hbCIgLz48RmllbGQgTmFtZT0iRmVjaGEiIFR5cGU9IkRhdGVUaW1lIiAvPjwvVmlldz48L0RhdGFTZ" +
     "XQ+";
             // 
-            // xrTable5
-            // 
-            this.xrTable5.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTable5.Font = new System.Drawing.Font("Times New Roman", 12F);
-            this.xrTable5.LocationFloat = new DevExpress.Utils.PointFloat(12.50003F, 0F);
-            this.xrTable5.Name = "xrTable5";
-            this.xrTable5.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
-            this.xrTableRow8});
-            this.xrTable5.SizeF = new System.Drawing.SizeF(630F, 25F);
-            this.xrTable5.StylePriority.UseBorders = false;
-            this.xrTable5.StylePriority.UseFont = false;
-            this.xrTable5.StylePriority.UseTextAlignment = false;
-            this.xrTable5.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
-            // 
-            // xrTableRow8
-            // 
-            this.xrTableRow8.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.fechaCompraCell,
-            this.compraTiendaCell,
-            this.compraProductosCell,
-            this.comprasCandidadCell,
-            this.compraImporteCell});
-            this.xrTableRow8.Name = "xrTableRow8";
-            this.xrTableRow8.Weight = 1D;
-            // 
-            // fechaCompraCell
-            // 
-            this.fechaCompraCell.Name = "fechaCompraCell";
-            this.fechaCompraCell.Text = "Fecha";
-            this.fechaCompraCell.Weight = 0.43650787447244438D;
-            // 
-            // compraTiendaCell
-            // 
-            this.compraTiendaCell.Name = "compraTiendaCell";
-            this.compraTiendaCell.Text = "Tienda";
-            this.compraTiendaCell.Weight = 0.53366909255616279D;
-            // 
-            // compraProductosCell
-            // 
-            this.compraProductosCell.Multiline = true;
-            this.compraProductosCell.Name = "compraProductosCell";
-            this.compraProductosCell.Text = "Productos";
-            this.compraProductosCell.Weight = 1.0853780769311632D;
-            // 
-            // comprasCandidadCell
-            // 
-            this.comprasCandidadCell.Multiline = true;
-            this.comprasCandidadCell.Name = "comprasCandidadCell";
-            this.comprasCandidadCell.Text = "Cantidad";
-            this.comprasCandidadCell.Weight = 0.48412710819796989D;
-            // 
-            // compraImporteCell
-            // 
-            this.compraImporteCell.Multiline = true;
-            this.compraImporteCell.Name = "compraImporteCell";
-            this.compraImporteCell.Text = "Importe";
-            this.compraImporteCell.Weight = 0.46031784784226187D;
-            // 
             // xrTable4
             // 
             this.xrTable4.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
@@ -185,7 +188,8 @@
             this.xrTableCell1,
             this.xrTableCell8,
             this.xrTableCell10,
-            this.xrTableCell12});
+            this.xrTableCell12,
+            this.xrTableCell2});
             this.xrTableRow7.Name = "xrTableRow7";
             this.xrTableRow7.Weight = 1D;
             // 
@@ -195,7 +199,7 @@
             this.xrTableCell7.Name = "xrTableCell7";
             this.xrTableCell7.StylePriority.UseBorders = false;
             this.xrTableCell7.Text = "Fecha";
-            this.xrTableCell7.Weight = 0.43650787447244438D;
+            this.xrTableCell7.Weight = 0.3849205607749927D;
             // 
             // xrTableCell1
             // 
@@ -203,7 +207,7 @@
             this.xrTableCell1.Name = "xrTableCell1";
             this.xrTableCell1.StylePriority.UseBorders = false;
             this.xrTableCell1.Text = "Tienda";
-            this.xrTableCell1.Weight = 0.53366909255616279D;
+            this.xrTableCell1.Weight = 0.53366949219111437D;
             // 
             // xrTableCell8
             // 
@@ -211,15 +215,15 @@
             this.xrTableCell8.Name = "xrTableCell8";
             this.xrTableCell8.StylePriority.UseBorders = false;
             this.xrTableCell8.Text = "Productos";
-            this.xrTableCell8.Weight = 1.0853780769311632D;
+            this.xrTableCell8.Weight = 1.0456949801817213D;
             // 
             // xrTableCell10
             // 
             this.xrTableCell10.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
             this.xrTableCell10.Name = "xrTableCell10";
             this.xrTableCell10.StylePriority.UseBorders = false;
-            this.xrTableCell10.Text = "Cantidad";
-            this.xrTableCell10.Weight = 0.48412710819796989D;
+            this.xrTableCell10.Text = "Cant";
+            this.xrTableCell10.Weight = 0.3253969736881111D;
             // 
             // xrTableCell12
             // 
@@ -227,7 +231,7 @@
             this.xrTableCell12.Name = "xrTableCell12";
             this.xrTableCell12.StylePriority.UseBorders = false;
             this.xrTableCell12.Text = "Importe";
-            this.xrTableCell12.Weight = 0.46031784784226187D;
+            this.xrTableCell12.Weight = 0.35317484537760424D;
             // 
             // ReportHeader
             // 
@@ -235,6 +239,18 @@
             this.xrTable4});
             this.ReportHeader.HeightF = 25F;
             this.ReportHeader.Name = "ReportHeader";
+            // 
+            // xrTableCell2
+            // 
+            this.xrTableCell2.Name = "xrTableCell2";
+            this.xrTableCell2.Text = "Total";
+            this.xrTableCell2.Weight = 0.35714314778645839D;
+            // 
+            // totalCompra
+            // 
+            this.totalCompra.Name = "totalCompra";
+            this.totalCompra.Text = "totalCompra";
+            this.totalCompra.Weight = 0.35714343843005958D;
             // 
             // Compras
             // 
@@ -244,7 +260,7 @@
             this.BottomMargin,
             this.ReportHeader});
             this.Font = new System.Drawing.Font("Tahoma", 9.75F);
-            this.Margins = new System.Drawing.Printing.Margins(100, 100, 23, 26);
+            this.Margins = new System.Drawing.Printing.Margins(100, 100, 24, 26);
             this.Version = "14.1";
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).EndInit();
@@ -273,5 +289,7 @@
         private DevExpress.XtraReports.UI.XRTableCell compraTiendaCell;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell1;
         private DevExpress.XtraReports.UI.ReportHeaderBand ReportHeader;
+        private DevExpress.XtraReports.UI.XRTableCell totalCompra;
+        private DevExpress.XtraReports.UI.XRTableCell xrTableCell2;
     }
 }
