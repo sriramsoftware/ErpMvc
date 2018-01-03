@@ -1,0 +1,61 @@
+﻿@using CompraVentaCore.Models
+@model IEnumerable<AlmacenCore.Models.MovimientoDeProducto>
+
+@{
+    ViewBag.Title = "Mermas";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <form class="form-horizontal" role="form" accept-charset="utf-8">
+            <div class="form-group">
+                <label class="col-md-6 col-sm-6  col-xs-12 control-label">Buscar Mermas del Día</label>
+                <div class="col-md-6 col-sm-6 col-xs-12 " style="padding: 0px;">
+                    <div class="input-group input-append date col-md-6 col-sm-6" data-date="" data-date-format="dd-mm-yyyy" id="datepicker" data-date="">
+                        <input class="input-small form-control  datepicker" type="text" id="date" name="date" value='@DateTime.Now.ToShortDateString()'>
+                        <span class="input-group-addon add-on">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="mermas-div">
+    @{
+        Html.RenderAction("ListaDeMermasPorFechaPartial", "Reportes", new { Fecha = DateTime.Now });
+    }
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('btn').tooltip();
+            $('#date').change(function () {
+                console.log("cambio de fecha");
+                var fecha = $("#date").val();
+                $.ajax({
+                    url: "@Url.Action("BuscarMermas", "Reportes")",
+                    type: "POST",
+                    data: { fecha: fecha },
+                    dataType: "html",
+                    success: function (data) {
+                        $("#mermas-div").html(data);
+                        declareDatatable('#mermas-table', [[0, "asc"]]);
+                    },
+                    error: function (data) { }
+                });
+            });
+
+        });
+
+    </script>
+}

@@ -1,0 +1,20 @@
+﻿@model IEnumerable<AlmacenCore.Models.MovimientoDeProducto>
+
+
+<table id="mermas-table" class="table">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Producto.Producto.Nombre</td>
+                <td>@item.Cantidad @item.Producto.UnidadDeMedida.Siglas</td>
+            </tr>
+        }
+    </tbody>
+</table>

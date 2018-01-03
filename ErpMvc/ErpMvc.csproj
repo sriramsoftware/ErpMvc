@@ -1663,6 +1663,8 @@
     <Content Include="Views\ClasificacionDeMenus\Agregar.cshtml" />
     <Content Include="Views\ClasificacionDeMenus\Editar.cshtml" />
     <Content Include="Views\ClasificacionDeMenus\Listado.cshtml" />
+    <Content Include="Views\Reportes\Mermas.cshtml" />
+    <Content Include="Views\Reportes\_ListaDeMermasPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />

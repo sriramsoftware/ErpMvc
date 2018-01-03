@@ -406,6 +406,26 @@ namespace ErpMvc.Controllers
             return View("Plantilla");
         }
 
+        public ActionResult Mermas()
+        {
+            return View();
+        }
+
+        public PartialViewResult ListaDeMermasPorFechaPartial(DateTime fecha)
+        {
+            var fIni = fecha.Date;
+            var fFin = fecha.Date.AddHours(23).AddMinutes(59);
+            
+            var mermas = _db.Set<MovimientoDeProducto>().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin && v.Tipo.Descripcion == TipoDeMovimientoConstantes.Merma).OrderByDescending(v => v.Fecha).ToList();
+            return PartialView("_ListaDeMermasPartial", mermas);
+        }
+
+        [HttpPost]
+        public ActionResult BuscarMermas(DateTime fecha)
+        {
+            return RedirectToAction("ListaDeMermasPorFechaPartial", new { Fecha = fecha });
+        }
+
         private string NombreMeses(int mes)
         {
             switch (mes)
