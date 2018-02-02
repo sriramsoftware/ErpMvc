@@ -108,7 +108,7 @@ namespace ErpMvc.Controllers
             return View("Plantilla");
         }
 
-        [Authorize(Roles = RolesMontin.Vendedor + ","+ RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [Authorize(Roles = RolesMontin.Vendedor + "," + RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
         public ActionResult Comanda(int id)
         {
             var report = new ComandaReport(id);
@@ -320,7 +320,7 @@ namespace ErpMvc.Controllers
             var ventasNormales =
                 ventas.Where(
                     d =>
-                        d.Venta.Importe > 0 && (d.Venta.Observaciones ==null || !d.Venta.Observaciones.Contains("Venta al costo")) &&
+                        d.Venta.Importe > 0 && (d.Venta.Observaciones == null || !d.Venta.Observaciones.Contains("Venta al costo")) &&
                         d.Venta.EstadoDeVenta != EstadoDeVenta.PagadaPorFactura).ToList();
 
             var ventasAlCosto =
@@ -387,14 +387,14 @@ namespace ErpMvc.Controllers
 
         public ActionResult MenusPorProducto()
         {
-            ViewBag.ProductoId = new SelectList(_db.Set<Producto>(),"Id","Nombre");
+            ViewBag.ProductoId = new SelectList(_db.Set<Producto>(), "Id", "Nombre");
             return View();
         }
 
         public PartialViewResult MenusProducto(int productoId)
         {
             var menus = _db.Set<ProductosPorElaboracion>().Where(p => p.ProductoId == productoId).Select(p => p.Elaboracion).ToList();
-            return PartialView("_MenusPorProductoPartial",menus);
+            return PartialView("_MenusPorProductoPartial", menus);
         }
 
         public ActionResult FichaDeCosto(int id)
@@ -415,8 +415,13 @@ namespace ErpMvc.Controllers
         {
             var fIni = fecha.Date;
             var fFin = fecha.Date.AddHours(23).AddMinutes(59);
-            
-            var mermas = _db.Set<MovimientoDeProducto>().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin && v.Tipo.Descripcion == TipoDeMovimientoConstantes.Merma).OrderByDescending(v => v.Fecha).ToList();
+
+            var mermas = _db.Set<MovimientoDeProducto>().Where(v => v.DiaContable.Fecha >= fIni &&
+            v.DiaContable.Fecha <= fFin && v.Tipo.Descripcion == TipoDeMovimientoConstantes.Merma).ToList()
+            .GroupBy(p => p.Producto).Select(g => new MovimientoDeProducto()
+            {
+                Producto = g.Key, Cantidad = g.Sum(e => e.Cantidad)
+            }).OrderByDescending(v => v.Fecha).ToList();
             return PartialView("_ListaDeMermasPartial", mermas);
         }
 
