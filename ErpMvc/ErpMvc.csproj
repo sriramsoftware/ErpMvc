@@ -40,8 +40,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AlmacenCore, Version=1.3.12.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AlmacenCore.1.3.12\lib\net45\AlmacenCore.dll</HintPath>
+    <Reference Include="AlmacenCore, Version=1.3.13.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AlmacenCore.1.3.13\lib\net45\AlmacenCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
@@ -56,8 +56,8 @@
       <HintPath>..\packages\ComercialCore.1.5.0\lib\net45\ComercialCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompraVentaBL, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompraVentaBL.2.3.1\lib\net45\CompraVentaBL.dll</HintPath>
+    <Reference Include="CompraVentaBL, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompraVentaBL.2.3.2\lib\net45\CompraVentaBL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CompraVentaCore, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -390,6 +390,10 @@
     <Compile Include="Migrations\201711121515188_AgregandoOrdenAClasificacion.Designer.cs">
       <DependentUpon>201711121515188_AgregandoOrdenAClasificacion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802070250062_AgregandoObservacionesMovProdYSeleccionCV.cs" />
+    <Compile Include="Migrations\201802070250062_AgregandoObservacionesMovProdYSeleccionCV.Designer.cs">
+      <DependentUpon>201802070250062_AgregandoObservacionesMovProdYSeleccionCV.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AgregadoDeComanda.cs" />
     <Compile Include="Models\Anotacion.cs" />
@@ -406,6 +410,8 @@
     <Compile Include="Models\PorcientoMenu.cs" />
     <Compile Include="Models\Propina.cs" />
     <Compile Include="Models\RolesMontin.cs" />
+    <Compile Include="Models\SeleccionCompra.cs" />
+    <Compile Include="Models\SeleccionVenta.cs" />
     <Compile Include="Models\TarjetaDeAsistencia.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reportes\Asistencia.cs">
@@ -477,6 +483,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utiles\CustomErrorHandlerAttribute.cs" />
     <Compile Include="Utiles\DiaContableAttribute.cs" />
+    <Compile Include="Utiles\InformacionSolicitada.cs" />
     <Compile Include="Utiles\LicenciaAttribute.cs" />
     <Compile Include="Utiles\ResumenCierre.cs" />
     <Compile Include="ViewModels\AsientoContableViewModel.cs" />
@@ -499,6 +506,7 @@
     <Compile Include="ViewModels\ProductosNecesariosViewModel.cs" />
     <Compile Include="ViewModels\ProductoViewModel.cs" />
     <Compile Include="ViewModels\ResumenDeOperaciones.cs" />
+    <Compile Include="ViewModels\ResumenMermaViewModel.cs" />
     <Compile Include="ViewModels\ResumenProductoVM.cs" />
     <Compile Include="ViewModels\VendedorViewModel.cs" />
     <Compile Include="ViewModels\VerificarVentaViewModel.cs" />
@@ -1685,6 +1693,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711121515188_AgregandoOrdenAClasificacion.resx">
       <DependentUpon>201711121515188_AgregandoOrdenAClasificacion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802070250062_AgregandoObservacionesMovProdYSeleccionCV.resx">
+      <DependentUpon>201802070250062_AgregandoObservacionesMovProdYSeleccionCV.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Reportes\Asistencia.resx">

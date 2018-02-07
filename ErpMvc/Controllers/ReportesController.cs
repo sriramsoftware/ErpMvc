@@ -418,10 +418,10 @@ namespace ErpMvc.Controllers
 
             var mermas = _db.Set<MovimientoDeProducto>().Where(v => v.DiaContable.Fecha >= fIni &&
             v.DiaContable.Fecha <= fFin && v.Tipo.Descripcion == TipoDeMovimientoConstantes.Merma).ToList()
-            .GroupBy(p => p.Producto).Select(g => new MovimientoDeProducto()
+            .GroupBy(p => p.Producto).Select(g => new ResumenMermaViewModel()
             {
-                Producto = g.Key, Cantidad = g.Sum(e => e.Cantidad)
-            }).OrderByDescending(v => v.Fecha).ToList();
+                Producto = g.Key, Cantidad = g.Sum(e => e.Cantidad) , Detalles = g.Select(i => i.Cantidad + " " + i.Producto.UnidadDeMedida.Siglas + " : " + i.Observaciones + "; ").ToList()
+            }).ToList();
             return PartialView("_ListaDeMermasPartial", mermas);
         }
 

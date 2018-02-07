@@ -30,16 +30,12 @@ namespace ErpMvc.Utiles
 
                 decimal incremental = 0;
                 var listaAMostar = new List<int>();
-                foreach (var venta in ventas)
+                foreach (var venta in ventas.OrderByDescending(v => v.Importe))
                 {
-                    if (incremental <= importeAMostar)
+                    if (incremental + venta.Importe <= importeAMostar)
                     {
                         listaAMostar.Add(venta.Id);
                         incremental += venta.Importe;
-                    }
-                    else
-                    {
-                        break;
                     }
                 }
                 foreach (var idVenta in listaAMostar)

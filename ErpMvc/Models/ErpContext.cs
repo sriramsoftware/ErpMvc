@@ -151,5 +151,9 @@ namespace ErpMvc.Models
         public DbSet<Anotacion> Anotaciones { get; set; }
         public DbSet<Orden> Ordenes { get; set; }
         public DbSet<OrdenPorDetalle> OrdenesPorDetalles { get; set; }
+
+        //seleccion de CV
+        public DbSet<SeleccionVenta> SeleccionesVentas { get; set; }
+        public DbSet<SeleccionCompra> SeleccionesCompras { get; set; }
     }
 }

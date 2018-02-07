@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AlmacenCore.Models.MovimientoDeProducto>
+﻿@model IEnumerable<ErpMvc.ViewModels.ResumenMermaViewModel>
 
 
 <table id="mermas-table" class="table">
@@ -6,6 +6,7 @@
         <tr>
             <th>Producto</th>
             <th>Cantidad</th>
+            <th>Detalle</th>
         </tr>
     </thead>
     <tbody>
@@ -14,6 +15,12 @@
             <tr>
                 <td>@item.Producto.Producto.Nombre</td>
                 <td>@item.Cantidad @item.Producto.UnidadDeMedida.Siglas</td>
+                <td>
+                    @foreach (var d in item.Detalles)
+                {
+                        <span>@d</span><br />
+                    }
+                </td>
             </tr>
         }
     </tbody>

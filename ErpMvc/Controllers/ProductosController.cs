@@ -292,7 +292,7 @@ namespace ErpMvc.Controllers
                 }
                 foreach (var prod in compra.Productos)
                 {
-                    _centroCostoService.DarSalidaPorMerma(prod.ProductoId, centroDeCostoId, prod.Cantidad, prod.UnidadDeMedidaId, User.Identity.GetUserId());
+                    _centroCostoService.DarSalidaPorMerma(prod.ProductoId, centroDeCostoId, prod.Cantidad, prod.UnidadDeMedidaId, User.Identity.GetUserId(),compra.Descripcion);
                 }
                 _db.SaveChanges();
                 TempData["exito"] = "Salida registrada correctamente";
