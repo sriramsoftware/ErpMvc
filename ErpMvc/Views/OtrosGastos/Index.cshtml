@@ -50,11 +50,14 @@
             <p class="parrafo_derecha">&nbsp;@ViewBag.Title</p>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-            <a href="@Url.Action("Agregar")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Nuevo Gasto</a>
+    @if (!User.IsInRole(RolesMontin.Auditor))
+    {
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                <a href="@Url.Action("Agregar")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Nuevo Gasto</a>
+            </div>
         </div>
-    </div>
+    }
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 text-center">
             <a href="@Url.Action("Historico")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Ver historico</a>

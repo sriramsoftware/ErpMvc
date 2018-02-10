@@ -54,28 +54,31 @@
                     </p>
                 </td>
                 <td class="col-md-4 form-horizontal botones">
-                    <div class="form-group">
-                        <a class="btn btn-primary btn-sm col-md-12 edit-menu" value="@item.Id">
-                            <i class="glyphicon glyphicon-edit"></i>&nbsp;Editar Datos Generales
-                        </a>
-                    </div>
-                    <div class="form-group">
-                        <a href="@Url.Action("FichaDeCosto", new {Id = item.Id})" class="btn btn-primary btn-sm col-md-12">
-                            <i class="glyphicon glyphicon-folder-open"></i>&nbsp;Modificar Ficha de Costo
-                        </a>
-                    </div>
-                    <div class="form-group">
-                        <a href="@Url.Action("Agregados", new {Id = item.Id})" class="btn btn-primary  btn-sm col-md-12">
-                            <i class="glyphicon glyphicon-glass"></i>&nbsp;Agregados
-                        </a>
-                    </div>
-                    <div class="form-group">
-                        <form action="AgregarImagen" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="id" value="@item.Id" />
-                            <input class="select-image hidden" type="file" name="file" accept="image/*" />
-                            <a class="btn btn-primary btn-sm  col-md-12 edit-image"><i class="icon-picture"></i>&nbsp;Editar Imagen</a>
-                        </form>
-                    </div>
+                    @if (!User.IsInRole(RolesMontin.Auditor))
+                    {
+                        <div class="form-group">
+                            <a class="btn btn-primary btn-sm col-md-12 edit-menu" value="@item.Id">
+                                <i class="glyphicon glyphicon-edit"></i>&nbsp;Editar Datos Generales
+                            </a>
+                        </div>
+                        <div class="form-group">
+                            <a href="@Url.Action("FichaDeCosto", new {Id = item.Id})" class="btn btn-primary btn-sm col-md-12">
+                                <i class="glyphicon glyphicon-folder-open"></i>&nbsp;Modificar Ficha de Costo
+                            </a>
+                        </div>
+                        <div class="form-group">
+                            <a href="@Url.Action("Agregados", new {Id = item.Id})" class="btn btn-primary  btn-sm col-md-12">
+                                <i class="glyphicon glyphicon-glass"></i>&nbsp;Agregados
+                            </a>
+                        </div>
+                        <div class="form-group">
+                            <form action="AgregarImagen" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <input class="select-image hidden" type="file" name="file" accept="image/*" />
+                                <a class="btn btn-primary btn-sm  col-md-12 edit-image"><i class="icon-picture"></i>&nbsp;Editar Imagen</a>
+                            </form>
+                        </div>
+                    }
                 </td>
             </tr>
         }
@@ -98,14 +101,18 @@
     </div>
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-            <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" data-toggle="modal" data-target="#modal">Agregar Nuevo Menú</a>
+            @if (!User.IsInRole(RolesMontin.Auditor))
+            {
+                <a class="btn btn-default col-md-12 col-sm-12 col-xs-12" data-toggle="modal" data-target="#modal">Agregar Nuevo Menú</a>
 
-            <br />
-            <a class="btn btn-default col-md-12" href="@Url.Action("BajoPrecioDeCosto","Menus")">
+                <br />
+            }
+            
+            <a class="btn btn-default col-md-12" href="@Url.Action("BajoPrecioDeCosto", "Menus")">
                 <i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Menús bajo Precio de Costo
             </a>
-            <br />
-            <a class="btn btn-default col-md-12" href="@Url.Action("BajoPrecioConIndice","Menus")">
+            <br/>
+            <a class="btn btn-default col-md-12" href="@Url.Action("BajoPrecioConIndice", "Menus")">
                 <i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Menús bajo Precio con Índice
             </a>
             @* TODO: Agregar boton para mostrar listado de productos vendidos que  no se calcula porciento*@

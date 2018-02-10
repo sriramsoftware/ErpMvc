@@ -43,6 +43,7 @@ namespace ErpMvc.Controllers
               new { Nombre = RolesMontin.UsuarioAvanzado},
               new { Nombre = RolesMontin.Vendedor},
               new { Nombre = RolesMontin.CapitanDeSalon},
+              new { Nombre = RolesMontin.Auditor},
             };
             ViewBag.Roles = new SelectList(roles, "Nombre", "Nombre");
             return View();
@@ -85,6 +86,7 @@ namespace ErpMvc.Controllers
               new { Nombre = RolesMontin.UsuarioAvanzado},
               new { Nombre = RolesMontin.Vendedor},
               new { Nombre = RolesMontin.CapitanDeSalon},
+              new { Nombre = RolesMontin.Auditor},
             };
             ViewBag.Roles = new SelectList(roles, "Nombre", "Nombre", vendedorViewModel.Roles);
             return View(vendedorViewModel);
@@ -100,6 +102,7 @@ namespace ErpMvc.Controllers
               new { Nombre = RolesMontin.UsuarioAvanzado},
               new { Nombre = RolesMontin.Vendedor},
               new { Nombre = RolesMontin.CapitanDeSalon},
+              new { Nombre = RolesMontin.Auditor},
             };
             ViewBag.Roles = vendedor.Usuario != null ? new SelectList(roles, "Nombre", "Nombre", vendedor.Usuario.Roles.Select(r => r.Role.Name)) : new SelectList(roles, "Nombre", "Nombre");
             return View(viewModel);
@@ -146,6 +149,7 @@ namespace ErpMvc.Controllers
               new { Nombre = RolesMontin.UsuarioAvanzado},
               new { Nombre = RolesMontin.Vendedor},
               new { Nombre = RolesMontin.CapitanDeSalon},
+              new { Nombre = RolesMontin.Auditor},
             };
             ViewBag.Roles = new SelectList(roles, "Nombre", "Nombre", vendedorViewModel.Roles);
             return View(vendedorViewModel);

@@ -1,4 +1,5 @@
 ﻿@using CompraVentaCore.Models
+@using ErpMvc.Models
 @model IEnumerable<CompraVentaCore.Models.Compra>
 
 @{
@@ -44,11 +45,15 @@
             <p>Observe las compras registradas en la fecha contable actual y sus productos asociados</p>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-            <a href="@Url.Action("TramitarCompra")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Registrar Nueva Compra</a>
+    @if(!User.IsInRole(RolesMontin.Auditor))
+    {
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                <a href="@Url.Action("TramitarCompra")" class="btn btn-default col-md-12 col-sm-12 col-xs-12">Registrar Nueva Compra</a>
+            </div>
         </div>
-    </div>
+    }
+    
     <br />
 }
 
