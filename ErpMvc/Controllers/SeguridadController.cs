@@ -208,7 +208,8 @@ namespace ErpMvc.Controllers
               new { Nombre = RolesMontin.Administrador},
               new { Nombre = RolesMontin.UsuarioAvanzado},
               new { Nombre = RolesMontin.Vendedor},
-              new { Nombre = RolesMontin.CapitanDeSalon}
+              new { Nombre = RolesMontin.CapitanDeSalon},
+              new { Nombre = RolesMontin.Auditor},
             };
             ViewBag.Roles = new SelectList(roles, "Nombre", "Nombre");
             return View();
