@@ -53,38 +53,66 @@ namespace ErpMvc.Controllers
 
         public PartialViewResult ListaDeVentasPartial(int id)
         {
+            if (User.IsInRole(RolesMontin.Administrador))
+            {
+                ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContableId == id).ToList();
+                var ventas = _ventasService.Ventas().Where(v => v.DiaContableId == id).ToList().OrderByDescending(v => v.Fecha);
+                ViewBag.CantidadDeVentas = ventas.Count();
+                return PartialView("_ListaDeVentasPartial", ventas);
+            }
             ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContableId == id).ToList();
-            var ventas = _ventasService.Ventas().Where(v => v.DiaContableId == id).ToList().OrderByDescending(v => v.Fecha);
-            ViewBag.CantidadDeVentas = ventas.Count();
-            return PartialView("_ListaDeVentasPartial",ventas);
+            var ventasSeleccionadas = _db.Set<SeleccionVenta>().Where(v => v.Venta.DiaContableId == id).ToList().OrderByDescending(v => v.Venta.Fecha);
+            ViewBag.CantidadDeVentas = ventasSeleccionadas.Count();
+            return PartialView("_ListaDeVentasPartial", ventasSeleccionadas.Select(v => v.Venta));
         }
 
         public PartialViewResult ListaDeVentasPendientesPartial()
         {
+            if (User.IsInRole(RolesMontin.Administrador))
+            {
+                ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia).ToList();
+                var ventas = _ventasService.Ventas().Where(v => v.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia).ToList().OrderByDescending(v => v.Fecha);
+                ViewBag.CantidadDeVentas = ventas.Count();
+                return PartialView("_ListaDeVentasPartial", ventas);
+            }
             ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia).ToList();
-            var ventas = _ventasService.Ventas().Where(v => v.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia).ToList().OrderByDescending(v => v.Fecha);
-            ViewBag.CantidadDeVentas = ventas.Count();
-            return PartialView("_ListaDeVentasPartial", ventas);
+            var ventasSeleccionadas = _db.Set<SeleccionVenta>().Where(v => v.Venta.EstadoDeVenta == EstadoDeVenta.PendienteParaOtroDia).ToList().OrderByDescending(v => v.Venta.Fecha);
+            ViewBag.CantidadDeVentas = ventasSeleccionadas.Count();
+            return PartialView("_ListaDeVentasPartial", ventasSeleccionadas.Select(v => v.Venta));
         }
 
         public PartialViewResult ListaDeVentasPorFechaPartial(DateTime fecha)
         {
             var fIni = fecha.Date;
             var fFin = fecha.Date.AddHours(23).AddMinutes(59);
+            if (User.IsInRole(RolesMontin.Administrador))
+            {
+                ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContable.Fecha >= fIni && p.Venta.DiaContable.Fecha <= fFin).ToList();
+                var ventas = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin).OrderByDescending(v => v.Fecha).ToList();
+                ViewBag.CantidadDeVentas = ventas.Count();
+                return PartialView("_ListaDeVentasSoloVerPartial", ventas);
+            }
             ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContable.Fecha >= fIni && p.Venta.DiaContable.Fecha <= fFin).ToList();
-            var ventas = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin).OrderByDescending(v => v.Fecha).ToList();
-            ViewBag.CantidadDeVentas = ventas.Count();
-            return PartialView("_ListaDeVentasSoloVerPartial", ventas);
+            var ventasSeleccionadas = _db.Set<SeleccionVenta>().Where(v => v.Venta.DiaContable.Fecha >= fIni && v.Venta.DiaContable.Fecha <= fFin).OrderByDescending(v => v.Venta.Fecha).ToList();
+            ViewBag.CantidadDeVentas = ventasSeleccionadas.Count();
+            return PartialView("_ListaDeVentasSoloVerPartial", ventasSeleccionadas.Select(v => v.Venta));
         }
 
         public PartialViewResult ListaDeVentasFacturasPorFechaPartial(DateTime fecha)
         {
             var fIni = fecha.Date;
             var fFin = fecha.Date.AddHours(23).AddMinutes(59);
+            if (User.IsInRole(RolesMontin.Administrador))
+            {
+                ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContable.Fecha >= fIni && p.Venta.DiaContable.Fecha <= fFin && p.Venta.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura).ToList();
+                var ventas = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin && v.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura).OrderByDescending(v => v.Fecha).ToList();
+                ViewBag.CantidadDeVentas = ventas.Count();
+                return PartialView("_ListaDeVentasSoloVerPartial", ventas);
+            }
             ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContable.Fecha >= fIni && p.Venta.DiaContable.Fecha <= fFin && p.Venta.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura).ToList();
-            var ventas = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin && v.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura).OrderByDescending(v => v.Fecha).ToList();
-            ViewBag.CantidadDeVentas = ventas.Count();
-            return PartialView("_ListaDeVentasSoloVerPartial", ventas);
+            var ventasSeleccionadas = _db.Set<SeleccionVenta>().Where(v => v.Venta.DiaContable.Fecha >= fIni && v.Venta.DiaContable.Fecha <= fFin && v.Venta.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura).OrderByDescending(v => v.Venta.Fecha).ToList();
+            ViewBag.CantidadDeVentas = ventasSeleccionadas.Count();
+            return PartialView("_ListaDeVentasSoloVerPartial", ventasSeleccionadas.Select(v => v.Venta));
         }
 
 
@@ -92,18 +120,30 @@ namespace ErpMvc.Controllers
         {
             var fIni = fecha.Date;
             var fFin = fecha.Date.AddHours(23).AddMinutes(59);
-            var cuentaCasa = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin).SelectMany(v => v.Elaboraciones.Where(e => e.ImporteTotal == 0)).OrderByDescending(v => v.VentaId).ToList();
-            return PartialView("_MenusCuentaCasaPartial", cuentaCasa);
+            if (User.IsInRole(RolesMontin.Administrador))
+            {
+                var cuentaCasa = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin).SelectMany(v => v.Elaboraciones.Where(e => e.ImporteTotal == 0)).OrderByDescending(v => v.VentaId).ToList();
+                return PartialView("_MenusCuentaCasaPartial", cuentaCasa);
+            }
+            var cuentaCasaSel = _db.Set<SeleccionVenta>().Where(v => v.Venta.DiaContable.Fecha >= fIni && v.Venta.DiaContable.Fecha <= fFin).SelectMany(v => v.Venta.Elaboraciones.Where(e => e.ImporteTotal == 0)).OrderByDescending(v => v.VentaId).ToList();
+            return PartialView("_MenusCuentaCasaPartial", cuentaCasaSel);
         }
 
         public PartialViewResult ListaDeVentasAlCostoPartial(DateTime fecha)
         {
             var fIni = fecha.Date;
             var fFin = fecha.Date.AddHours(23).AddMinutes(59);
+            if (User.IsInRole(RolesMontin.Administrador))
+            {
+                ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContable.Fecha >= fIni && p.Venta.DiaContable.Fecha <= fFin).ToList();
+                var ventas = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin && v.Observaciones == "Venta al costo").OrderByDescending(v => v.Fecha).ToList();
+                ViewBag.CantidadDeVentas = ventas.Count();
+                return PartialView("_ListaDeVentasSoloVerPartial", ventas);
+            }
             ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContable.Fecha >= fIni && p.Venta.DiaContable.Fecha <= fFin).ToList();
-            var ventas = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin && v.Observaciones == "Venta al costo").OrderByDescending(v => v.Fecha).ToList();
-            ViewBag.CantidadDeVentas = ventas.Count();
-            return PartialView("_ListaDeVentasSoloVerPartial", ventas);
+            var ventasSel = _db.Set<SeleccionVenta>().Where(v => v.Venta.DiaContable.Fecha >= fIni && v.Venta.DiaContable.Fecha <= fFin && v.Venta.Observaciones == "Venta al costo").OrderByDescending(v => v.Venta.Fecha).ToList();
+            ViewBag.CantidadDeVentas = ventasSel.Count();
+            return PartialView("_ListaDeVentasSoloVerPartial", ventasSel.Select(v => v.Venta));
         }
 
         public PartialViewResult ConsumoPorFechaPartial(DateTime fechaInicio, DateTime fechaFin)
