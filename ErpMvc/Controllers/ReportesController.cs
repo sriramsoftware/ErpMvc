@@ -164,22 +164,22 @@ namespace ErpMvc.Controllers
             ViewData["ReporteId"] = random;
             return View("Plantilla");
         }
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador + "," + RolesMontin.Auditor)]
         public ActionResult Ventas()
         {
             return View();
         }
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador + "," + RolesMontin.Auditor)]
         public ActionResult VentasAlCosto()
         {
             return View();
         }
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador + "," + RolesMontin.Auditor)]
         public ActionResult VentasCuentaCasa()
         {
             return View();
         }
-        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador)]
+        [Authorize(Roles = RolesMontin.UsuarioAvanzado + "," + RolesMontin.Administrador + "," + RolesMontin.Auditor)]
         public ActionResult VentasPorFacturas()
         {
             return View();

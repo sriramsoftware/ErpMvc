@@ -37,6 +37,20 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    @if (User.IsInRole(RolesMontin.Auditor))
+                    {
+                        <li><a href="@Url.Action("Listado", "Productos")">Productos</a></li>
+                        <li><a href="@Url.Action("Listado", "Menus")">Menus</a></li>
+                        <li><a href="@Url.Action("Index", "Compras")">Compras</a></li>
+                        <li><a href="@Url.Action("Index", "OtrosGastos")">Otros gastos</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-list-alt"></span> Reportes<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("Ventas","Reportes")">Ventas</a></li>
+                                <li><a href="@Url.Action("VentasPorFacturas","Reportes")">Ventas por facturas</a></li>
+                            </ul>
+                        </li>
+                    }
                     @if (User.IsInRole(RolesMontin.Administrador) || User.IsInRole(RolesMontin.UsuarioAvanzado))
                     {
                         <li><a href="@Url.Action("Listado", "Productos")">Productos</a></li>
@@ -59,18 +73,18 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-list-alt"></span> Reportes<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href="@Url.Action("Inventario","Reportes")">Inventario</a></li>
-                                <li><a href="@Url.Action("Operaciones","Reportes")">Operaciones</a></li>
-                                <li><a href="@Url.Action("Ventas","Reportes")">Ventas</a></li>
-                                <li><a href="@Url.Action("VentasPorFacturas","Reportes")">Ventas por facturas</a></li>
-                                <li><a href="@Url.Action("Cierres","PeriodoContable")">Cierres</a></li>
-                                <li><a href="@Url.Action("Consumo","Reportes")">Consumo</a></li>
-                                <li><a href="@Url.Action("ResumenDeGanaciasDiario","Reportes")">Resumen de ganacias</a></li>
-                                <li><a href="@Url.Action("MovimientosDeProductos","Reportes")">Movimientos de productos</a></li>
-                                <li><a href="@Url.Action("ResumenDeProducto","Reportes")">Resumen de productos</a></li>
-                                <li><a href="@Url.Action("ComprasConComprobante","Reportes")">Compras con comprobante</a></li>
-                                <li><a href="@Url.Action("MenusPorProducto","Reportes")">Menus por producto</a></li>
-                                <li><a href="@Url.Action("Mermas","Reportes")">Mermas</a></li>
+                                <li><a href="@Url.Action("Inventario", "Reportes")">Inventario</a></li>
+                                <li><a href="@Url.Action("Operaciones", "Reportes")">Operaciones</a></li>
+                                <li><a href="@Url.Action("Ventas", "Reportes")">Ventas</a></li>
+                                <li><a href="@Url.Action("VentasPorFacturas", "Reportes")">Ventas por facturas</a></li>
+                                <li><a href="@Url.Action("Cierres", "PeriodoContable")">Cierres</a></li>
+                                <li><a href="@Url.Action("Consumo", "Reportes")">Consumo</a></li>
+                                <li><a href="@Url.Action("ResumenDeGanaciasDiario", "Reportes")">Resumen de ganacias</a></li>
+                                <li><a href="@Url.Action("MovimientosDeProductos", "Reportes")">Movimientos de productos</a></li>
+                                <li><a href="@Url.Action("ResumenDeProducto", "Reportes")">Resumen de productos</a></li>
+                                <li><a href="@Url.Action("ComprasConComprobante", "Reportes")">Compras con comprobante</a></li>
+                                <li><a href="@Url.Action("MenusPorProducto", "Reportes")">Menus por producto</a></li>
+                                <li><a href="@Url.Action("Mermas", "Reportes")">Mermas</a></li>
                                 <li>@*<a href="@Url.Action("ComprasPersonalizado","Reportes")">Compras personalizado</a>*@</li>
                             </ul>
                         </li>
