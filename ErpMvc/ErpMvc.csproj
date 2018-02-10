@@ -368,6 +368,7 @@
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\SalvaRestauraController.cs" />
     <Compile Include="Controllers\SeguridadController.cs" />
+    <Compile Include="Controllers\SeleccionController.cs" />
     <Compile Include="Controllers\UnidadesDeMedidasController.cs" />
     <Compile Include="Controllers\TrabajadoresController.cs" />
     <Compile Include="Controllers\VentasController.cs" />
@@ -488,6 +489,7 @@
     <Compile Include="Utiles\ResumenCierre.cs" />
     <Compile Include="ViewModels\AsientoContableViewModel.cs" />
     <Compile Include="ViewModels\CierreViewModel.cs" />
+    <Compile Include="ViewModels\ComprasSeleccionViewModel.cs" />
     <Compile Include="ViewModels\ConsumoViewModel.cs" />
     <Compile Include="ViewModels\ConvertirProductoViewModel.cs" />
     <Compile Include="ViewModels\DenominacionViewModel.cs" />
@@ -1673,6 +1675,8 @@
     <Content Include="Views\ClasificacionDeMenus\Listado.cshtml" />
     <Content Include="Views\Reportes\Mermas.cshtml" />
     <Content Include="Views\Reportes\_ListaDeMermasPartial.cshtml" />
+    <Content Include="Views\Seleccion\Compras.cshtml" />
+    <Content Include="Views\Seleccion\SeleccionarCompras.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />

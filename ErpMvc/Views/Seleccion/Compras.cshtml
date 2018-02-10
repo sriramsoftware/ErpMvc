@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ErpMvc.ViewModels.ComprasSeleccionViewModel>
+@{
+    ViewBag.Title = "Compras";
+}
+
+<h2>Compras por dia</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>Importe</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td><span class="hidden">@item.DiaContable.Fecha.Ticks</span> @item.DiaContable.Fecha</td>
+            <td>@item.Importe</td>
+            <td>
+                <a class="btn btn-default" href="@Url.Action("SeleccionarCompras", "Seleccion", new {Id = item.DiaContable.Id})">Seleccionar</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            declareDatatable('.table', [[0, "desc"]]);
+            $('btn').tooltip();
+            
+
+            $(document).on('click', ".prod-comprados-btn", function () {
+                var id = $(this).attr("data-id");
+                $("#modal-detalle").load("@Url.Action("Compras")" + "/" + id, function () {
+                    mostrarModal();
+                });
+            });
+
+        });
+
+        function mostrarModal() {
+            $("#modal").modal('show');
+        }
+
+    </script>
+}

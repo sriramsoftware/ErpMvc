@@ -1,0 +1,49 @@
+﻿
+@model IEnumerable<CompraVentaCore.Models.Compra>
+@{
+    ViewBag.Title = "SeleccionarCompras";
+}
+
+<h2>Seleccionar Compras</h2>
+
+<h1 class="message-body ">Compras del Día: @String.Format("{0:C}", Model.Sum(v => v.Productos.Sum(p => p.ImporteTotal)))</h1>
+<hr/>
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <table class="table">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Fecha</th>
+                <th>Comprobante?</th>
+                <th>Lugar</th>
+                <th>Productos</th>
+                <th>Importe</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var compra in Model)
+            {
+                <tr>
+                    <td><input type="checkbox" value="@compra.Id" name="comprasIds"/></td>
+                    <td>@compra.Fecha.ToShortDateString()</td>
+                    <td>@compra.TieneComprobante</td>
+                    <td>@compra.Entidad.Nombre</td>
+                    <td>
+                        @foreach (var prod in compra.Productos)
+                        {
+                            <span>@String.Format("{0} - Cant: {1} {2} - {3:C}", prod.Producto.Nombre, prod.Cantidad, prod.UnidadDeMedida.Siglas, prod.ImporteTotal)</span><br/>
+                        }
+                    </td>
+                    <td>@String.Format("{0:C}", compra.Productos.Sum(p => p.ImporteTotal))</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <input type="submit" class="btn btn-success" value="Guardar"/>
+    </div>
+
+}
