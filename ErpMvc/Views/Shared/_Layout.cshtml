@@ -89,6 +89,16 @@
                             </ul>
                         </li>
                     }
+                    @if (User.IsInRole(RolesMontin.Administrador))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Seleccion<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("Ventas", "Seleccion")">Seleccion de ventas</a></li>
+                                <li><a href="@Url.Action("Compras", "Seleccion")">Seleccion de compras</a></li>
+                            </ul>
+                        </li>
+                    }
                     @if (User.IsInRole(RolesMontin.Vendedor) || User.IsInRole(RolesMontin.CapitanDeSalon))
                     {
                         <li><a href="@Url.Action("Index", "Comandas")">Comandas</a></li>
