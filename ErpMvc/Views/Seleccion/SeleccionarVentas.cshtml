@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CompraVentaCore.Models.Venta>
+@{
+    ViewBag.Title = "Ventas Seleccionadas";
+}
+
+<h2>Ventas seleccionadas automaticamente</h2>
+
+<h1 class="message-body ">Ventas del Día @Model.FirstOrDefault().DiaContable.Fecha.ToShortDateString(): @String.Format("{0:C}", Model.Sum(v => v.Importe))</h1>
+<hr />
+
+<div class="row">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>No</th>
+            <th>Hora</th>
+            <th>Personas</th>
+            <th>Dependiente</th>
+            <th>Menus</th>
+            <th>Importe</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var venta in Model)
+        {
+            <tr>
+                <td>@venta.Id</td>
+                <td>@venta.Fecha.ToShortTimeString()</td>
+                <td>@venta.CantidadPersonas</td>
+                <td>@venta.Vendedor.Nombres</td>
+                <td>
+                    @foreach (var prod in venta.Elaboraciones)
+                    {
+                        <span>@String.Format("{0} - Cant: {1} - {2:C}", prod.Elaboracion.Nombre, prod.Cantidad, prod.ImporteTotal)</span><br/>
+                    }
+                </td>
+                <td>@String.Format("{0:C}", venta.Importe)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<div class="row">
+    <a class="btn btn-default" href="@Url.Action("Ventas")">Atras</a>
+</div>

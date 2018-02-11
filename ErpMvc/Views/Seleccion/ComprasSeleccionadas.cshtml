@@ -1,10 +1,15 @@
 ﻿
 @model IEnumerable<CompraVentaCore.Models.Compra>
 @{
-    ViewBag.Title = "Seleccionar Compras";
+    ViewBag.Title = "Seleccion de Compras";
 }
 
-<h2>Seleccionar Compras</h2>
+@{
+    var compras = Model.Sum(c => c.Productos.Sum(p => p.ImporteTotal));
+    var porciento = compras*100/ViewBag.Ventas;
+}
+
+<h2>Seleccion de Compras</h2>
 <div id="seleccionComprasController" ng-controller="seleccionComprasController">
     <h1 class="message-body ">Compras del Día @Model.FirstOrDefault().DiaContable.Fecha.ToShortDateString(): @String.Format("{0:C}", Model.Sum(v => v.Productos.Sum(p => p.ImporteTotal)))</h1>
     <hr />
@@ -16,11 +21,11 @@
         </div>
         <div class="col-md-3">
             <p> Compras seleccionadas</p>
-            <p><strong id="compras-seleccionadas">{{compras }}</strong></p>
+            <p><strong id="compras-seleccionadas">@String.Format("{0:C}", compras)</strong></p>
         </div>
         <div class="col-md-3">
             <p> Por Ciento</p>
-            <p><strong id="porciento">{{porciento}}</strong></p>
+            <p><strong id="porciento">@porciento</strong></p>
         </div>
     </div>
     @using (Html.BeginForm())
@@ -29,7 +34,6 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th></th>
                         <th>Fecha</th>
                         <th>Comprobante?</th>
                         <th>Lugar</th>
@@ -41,7 +45,6 @@
                     @foreach (var compra in Model)
                     {
                         <tr>
-                            <td><input type="checkbox" value="@compra.Id" name="comprasIds" ng-click="toggleCompraSelection(@compra.Id,@compra.Productos.Sum(p => p.ImporteTotal))" data-importe="@compra.Productos.Sum(p => p.ImporteTotal)" /></td>
                             <td>@compra.Fecha.ToShortDateString()</td>
                             <td>@compra.TieneComprobante</td>
                             <td>@compra.Entidad.Nombre</td>
@@ -64,11 +67,3 @@
 
     }
 </div>
-@section scripts{
-    <script src="~/Scripts/erp/seleccionComprasController.js"></script>
-    <script>
-        $(document).ready(function () {
-            angular.element('#seleccionComprasController').scope().ventas = @ViewBag.Ventas;
-        });
-    </script>
-}

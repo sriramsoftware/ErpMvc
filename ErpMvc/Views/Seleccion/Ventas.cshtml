@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<ErpMvc.ViewModels.SeleccionViewModel>
 @{
-    ViewBag.Title = "Compras";
+    ViewBag.Title = "Ventas";
 }
 
-<h2>Compras por dia</h2>
+<h2>Ventas por dia</h2>
 
 <table class="table">
     <thead>
@@ -11,7 +11,7 @@
         <th>Fecha</th>
         <th>Importe</th>
         <th>Importe Seleccionado</th>
-        <th>Por Ciento</th>
+        <th>Por ciento</th>
         <th></th>
     </tr>
     </thead>
@@ -22,9 +22,9 @@
             <td><span class="hidden">@item.DiaContable.Fecha.Ticks</span> @item.DiaContable.Fecha</td>
             <td>@item.Importe</td>
             <td>@item.ImporteSeleccionado</td>
-            <td>@item.PorCiento</td>
+            <td>@String.Format("{0:##.##}",item.PorCiento)</td>
             <td>
-                <a class="btn btn-default" href="@Url.Action("SeleccionarCompras", "Seleccion", new {Id = item.DiaContable.Id})">Seleccionar</a>
+                <a class="btn btn-default" href="@Url.Action("SeleccionarVentas", "Seleccion", new {Id = item.DiaContable.Id})">Seleccionar</a>
             </td>
         </tr>
     }

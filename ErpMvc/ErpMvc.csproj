@@ -489,7 +489,7 @@
     <Compile Include="Utiles\ResumenCierre.cs" />
     <Compile Include="ViewModels\AsientoContableViewModel.cs" />
     <Compile Include="ViewModels\CierreViewModel.cs" />
-    <Compile Include="ViewModels\ComprasSeleccionViewModel.cs" />
+    <Compile Include="ViewModels\SeleccionViewModel.cs" />
     <Compile Include="ViewModels\ConsumoViewModel.cs" />
     <Compile Include="ViewModels\ConvertirProductoViewModel.cs" />
     <Compile Include="ViewModels\DenominacionViewModel.cs" />
@@ -616,6 +616,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\chosen.jquery.js" />
     <Content Include="Scripts\chosen.jquery.min.js" />
+    <Content Include="Scripts\erp\seleccionComprasController.js" />
     <Content Include="Scripts\erp\menu.js" />
     <Content Include="Scripts\datatables.min.js" />
     <Content Include="Scripts\erp\entradaProductoController.js" />
@@ -1677,6 +1678,9 @@
     <Content Include="Views\Reportes\_ListaDeMermasPartial.cshtml" />
     <Content Include="Views\Seleccion\Compras.cshtml" />
     <Content Include="Views\Seleccion\SeleccionarCompras.cshtml" />
+    <Content Include="Views\Seleccion\Ventas.cshtml" />
+    <Content Include="Views\Seleccion\SeleccionarVentas.cshtml" />
+    <Content Include="Views\Seleccion\ComprasSeleccionadas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\uploads\productos\" />

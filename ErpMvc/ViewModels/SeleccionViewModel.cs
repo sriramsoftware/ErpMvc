@@ -7,10 +7,19 @@ using ContabilidadCore.Models;
 
 namespace ErpMvc.ViewModels
 {
-    public class ComprasSeleccionViewModel
+    public class SeleccionViewModel
     {
+        public int Id { get; set; }
+
         public DiaContable DiaContable { get; set; }
 
         public decimal Importe { get; set; }
+
+        public decimal ImporteSeleccionado { get; set; }
+
+        public decimal PorCiento
+        {
+            get { return Importe > 0? ImporteSeleccionado*100/Importe:0; }
+        }
     }
 }
