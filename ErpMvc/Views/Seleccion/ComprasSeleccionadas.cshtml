@@ -6,7 +6,7 @@
 
 @{
     var compras = Model.Sum(c => c.Productos.Sum(p => p.ImporteTotal));
-    var porciento = compras*100/ViewBag.Ventas;
+    var porciento = compras * 100 / ViewBag.Ventas;
 }
 
 <h2>Seleccion de Compras</h2>
@@ -16,7 +16,8 @@
     <div class="row">
         <div class="col-md-3">
             <p> Ventas seleccionadas</p>
-            <p><strong id="ventas">@String.Format("{0:C}", ViewBag.Ventas)</strong>
+            <p>
+                <strong id="ventas">@String.Format("{0:C}", ViewBag.Ventas)</strong>
             </p>
         </div>
         <div class="col-md-3">
@@ -67,3 +68,15 @@
 
     }
 </div>
+
+@section Scripts {
+
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            declareDatatable('.table', [[0, "desc"]]);
+        });
+    </script>
+}

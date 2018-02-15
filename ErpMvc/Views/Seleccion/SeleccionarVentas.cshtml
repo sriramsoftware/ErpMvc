@@ -43,3 +43,16 @@
 <div class="row">
     <a class="btn btn-default" href="@Url.Action("Ventas")">Atras</a>
 </div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/mbs-qdtf.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            declareDatatable('.table', [[0, "desc"]]);
+        });
+    </script>
+}

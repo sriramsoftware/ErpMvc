@@ -66,9 +66,12 @@
 </div>
 @section scripts{
     <script src="~/Scripts/erp/seleccionComprasController.js"></script>
+<script src="~/Scripts/datatables.min.js"></script>
+<script src="~/Scripts/mbs-qdtf.js"></script>
     <script>
         $(document).ready(function () {
             angular.element('#seleccionComprasController').scope().ventas = @ViewBag.Ventas;
+            //declareDatatable('.table', [[0, "desc"]]);
         });
     </script>
 }
