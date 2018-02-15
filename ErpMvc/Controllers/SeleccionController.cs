@@ -27,7 +27,7 @@ namespace ErpMvc.Controllers
         // GET: Seleccion
         public ActionResult Ventas()
         {
-            var ventas = _db.Set<Venta>().GroupBy(c => c.DiaContable).Select(g => new SeleccionViewModel()
+            var ventas = _db.Set<Venta>().Where(v => !v.DiaContable.Abierto).GroupBy(c => c.DiaContable).Select(g => new SeleccionViewModel()
             {
                 DiaContable = g.Key,
                 Importe = g.Sum(co => co.Importe),
@@ -49,7 +49,7 @@ namespace ErpMvc.Controllers
 
         public ActionResult Compras()
         {
-            var compras = _db.Set<Compra>().GroupBy(c => c.DiaContable).Select(g => new SeleccionViewModel()
+            var compras = _db.Set<Compra>().Where(c => !c.DiaContable.Abierto).GroupBy(c => c.DiaContable).Select(g => new SeleccionViewModel()
             {
                 DiaContable = g.Key,
                 Importe = g.Sum(co => co.Productos.Sum(p => p.ImporteTotal)),
