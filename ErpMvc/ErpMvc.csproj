@@ -489,6 +489,7 @@
     <Compile Include="Utiles\ResumenCierre.cs" />
     <Compile Include="ViewModels\AsientoContableViewModel.cs" />
     <Compile Include="ViewModels\CierreViewModel.cs" />
+    <Compile Include="ViewModels\SeleccionarCompraViewModel.cs" />
     <Compile Include="ViewModels\SeleccionViewModel.cs" />
     <Compile Include="ViewModels\ConsumoViewModel.cs" />
     <Compile Include="ViewModels\ConvertirProductoViewModel.cs" />

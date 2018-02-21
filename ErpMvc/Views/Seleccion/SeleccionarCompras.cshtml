@@ -1,30 +1,47 @@
 ﻿
-@model IEnumerable<CompraVentaCore.Models.Compra>
+@using System.Linq
+@model IEnumerable<ErpMvc.ViewModels.SeleccionarCompraViewModel>
 @{
     ViewBag.Title = "Seleccionar Compras";
 }
 
 <h2>Seleccionar Compras</h2>
 <div id="seleccionComprasController" ng-controller="seleccionComprasController">
-    <h1 class="message-body ">Compras del Día @Model.FirstOrDefault().DiaContable.Fecha.ToShortDateString(): @String.Format("{0:C}", Model.Sum(v => v.Productos.Sum(p => p.ImporteTotal)))</h1>
+    <h1 class="message-body ">Compras del Día @Model.FirstOrDefault().Compra.DiaContable.Fecha.ToShortDateString(): @String.Format("{0:C}", Model.Sum(v => v.Compra.Productos.Sum(p => p.ImporteTotal)))</h1>
     <hr />
     <div class="row">
         <div class="col-md-3">
-            <p> Ventas seleccionadas</p>
+            <p> Ventas</p>
             <p><strong id="ventas">@String.Format("{0:C}", ViewBag.Ventas)</strong>
             </p>
         </div>
         <div class="col-md-3">
-            <p> Compras seleccionadas</p>
-            <p><strong id="compras-seleccionadas">{{compras }}</strong></p>
+            <p> CUC</p>
+            <p><strong id="compras-seleccionadas">{{compras }}</strong>
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p> MN</p>
+            <p><strong id="compras-seleccionadas-mn">{{compras * 24 | number:2}}</strong></p>
         </div>
         <div class="col-md-3">
             <p> Por Ciento</p>
-            <p><strong id="porciento">{{porciento}}</strong></p>
+            <p><strong id="porciento">{{porciento}}</strong>
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p> Comprobante</p>
+            <p><strong id="porciento-comprobante">{{porcientoComprobante}}</strong>
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p> Sin Comprobante</p>
+            <p><strong id="porciento-sin-comprobante">{{porcientoSinComprobante}}</strong></p>
         </div>
     </div>
     @using (Html.BeginForm())
     {
+        <input type="hidden" name="diaContableId" value="@ViewBag.DiaContableId"/>
         <div class="row">
             <table class="table">
                 <thead>
@@ -41,17 +58,17 @@
                     @foreach (var compra in Model)
                     {
                         <tr>
-                            <td><input type="checkbox" value="@compra.Id" name="comprasIds" ng-click="toggleCompraSelection(@compra.Id,@compra.Productos.Sum(p => p.ImporteTotal))" data-importe="@compra.Productos.Sum(p => p.ImporteTotal)" /></td>
-                            <td>@compra.Fecha.ToShortDateString()</td>
-                            <td>@compra.TieneComprobante</td>
-                            <td>@compra.Entidad.Nombre</td>
+                            <td><input type="checkbox" value="@compra.Compra.Id" name="comprasIds" ng-click="toggleCompraSelection(@compra.Compra.Id,@compra.Compra.Productos.Sum(p => p.ImporteTotal),@compra.Compra.TieneComprobante.ToString())" ng-checked="comprasIds.indexOf(@compra.Compra.Id) > -1" data-importe="@compra.Compra.Productos.Sum(p => p.ImporteTotal)" /></td>
+                            <td>@compra.Compra.Fecha.ToShortDateString()</td>
+                            <td>@compra.Compra.TieneComprobante</td>
+                            <td>@compra.Compra.Entidad.Nombre</td>
                             <td>
-                                @foreach (var prod in compra.Productos)
+                                @foreach (var prod in compra.Compra.Productos)
                                 {
                                     <span>@String.Format("{0} - Cant: {1} {2} - {3:C}", prod.Producto.Nombre, prod.Cantidad, prod.UnidadDeMedida.Siglas, prod.ImporteTotal)</span><br />
                                 }
                             </td>
-                            <td>@String.Format("{0:C}", compra.Productos.Sum(p => p.ImporteTotal))</td>
+                            <td>@String.Format("{0:C}", compra.Compra.Productos.Sum(p => p.ImporteTotal))</td>
                         </tr>
                     }
                 </tbody>
@@ -71,6 +88,7 @@
     <script>
         $(document).ready(function () {
             angular.element('#seleccionComprasController').scope().ventas = @ViewBag.Ventas;
+            angular.element('#seleccionComprasController').scope().fetchComprasSeleccionadas(@ViewBag.DiaContableId);
             //declareDatatable('.table', [[0, "desc"]]);
         });
     </script>

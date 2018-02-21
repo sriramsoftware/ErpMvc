@@ -9,9 +9,13 @@
     <thead>
     <tr>
         <th>Fecha</th>
+        <th>Ventas</th>
         <th>Importe</th>
-        <th>Importe Seleccionado</th>
-        <th>Por Ciento</th>
+        <th>CUC</th>
+        <th>MN</th>
+        <th>%</th>
+        <th>Con Comprobante</th>
+        <th>Sin Comprobante</th>
         <th></th>
     </tr>
     </thead>
@@ -19,10 +23,14 @@
     @foreach (var item in Model)
     {
         <tr>
-            <td><span class="hidden">@item.DiaContable.Fecha.Ticks</span> @item.DiaContable.Fecha</td>
-            <td>@item.Importe</td>
-            <td>@item.ImporteSeleccionado</td>
-            <td>@item.PorCiento</td>
+            <td><span class="hidden">@item.DiaContable.Fecha.Ticks</span> @item.DiaContable.Fecha.ToShortDateString()</td>
+            <td class="text-right">@item.Ventas</td>
+            <td class="text-right">@item.Importe</td>
+            <td class="text-right">@item.ImporteSeleccionado</td>
+            <td class="text-right">@(item.ImporteSeleccionado * 24)</td>
+            <td>@item.PorCientoPorVentas</td>
+            <td>@item.PorCientoComprobante</td>
+            <td>@item.PorCientoSinComprobante</td>
             <td>
                 <a class="btn btn-default" href="@Url.Action("SeleccionarCompras", "Seleccion", new {Id = item.DiaContable.Id})">Seleccionar</a>
             </td>
