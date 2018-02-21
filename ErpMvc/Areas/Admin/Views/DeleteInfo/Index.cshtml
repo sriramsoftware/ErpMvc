@@ -6,7 +6,15 @@
 <h2>Borrado de informacion</h2>
 
 <div class="col-md-12">
-    <a class="btn btn-danger" id="btn-delete" href="#">Borrar</a>
+    <div class="col-md-12">
+        <a class="btn btn-danger" id="btn-delete-compras" href="#">Borrar Compras</a>
+        <p id="delete-compras-info"></p>
+    </div>
+    <div class="col-md-12">
+        <a class="btn btn-danger" id="btn-delete" href="#">Borrar lo demas</a>
+        <p id="delete-all-info"></p>
+    </div>
+    
 </div>
 
 <!-- MODAL CONFIRMACION -->
@@ -15,29 +23,98 @@
         <div class="modal-content" id="agregados-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 id="modal-title" class="modal-title">Confirmar borrar</h4>
+                <h4 id="modal-title" class="modal-title">Confirmar borrar compras</h4>
             </div>
-            <div id="modal-detalle" class="modal-body">
-                <div class="container">
-                   <p>Seguro que desea borrar los datos???</p>
+            @using (Ajax.BeginForm("DeleteCompras", "DeleteInfo", new AjaxOptions() {HttpMethod = "POST", OnBegin = "inicioDelCompras", OnComplete = "completeDelCompras"}))
+            {
+                <div id="modal-detalle" class="modal-body">
+                    <div class="container">
+                        <p>Seguro que desea borrar las compras???</p>
+                        <div class="row">
+                            <label class="col-md-2 control-label">Fecha de inicio</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control datepicker" id="fechaInicio" name="fechaInicio"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-md-2 control-label">Fecha de fin</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control datepicker" id="fechaFin" name="fechaFin" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <a class="btn btn-danger" href="@Url.Action("DeleteInfoConfirmado")">Borrar</a>
-            </div>
-
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <input type="submit" class="btn btn-danger" value="Eliminar"/>
+                </div>
+            }
         </div>
     </div>
 </div>
 <!-- TERMINA MODAL CONFIRMACION -->
+
+<!-- MODAL CONFIRMACION -->
+<div id="modal-all" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 id="modal-title" class="modal-title">Confirmar borrar compras</h4>
+            </div>
+            @using (Ajax.BeginForm("DeleteNotCompras", "DeleteInfo", new AjaxOptions() { HttpMethod = "POST", OnBegin = "inicioDelAll", OnComplete = "completeDelAll" }))
+            {
+                <div id="modal-detalle" class="modal-body">
+                    <div class="container">
+                        <p>Seguro que desea borrar los datos???</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <input type="submit" class="btn btn-danger" value="Eliminar" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- TERMINA MODAL CONFIRMACION -->
+
 @section scripts
 {
     <script>
         $(document).ready(function() {
-            $("#btn-delete").click(function() {
+            $("#btn-delete-compras").click(function() {
                 $("#modal").modal('show');
             });
+            $("#btn-delete").click(function () {
+                $("#modal-all").modal('show');
+            });
         });
+
+        function inicioDelCompras(data) {
+            $('#delete-compras-info').html("Estamos borrando las compras en las fechas seleccionadas");
+            $("#modal").modal('hide');
+        }
+
+        function completeDelCompras(data) {
+            if (data) {
+                $('#delete-compras-info').html("Compras borradas correctamente");
+            } else {
+                $('#delete-compras-info').html("Error al borrar las compras");
+            }
+        }
+
+        function inicioDelAll(data) {
+            $('#delete-all-info').html("Estamos borrando los datos");
+            $("#modal").modal('hide');
+        }
+
+        function completeDelAll(data) {
+            if (data) {
+                $('#delete-all-info').html("Datos borrados correctamente");
+            } else {
+                $('#delete-all-info').html("Error al borrar los datos");
+            }
+        }
     </script>
 }
