@@ -47,10 +47,10 @@ namespace ErpMvc.Areas.Admin.Controllers
             }
         }
 
-        public JsonResult DeleteNotCompras(DateTime fechaInicio, DateTime fechaFin)
+        public JsonResult DeleteNotCompras(DateTime? fechaInicio, DateTime? fechaFin)
         {
-            var fIni = fechaInicio.Date;
-            var fFin = fechaFin.Date.AddHours(23).AddMinutes(59);
+            //var fIni = fechaInicio.Value.Date;
+            //var fFin = fechaFin.Value.Date.AddHours(23).AddMinutes(59);
             _db.Set<EntradaAlmacen>().RemoveRange(_db.Set<EntradaAlmacen>());
 
             _db.Set<DetalleSalidaAlmacen>().RemoveRange(_db.Set<DetalleSalidaAlmacen>());
@@ -58,16 +58,18 @@ namespace ErpMvc.Areas.Admin.Controllers
             _db.Set<SalidaPorMerma>().RemoveRange(_db.Set<SalidaPorMerma>());
 
             _db.Set<MovimientoDeProducto>().RemoveRange(_db.Set<MovimientoDeProducto>());
-            //todo borrar todo menos ventas seleccionadas y todas las compras
-            _db.Set<OrdenPorDetalle>().RemoveRange(_db.Set<OrdenPorDetalle>());
-            _db.Set<AgregadoDeComanda>().RemoveRange(_db.Set<AgregadoDeComanda>());
-            _db.Set<DetalleDeComanda>().RemoveRange(_db.Set<DetalleDeComanda>());
-            _db.Set<Orden>().RemoveRange(_db.Set<Orden>());
-            _db.Set<Comanda>().RemoveRange(_db.Set<Comanda>());
+            //borrando all menos ventas seleccionadas y todas las compras
+            var ventasNoBorrar = _db.Set<SeleccionVenta>().Select(s => s.VentaId).ToList();
 
-            _db.Set<AgregadosVendidos>().RemoveRange(_db.Set<AgregadosVendidos>());
-            _db.Set<DetalleDeVenta>().RemoveRange(_db.Set<DetalleDeVenta>());
-            _db.Set<Venta>().RemoveRange(_db.Set<Venta>());
+            _db.Set<OrdenPorDetalle>().RemoveRange(_db.Set<OrdenPorDetalle>().Where(o => ventasNoBorrar.All(v => v != o.DetalleDeComanda.Comanda.VentaId)));
+            _db.Set<AgregadoDeComanda>().RemoveRange(_db.Set<AgregadoDeComanda>().Where(o => ventasNoBorrar.All(v => v != o.DetalleDeComanda.Comanda.VentaId)));
+            _db.Set<DetalleDeComanda>().RemoveRange(_db.Set<DetalleDeComanda>().Where(o => ventasNoBorrar.All(v => v != o.Comanda.VentaId)));
+            _db.Set<Orden>().RemoveRange(_db.Set<Orden>().Where(o => ventasNoBorrar.All(v => v != o.Comanda.VentaId)));
+            _db.Set<Comanda>().RemoveRange(_db.Set<Comanda>().Where(o => ventasNoBorrar.All(v => v != o.VentaId)));
+
+            _db.Set<AgregadosVendidos>().RemoveRange(_db.Set<AgregadosVendidos>().Where(o => ventasNoBorrar.All(v => v != o.DetalleDeVenta.VentaId)));
+            _db.Set<DetalleDeVenta>().RemoveRange(_db.Set<DetalleDeVenta>().Where(o => ventasNoBorrar.All(v => v != o.VentaId)));
+            _db.Set<Venta>().RemoveRange(_db.Set<Venta>().Where(o => ventasNoBorrar.All(v => v != o.Id)));
             _db.Set<Propina>().RemoveRange(_db.Set<Propina>());
 
             _db.Set<Asiento>().RemoveRange(_db.Set<Asiento>());
@@ -75,7 +77,7 @@ namespace ErpMvc.Areas.Admin.Controllers
 
             //var dia = new DiaContable() { Abierto = false, Fecha = DateTime.Now, HoraEnQueCerro = DateTime.Now };
             //db.Set<DiaContable>().Add(dia);
-            var dia = _db.Set<DiaContable>().Last();
+            var dia = _db.Set<DiaContable>().ToList().OrderBy(d => d.Fecha).Last();
 
             var existencias = _db.Set<ExistenciaAlmacen>().ToList();
 
