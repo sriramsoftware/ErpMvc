@@ -56,7 +56,7 @@ namespace ErpMvc.Controllers
         public PartialViewResult ListaDeComprasPartial(DateTime fecha)
         {
             //todo: cambiar aqui y en compras la verificacion de la fecha para no cargar todos los registros
-            if (User.IsInRole(RolesMontin.Administrador))
+            if (User.IsInRole(RolesMontin.Administrador) || (User.IsInRole(RolesMontin.UsuarioAvanzado) && fecha.Date == DateTime.Now.Date))
             {
                 var compras = _db.Set<Compra>().ToList().Where(v => v.Fecha.Date == fecha.Date).ToList().OrderByDescending(v => v.Fecha);
                 return PartialView("_ListaDeComprasPartial", compras);

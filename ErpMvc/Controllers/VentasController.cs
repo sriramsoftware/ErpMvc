@@ -53,7 +53,8 @@ namespace ErpMvc.Controllers
 
         public PartialViewResult ListaDeVentasPartial(int id)
         {
-            if (User.IsInRole(RolesMontin.Administrador))
+            var dia = _periodoContableService.GetDiaContableActual();
+            if (User.IsInRole(RolesMontin.Administrador)|| (User.IsInRole(RolesMontin.UsuarioAvanzado) && id == dia.Id))
             {
                 ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContableId == id).ToList();
                 var ventas = _ventasService.Ventas().Where(v => v.DiaContableId == id).ToList().OrderByDescending(v => v.Fecha);
@@ -85,7 +86,7 @@ namespace ErpMvc.Controllers
         {
             var fIni = fecha.Date;
             var fFin = fecha.Date.AddHours(23).AddMinutes(59);
-            if (User.IsInRole(RolesMontin.Administrador))
+            if (User.IsInRole(RolesMontin.Administrador) || (User.IsInRole(RolesMontin.UsuarioAvanzado) && fecha.Date == DateTime.Now.Date))
             {
                 ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContable.Fecha >= fIni && p.Venta.DiaContable.Fecha <= fFin).ToList();
                 var ventas = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin).OrderByDescending(v => v.Fecha).ToList();
@@ -102,7 +103,7 @@ namespace ErpMvc.Controllers
         {
             var fIni = fecha.Date;
             var fFin = fecha.Date.AddHours(23).AddMinutes(59);
-            if (User.IsInRole(RolesMontin.Administrador))
+            if (User.IsInRole(RolesMontin.Administrador) || (User.IsInRole(RolesMontin.UsuarioAvanzado) && fecha.Date == DateTime.Now.Date))
             {
                 ViewBag.Propinas = _db.Set<Propina>().Where(p => p.Venta.DiaContable.Fecha >= fIni && p.Venta.DiaContable.Fecha <= fFin && p.Venta.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura).ToList();
                 var ventas = _ventasService.Ventas().Where(v => v.DiaContable.Fecha >= fIni && v.DiaContable.Fecha <= fFin && v.EstadoDeVenta == EstadoDeVenta.PagadaPorFactura).OrderByDescending(v => v.Fecha).ToList();
