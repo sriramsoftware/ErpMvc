@@ -52,7 +52,7 @@ namespace ErpMvc.Controllers
             var compras = _db.Set<Compra>().Where(c => !c.DiaContable.Abierto).GroupBy(c => c.DiaContable).Select(g => new SeleccionViewModel()
             {
                 DiaContable = g.Key,
-                Ventas = _db.Set<SeleccionVenta>().Where(v => v.Venta.DiaContableId == g.Key.Id).Sum(v => v.Venta.Importe),
+                Ventas = _db.Set<SeleccionVenta>().Any(v => v.Venta.DiaContableId == g.Key.Id)? _db.Set<SeleccionVenta>().Where(v => v.Venta.DiaContableId == g.Key.Id).Sum(v => v.Venta.Importe):0,
                 Importe = g.Sum(co => co.Productos.Sum(p => p.ImporteTotal)),
                 ImporteSeleccionado = _db.Set<SeleccionCompra>().Any(c => c.Compra.DiaContableId == g.Key.Id) ?_db.Set<SeleccionCompra>().Where(c => c.Compra.DiaContableId == g.Key.Id).Sum(c => c.Compra.Productos.Sum(com => com.ImporteTotal)):0,
                 ConComprobante = _db.Set<SeleccionCompra>().Any(c => c.Compra.DiaContableId == g.Key.Id && c.Compra.TieneComprobante) ?_db.Set<SeleccionCompra>().Where(c => c.Compra.DiaContableId == g.Key.Id && c.Compra.TieneComprobante).Sum(c => c.Compra.Productos.Sum(com => com.ImporteTotal)):0,
@@ -113,7 +113,7 @@ namespace ErpMvc.Controllers
             }
         }
 
-        public JsonResult Ventas(int id)
+        public JsonResult VentasData(int id)
         {
             return Json(_db.Set<SeleccionVenta>().Where(s => s.Venta.DiaContableId == id).Sum(s => s.Venta.Importe), JsonRequestBehavior.AllowGet);
         }
